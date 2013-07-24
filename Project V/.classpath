@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Sources/java dep/Project V/artemis.jar" sourcepath="C:/Sources/java dep/artemis-src.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/kryonet"/>
+	<classpathentry kind="lib" path="C:/Sources/java dep/TWL/TWL.jar"/>
+	<classpathentry kind="lib" path="C:/Sources/java dep/TWL/xpp3-1.1.4c_all/xpp3-1.1.4c/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lwjgl">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Sources/java dep/lwjgl/native/windows"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Sources/java dep/SoundSystem/SoundSystem.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
