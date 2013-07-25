@@ -14,7 +14,6 @@ import me.furt.projectv.NetPlayer;
 import me.furt.projectv.Network;
 import me.furt.projectv.Network.AddPlayer;
 import me.furt.projectv.Network.Login;
-import me.furt.projectv.Network.MovePlayer;
 import me.furt.projectv.Network.Register;
 import me.furt.projectv.Network.RegistrationRequired;
 import me.furt.projectv.Network.RemovePlayer;

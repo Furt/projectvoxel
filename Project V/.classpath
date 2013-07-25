@@ -12,5 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Sources/java dep/SoundSystem/SoundSystem.jar"/>
+	<classpathentry kind="lib" path="C:/Sources/java dep/toxiclibs-complete-0020/toxiclibscore/library/toxiclibscore.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
