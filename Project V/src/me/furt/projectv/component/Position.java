@@ -1,5 +1,7 @@
 package me.furt.projectv.component;
 
-public class Position {
+import com.artemis.Component;
+
+public class Position extends Component {
 	public float x, y, z;
 }

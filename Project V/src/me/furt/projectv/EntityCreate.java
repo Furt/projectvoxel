@@ -1,16 +1,16 @@
 package me.furt.projectv;
 
-import me.furt.projectv.component.Camera;
 import me.furt.projectv.component.Health;
 import me.furt.projectv.component.Name;
 import me.furt.projectv.component.Player;
+import me.furt.projectv.component.Position;
 
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.managers.GroupManager;
 
-public class EntityTest {
-	public static Entity createPlayer(World world, int id, String rawName, String displayName, int health, int maxHealth, float x, float y, float z, float pitch, float yaw) {
+public class EntityCreate {
+	public static Entity createPlayer(World world, int id, String rawName, String displayName, int health, int maxHealth, float x, float y, float z) {
 		Entity e = world.createEntity();
 		
 		// player
@@ -31,12 +31,10 @@ public class EntityTest {
 		e.addComponent(h);
 		
 		// camera position
-		Camera c = new Camera();
+		Position c = new Position();
 		c.x = x;
 		c.y = y;
 		c.z = z;
-		c.pitch = pitch;
-		c.yaw = yaw;
 		e.addComponent(c);
 		
 		world.getManager(GroupManager.class).add(e, Constants.Groups.PLAYERS);

@@ -100,6 +100,7 @@ public class GameServer {
 
 					// Register player
 					player = new NetPlayer();
+					player.id = 1;
 					player.rawName = register.name;
 					player.displayName = register.name;
 					player.x = 0;
