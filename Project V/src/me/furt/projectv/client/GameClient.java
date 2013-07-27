@@ -52,6 +52,7 @@ public class GameClient {
 	public GameClient() throws LWJGLException {
 		client = new Client();
 		client.start();
+		world = new World();
 		pname = "Player";
 		Network.register(client);
 		// int centerX = (Display.getDisplayMode().getWidth() - WINDOW_WIDTH) /
@@ -106,7 +107,6 @@ public class GameClient {
 		Login login = new Login();
 		login.name = pname;
 		client.sendTCP(login);
-		world = new World();
 		start();
 	}
 

@@ -2,17 +2,25 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Sources/java dep/Project V/artemis.jar" sourcepath="C:/Sources/java dep/artemis-src.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/kryonet"/>
-	<classpathentry kind="lib" path="C:/Sources/java dep/TWL/TWL.jar"/>
-	<classpathentry kind="lib" path="C:/Sources/java dep/TWL/xpp3-1.1.4c_all/xpp3-1.1.4c/xpp3-1.1.4c.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lwjgl">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Sources/java dep/lwjgl/native/windows"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Sources/java dep/SoundSystem/SoundSystem.jar"/>
-	<classpathentry kind="lib" path="C:/Sources/java dep/toxiclibs-complete-0020/toxiclibscore/library/toxiclibscore.jar"/>
-	<classpathentry kind="lib" path="C:/Sources/java dep/vecmath-1.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/artemis/artemis.jar" sourcepath="lib/artemis/artemis-src.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/asm-debug-all.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/jinput.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-debug.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lzma.jar"/>
+	<classpathentry kind="lib" path="lib/kryonet/asm-4.0.jar"/>
+	<classpathentry kind="lib" path="lib/kryonet/jsonbeans-0.2.jar"/>
+	<classpathentry kind="lib" path="lib/kryonet/kryo-2.20.jar"/>
+	<classpathentry kind="lib" path="lib/kryonet/kryonet-2.18.jar"/>
+	<classpathentry kind="lib" path="lib/kryonet/minlog-none-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/kryonet/objenesis-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/kryonet/reflectasm-1.07.jar"/>
+	<classpathentry kind="lib" path="lib/utils/guava-14.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/utils/SoundSystem.jar"/>
+	<classpathentry kind="lib" path="lib/utils/toxiclibscore.jar"/>
+	<classpathentry kind="lib" path="lib/utils/trove-3.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/utils/vecmath-1.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/utils/PNGDecoder.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
