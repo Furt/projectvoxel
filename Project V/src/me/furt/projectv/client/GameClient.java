@@ -190,11 +190,7 @@ public class GameClient {
 			world.setSystem(new RenderPlayerSystem());
 			world.initialize();
 
-			// Add entity player to world
-			NetPlayer player = ui.players.get(1);
-			EntityCreate.createPlayer(world, player.id, player.rawName,
-					player.displayName, player.health, player.maxHealth,
-					player.x, player.y, player.z).addToWorld();
+			// TODO add player
 
 			while (!Display.isCloseRequested() && client.isConnected()) {
 				SkyBox.renderSkyBox(camera.getCameraPitch(),

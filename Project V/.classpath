@@ -6,7 +6,11 @@
 	<classpathentry kind="lib" path="lib/lwjgl/jinput.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-debug.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Project V/lib/natives/windows"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/lwjgl/lzma.jar"/>
 	<classpathentry kind="lib" path="lib/kryonet/asm-4.0.jar"/>
 	<classpathentry kind="lib" path="lib/kryonet/jsonbeans-0.2.jar"/>
