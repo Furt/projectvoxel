@@ -1,6 +1,5 @@
 package me.furt.projectv.voxelengine;
 
-import me.furt.projectv.voxelengine.camera.Camera;
 import me.furt.projectv.voxelengine.camera.FirstPerson;
 
 import org.lwjgl.LWJGLException;
