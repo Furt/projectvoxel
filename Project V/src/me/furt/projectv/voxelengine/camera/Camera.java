@@ -1,5 +1,7 @@
 package me.furt.projectv.voxelengine.camera;
 
+import javax.vecmath.Vector3f;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GLContext;
@@ -27,14 +29,12 @@ public class Camera {
     private final float nearClippingPlane;
     // farClippingPlane = Render distance from the camera
     private final float farClippingPlane;
-	public Vertex position;
+	public Vector3f position;
 
     public Camera(float x, float y, float z, float pitch, float yaw, float roll, float fov, float aspectRatio, float zNear, float zFar) {
 	super();
 
-	this.position.x = x;
-	this.position.y = y;
-	this.position.z = z;
+	this.position = new Vector3f(x, y, z);
 	this.x = x;
 	this.y = y;
 	this.z = z;
