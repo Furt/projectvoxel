@@ -5,8 +5,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.GLU;
 
+import toxi.geom.mesh.Vertex;
 import static java.lang.Math.*;
-
 import static org.lwjgl.opengl.ARBDepthClamp.GL_DEPTH_CLAMP;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -27,10 +27,14 @@ public class Camera {
     private final float nearClippingPlane;
     // farClippingPlane = Render distance from the camera
     private final float farClippingPlane;
+	public Vertex position;
 
     public Camera(float x, float y, float z, float pitch, float yaw, float roll, float fov, float aspectRatio, float zNear, float zFar) {
 	super();
 
+	this.position.x = x;
+	this.position.y = y;
+	this.position.z = z;
 	this.x = x;
 	this.y = y;
 	this.z = z;
@@ -97,6 +101,7 @@ public class Camera {
 
         if (keyUp && keyRight && !keyLeft && !keyDown) {
             moveFromLook(speed * delta * 0.003f, 0, -speed * delta * 0.003f);
+            System.out.println("key pressed");
         }
         if (keyUp && keyLeft && !keyRight && !keyDown) {
             moveFromLook(-speed * delta * 0.003f, 0, -speed * delta * 0.003f);
