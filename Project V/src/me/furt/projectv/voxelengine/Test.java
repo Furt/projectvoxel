@@ -119,7 +119,7 @@ public class Test {
 		// draw quad
 		GL11.glPushMatrix();
 			GL11.glTranslatef(x, y, 0);
-			GL11.glRotatef(rotation, 0f, 0f, 1f);
+			//GL11.glRotatef(rotation, 0f, 0f, 1f);
 			GL11.glTranslatef(-x, -y, 0);
 			
 			GL11.glBegin(GL11.GL_QUADS);
