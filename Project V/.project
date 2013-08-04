@@ -14,4 +14,41 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/me/furt/projectv/voxelengine/assets/1.png</name>
+			<type>1</type>
+			<location>C:/Users/Jerry.Inferno/Dropbox/CrimsonGaming/Project-V/assets/texture/1.png</location>
+		</link>
+		<link>
+			<name>src/me/furt/projectv/voxelengine/assets/2.png</name>
+			<type>1</type>
+			<location>C:/Users/Jerry.Inferno/Dropbox/CrimsonGaming/Project-V/assets/texture/2.png</location>
+		</link>
+		<link>
+			<name>src/me/furt/projectv/voxelengine/assets/3.png</name>
+			<type>1</type>
+			<location>C:/Users/Jerry.Inferno/Dropbox/CrimsonGaming/Project-V/assets/texture/3.png</location>
+		</link>
+		<link>
+			<name>src/me/furt/projectv/voxelengine/assets/4.png</name>
+			<type>1</type>
+			<location>C:/Users/Jerry.Inferno/Dropbox/CrimsonGaming/Project-V/assets/texture/4.png</location>
+		</link>
+		<link>
+			<name>src/me/furt/projectv/voxelengine/assets/5.png</name>
+			<type>1</type>
+			<location>C:/Users/Jerry.Inferno/Dropbox/CrimsonGaming/Project-V/assets/texture/5.png</location>
+		</link>
+		<link>
+			<name>src/me/furt/projectv/voxelengine/assets/6.png</name>
+			<type>1</type>
+			<location>C:/Users/Jerry.Inferno/Dropbox/CrimsonGaming/Project-V/assets/texture/6.png</location>
+		</link>
+		<link>
+			<name>src/me/furt/projectv/voxelengine/assets/7.png</name>
+			<type>1</type>
+			<location>C:/Users/Jerry.Inferno/Dropbox/CrimsonGaming/Project-V/assets/texture/7.png</location>
+		</link>
+	</linkedResources>
 </projectDescription>
