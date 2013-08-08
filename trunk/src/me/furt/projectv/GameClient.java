@@ -50,6 +50,7 @@ public class GameClient extends SimpleApplication {
     private CubesSettings cubesSettings;
     private BlockTerrainControl blockTerrain;
     private Node terrainNode = new Node();
+    BitmapText debugger;
 
     public static void main(String[] args) {
         GameClient app = new GameClient();
@@ -111,30 +112,6 @@ public class GameClient extends SimpleApplication {
         //TODO: add render code
     }
 
-    public void onAction(String actionName, boolean value, float lastTimePerFrame) {
-        if (actionName.equals("move_up")) {
-            arrowKeys[0] = value;
-        } else if (actionName.equals("move_right")) {
-            arrowKeys[1] = value;
-        } else if (actionName.equals("move_left")) {
-            arrowKeys[3] = value;
-        } else if (actionName.equals("move_down")) {
-            arrowKeys[2] = value;
-        } else if (actionName.equals("jump")) {
-            playerControl.jump();
-        }
-    }
-
-    protected void initCrossHairs() {
-        setDisplayStatView(false);
-        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        BitmapText ch = new BitmapText(guiFont, false);
-        ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
-        ch.setText("+");
-        ch.setLocalTranslation(settings.getWidth() / 2 - ch.getLineWidth() / 2, settings.getHeight() / 2 + ch.getLineHeight() / 2, 0);
-        guiNode.attachChild(ch);
-    }
-
     protected Spatial makeCharacter() {
         // load a character from jme3test-test-data
         Spatial golem = assetManager.loadModel("Models/Oto/Oto.mesh.xml");
@@ -164,12 +141,32 @@ public class GameClient extends SimpleApplication {
         public void onAction(String name, boolean value, float tpf) {
             if (name.equals("move_up")) {
                 arrowKeys[0] = value;
+                if (value) {
+                    enableDebugger("Walking Forward.");
+                } else {
+                    disableDebugger();
+                }
             } else if (name.equals("move_right")) {
                 arrowKeys[1] = value;
+                if (value) {
+                    enableDebugger("Strafing Right.");
+                } else {
+                    disableDebugger();
+                }
             } else if (name.equals("move_left")) {
                 arrowKeys[3] = value;
+                if (value) {
+                    enableDebugger("Strafing Left.");
+                } else {
+                    disableDebugger();
+                }
             } else if (name.equals("move_down")) {
                 arrowKeys[2] = value;
+                if (value) {
+                    enableDebugger("Walking Backwards.");
+                } else {
+                    disableDebugger();
+                }
             } else if (name.equals("jump")) {
                 playerControl.jump();
             }
@@ -215,6 +212,19 @@ public class GameClient extends SimpleApplication {
         ch.setLocalTranslation(settings.getWidth() / 2 - ch.getLineWidth() / 2, settings.getHeight() / 2 + ch.getLineHeight() / 2, 0);
         guiNode.attachChild(ch);
 
+    }
+
+    private void enableDebugger(String s) {
+        debugger = new BitmapText(guiFont, false);
+        debugger.setSize(guiFont.getCharSet().getRenderedSize());
+        debugger.setText(s);
+        debugger.setLocalTranslation(0, 650 + debugger.getLineHeight(), 0);
+        guiNode.attachChild(debugger);
+
+    }
+
+    private void disableDebugger() {
+        guiNode.detachChild(debugger);
     }
 
     private void initPlayer() {
