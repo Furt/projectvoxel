@@ -1,0 +1,25 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package me.furt.projectv;
+
+/**
+ *
+ * @author Terry
+ */
+public class Globals {
+    public static final String VERSION = "Project V - v0.0.1";
+    public static final String DEFAULT_SERVER = "127.0.0.1";
+    public static final int PROTOCOL_VERSION = 1;
+    public static final int CLIENT_VERSION = 1;
+    public static final int SERVER_VERSION = 1;
+    public static final float NETWORK_SYNC_FREQUENCY = 0.25f;
+    public static final float NETWORK_MAX_PHYSICS_DELAY = 0.25f;
+    public static final int SCENE_FPS = 60;
+    public static final float PHYSICS_FPS = 1f / 30f;
+    public static final boolean PHYSICS_THREADED = true;
+    public static final boolean PHYSICS_DEBUG = false;
+    public static final int DEFAULT_PORT_TCP = 25570;
+    public static final int DEFAULT_PORT_UDP = 25570;
+}
