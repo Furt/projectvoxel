@@ -42,7 +42,10 @@ import me.furt.projectv.blocks.*;
 public class GameClient extends SimpleApplication {
 
     static final Logger log = Logger.getLogger("Project-V");
-    private final Vector3Int terrainSize = new Vector3Int(256, 30, 256);
+    /*
+     * terrainSize = noise input
+     */
+    private final Vector3Int terrainSize = new Vector3Int(64, 20, 64);
     private BulletAppState bulletAppState;
     private CharacterControl playerControl;
     private Vector3f walkDirection = new Vector3f();
@@ -59,9 +62,9 @@ public class GameClient extends SimpleApplication {
 
     public GameClient() {
         settings = new AppSettings(true);
-        settings.setWidth(1280);
-        settings.setHeight(720);
-        settings.setTitle("Project V");
+        settings.setWidth(Globals.WINDOW_WIDTH);
+        settings.setHeight(Globals.WINDOW_HEIGHT);
+        settings.setTitle(Globals.VERSION);
         try {
             settings.setIcons(new BufferedImage[]{
                         ImageIO.read(getClass().getResourceAsStream("/Textures/magex16.png")),
@@ -178,7 +181,10 @@ public class GameClient extends SimpleApplication {
         PVAssets.initializeEnvironment(this);
 
         cubesSettings = PVAssets.getSettings(this);
-        blockTerrain = new BlockTerrainControl(cubesSettings, new Vector3Int(7, 1, 7));
+        /*
+         *  This is for setting how many chunks to generate if world is empty
+         */
+        blockTerrain = new BlockTerrainControl(cubesSettings, new Vector3Int(16, 1, 16));
         blockTerrain.setBlocksFromNoise(new Vector3Int(), terrainSize, 0.3f, DirtBlock.class);
         blockTerrain.addChunkListener(new BlockChunkListener() {
             public void onSpatialUpdated(BlockChunkControl blockChunk) {
@@ -232,8 +238,19 @@ public class GameClient extends SimpleApplication {
         playerControl.setJumpSpeed(30.0F);
         playerControl.setFallSpeed(30.0F);
         playerControl.setGravity(120.0F);
+        // Set spawn location
         playerControl.setPhysicsLocation(new Vector3f(5.0F, terrainSize.getY() + 5, 5.0F).mult(cubesSettings.getBlockSize()));
         bulletAppState.getPhysicsSpace().add(playerControl);
+        Spatial golem = assetManager.loadModel("Models/cubes/golem/golem.j3o");
+        golem.scale(0.5f);
+        golem.setLocalTranslation(-1.0f, -1.5f, -0.6f);
+
+        // We must add a light to make the model visible
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
+        golem.addLight(sun);
+        golem.addControl(playerControl);
+        golem.scale(3.0f);
     }
 
     private Vector3Int getCurrentPointedBlockLocation(boolean getNeighborLocation) {

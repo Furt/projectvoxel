@@ -22,4 +22,6 @@ public class Globals {
     public static final boolean PHYSICS_DEBUG = false;
     public static final int DEFAULT_PORT_TCP = 25570;
     public static final int DEFAULT_PORT_UDP = 25570;
+    public static final int WINDOW_HEIGHT = 720;
+    public static final int WINDOW_WIDTH = 1280;
 }
