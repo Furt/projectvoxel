@@ -45,7 +45,7 @@ public class GameClient extends SimpleApplication {
     /*
      * terrainSize = noise input
      */
-    private final Vector3Int terrainSize = new Vector3Int(64, 20, 64);
+    private final Vector3Int terrainSize = new Vector3Int(16, 118, 16);
     private BulletAppState bulletAppState;
     private CharacterControl playerControl;
     private Vector3f walkDirection = new Vector3f();
@@ -81,14 +81,15 @@ public class GameClient extends SimpleApplication {
         stateManager.attach(bulletAppState);
         initControls();
         initBlockTerrain();
-        initPlayer();
+        //initPlayer();
         initHUD();
         cam.lookAtDirection(new Vector3f(1.0F, 0.0F, 1.0F), Vector3f.UNIT_Y);
+        flyCam.setMoveSpeed(50);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        /* increase this float to walk faster */
+        /* increase this float to walk faster 
         float playerMoveSpeed = cubesSettings.getBlockSize() * 10.5F * tpf;
         Vector3f camDir = cam.getDirection().mult(playerMoveSpeed);
         Vector3f camLeft = cam.getLeft().mult(playerMoveSpeed);
@@ -107,7 +108,7 @@ public class GameClient extends SimpleApplication {
         }
         walkDirection.setY(0.0F);
         playerControl.setWalkDirection(walkDirection);
-        cam.setLocation(playerControl.getPhysicsLocation());
+        cam.setLocation(playerControl.getPhysicsLocation());*/
     }
 
     @Override
@@ -144,34 +145,14 @@ public class GameClient extends SimpleApplication {
         public void onAction(String name, boolean value, float tpf) {
             if (name.equals("move_up")) {
                 arrowKeys[0] = value;
-                if (value) {
-                    enableDebugger("Walking Forward.");
-                } else {
-                    disableDebugger();
-                }
             } else if (name.equals("move_right")) {
                 arrowKeys[1] = value;
-                if (value) {
-                    enableDebugger("Strafing Right.");
-                } else {
-                    disableDebugger();
-                }
             } else if (name.equals("move_left")) {
                 arrowKeys[3] = value;
-                if (value) {
-                    enableDebugger("Strafing Left.");
-                } else {
-                    disableDebugger();
-                }
             } else if (name.equals("move_down")) {
                 arrowKeys[2] = value;
-                if (value) {
-                    enableDebugger("Walking Backwards.");
-                } else {
-                    disableDebugger();
-                }
             } else if (name.equals("jump")) {
-                playerControl.jump();
+                //playerControl.jump();
             }
         }
     };
@@ -184,8 +165,9 @@ public class GameClient extends SimpleApplication {
         /*
          *  This is for setting how many chunks to generate if world is empty
          */
-        blockTerrain = new BlockTerrainControl(cubesSettings, new Vector3Int(16, 1, 16));
-        blockTerrain.setBlocksFromNoise(new Vector3Int(), terrainSize, 0.3f, DirtBlock.class);
+        blockTerrain = new BlockTerrainControl(cubesSettings, new Vector3Int(7,3,7));
+        blockTerrain.setBlocksFromNoise(new Vector3Int(8,30,8), new Vector3Int(100,40,100), 1f, GrassBlock.class);
+        blockTerrain.setBlocksFromNoise(new Vector3Int(8,2,8), new Vector3Int(100,50,100), 1f, StoneBlock.class);
         blockTerrain.addChunkListener(new BlockChunkListener() {
             public void onSpatialUpdated(BlockChunkControl blockChunk) {
                 Geometry optimizedGeometry = blockChunk.getOptimizedGeometry_Opaque();
@@ -242,15 +224,14 @@ public class GameClient extends SimpleApplication {
         playerControl.setPhysicsLocation(new Vector3f(5.0F, terrainSize.getY() + 5, 5.0F).mult(cubesSettings.getBlockSize()));
         bulletAppState.getPhysicsSpace().add(playerControl);
         Spatial golem = assetManager.loadModel("Models/cubes/golem/golem.j3o");
-        golem.scale(0.5f);
+        golem.scale(1.0f);
         golem.setLocalTranslation(-1.0f, -1.5f, -0.6f);
 
         // We must add a light to make the model visible
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
         golem.addLight(sun);
-        golem.addControl(playerControl);
-        golem.scale(3.0f);
+        //golem.addControl(playerControl);
     }
 
     private Vector3Int getCurrentPointedBlockLocation(boolean getNeighborLocation) {

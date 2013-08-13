@@ -5,7 +5,8 @@ import com.cubes.BlockChunkListener;
 import com.cubes.BlockTerrainControl;
 import com.cubes.CubesSettings;
 import com.cubes.Vector3Int;
-import me.furt.projectv.test.blocks.Block_Grass;
+import com.cubes.test.CubesTestAssets;
+import com.cubes.test.blocks.Block_Grass;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
 public class TestPhysics extends SimpleApplication
         implements ActionListener {
 
-    private final Vector3Int terrainSize = new Vector3Int(100, 30, 100);
+    private final Vector3Int terrainSize = new Vector3Int(100, 20, 100);
     private BulletAppState bulletAppState;
     private CharacterControl playerControl;
     private Vector3f walkDirection = new Vector3f();
@@ -141,8 +142,3 @@ public class TestPhysics extends SimpleApplication
         }
     }
 }
-
-/* Location:           C:\Users\Terry\AppData\Roaming\.jmonkeyplatform\3.0RC2\libs\Cubes.jar
- * Qualified Name:     com.cubes.test.TestPhysics
- * JD-Core Version:    0.6.0
- */
