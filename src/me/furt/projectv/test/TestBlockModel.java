@@ -2,6 +2,7 @@ package me.furt.projectv.test;
 
 import com.cubes.BlockTerrainControl;
 import com.cubes.Vector3Int;
+import com.cubes.test.CubesTestAssets;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.FlyByCamera;
 import com.jme3.math.Vector3f;

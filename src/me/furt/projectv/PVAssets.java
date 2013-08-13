@@ -4,10 +4,13 @@
  */
 package me.furt.projectv;
 
+import com.cubes.Block;
+import com.cubes.BlockChunkControl;
 import com.cubes.BlockManager;
 import com.cubes.BlockSkin;
 import com.cubes.BlockSkin_TextureLocation;
 import com.cubes.CubesSettings;
+import com.cubes.Vector3Int;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
@@ -45,23 +48,21 @@ public class PVAssets {
     }
 
     public static void registerBlocks() {
-        /*BlockManager.register(Block_Grass.class, new BlockSkin(new BlockSkin_TextureLocation[]{new BlockSkin_TextureLocation(0, 0), new BlockSkin_TextureLocation(1, 0), new BlockSkin_TextureLocation(2, 0)}, false) {
-         protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-         if (chunk.isBlockOnSurface(blockLocation)) {
-         switch (face.ordinal()) {
-         case 1:
-         return 0;
-         case 2:
-         return 2;
-         }
-         return 1;
-         }
-         return 2;
-         }
-         });
-         */
-        BlockManager.register(GrassBlock.class, new BlockSkin(new BlockSkin_TextureLocation(0, 0), false));
-        BlockManager.register(DirtBlock.class, new BlockSkin(new BlockSkin_TextureLocation(1, 0), false));
+        BlockManager.register(GrassBlock.class, new BlockSkin(new BlockSkin_TextureLocation[]{new BlockSkin_TextureLocation(0, 0), new BlockSkin_TextureLocation(1, 0)}, false) {
+            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                if (chunk.isBlockOnSurface(blockLocation)) {
+                    switch (face.ordinal()) {
+                        case 1:
+                            return 1;
+                    }
+                    return 0;
+                }
+                return 1;
+            }
+        });
+
+        //BlockManager.register(GrassBlock.class, new BlockSkin(new BlockSkin_TextureLocation(0, 0), false));
+        //BlockManager.register(DirtBlock.class, new BlockSkin(new BlockSkin_TextureLocation(1, 0), false));
         BlockManager.register(ClayBlock.class, new BlockSkin(new BlockSkin_TextureLocation(2, 0), false));
         BlockManager.register(CobbleBlock.class, new BlockSkin(new BlockSkin_TextureLocation(3, 0), false));
         BlockManager.register(StoneBlock.class, new BlockSkin(new BlockSkin_TextureLocation(4, 0), false));
