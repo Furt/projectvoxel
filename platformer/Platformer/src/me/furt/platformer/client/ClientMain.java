@@ -15,8 +15,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.furt.platformer.Globals;
-import me.furt.platformer.PlatformerNetwork;
-import me.furt.platformer.PlatformerNetwork.PlayerMessage;
+import me.furt.platformer.network.PlatformerNetwork;
+import me.furt.platformer.network.PlatformerNetwork.PlayerMessage;
 
 /**
  * Platformer Server

@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.furt.platformer.Globals;
-import me.furt.platformer.PlatformerNetwork;
-import me.furt.platformer.PlatformerNetwork.PlayerMessage;
+import me.furt.platformer.network.PlatformerNetwork;
+import me.furt.platformer.network.PlatformerNetwork.PlayerMessage;
 
 /**
  * Platformer Server
@@ -45,8 +45,8 @@ public class ServerMain extends SimpleApplication {
             server.broadcast(new PlayerMessage("furt", "Hello Newbies!" + f));
         }
         
-        server.getConnection(1).send(null);
-    }
+        //server.getConnection(1).send(null);
+    } 
     
     @Override
     public void destroy() {
