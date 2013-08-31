@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.furt.platformer.Globals;
 import me.furt.platformer.network.PlatformerNetwork;
-import me.furt.platformer.network.PlatformerNetwork.PlayerMessage;
+import me.furt.platformer.network.PlatformerNetwork.ServerMessage;
 
 /**
  * Platformer Server
@@ -42,7 +42,7 @@ public class ServerMain extends SimpleApplication {
     public void simpleUpdate(float tpf) {
         float f = tpf + 0.003f;
         if(f >= 0.020f) {
-            server.broadcast(new PlayerMessage("furt", "Hello Newbies!" + f));
+            server.broadcast(new ServerMessage("Hello Newbies!" + f));
         }
         
         //server.getConnection(1).send(null);
