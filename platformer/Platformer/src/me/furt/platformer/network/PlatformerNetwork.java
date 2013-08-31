@@ -14,31 +14,27 @@ import com.jme3.network.serializing.Serializer;
  */
 public class PlatformerNetwork {
     public static void initializeSerializables() {
-        Serializer.registerClass(ServerMessage.class);
+        Serializer.registerClass(ChatMessages.class);
     }
     
     @Serializable
-    public static class ServerMessage extends AbstractMessage {
+    public static class ChatMessages extends AbstractMessage {
+        private Object channel;
         private String player;
         private String message;
         
-        public ServerMessage() {   
+        public ChatMessages() {   
         }
         
-        public ServerMessage(String message) {
+        public ChatMessages(Object channel, String player, String message) {
+            this.channel = channel;
             this.player = player;
             this.message = message;
             
         }
         
         public String getMessage() {
-            return "<Server> " + this.message;
+            return channel + ":" + player + ":" + message;
         }
     }
-    
-    @Serializable
-    public class HandShake extends AbstractMessage {
-        
-    }
-    
 }

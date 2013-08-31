@@ -5,15 +5,19 @@
 package me.furt.platformer.server;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.network.HostedConnection;
+import com.jme3.network.Message;
+import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.system.JmeContext;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.furt.platformer.Globals;
 import me.furt.platformer.network.PlatformerNetwork;
-import me.furt.platformer.network.PlatformerNetwork.ServerMessage;
+import me.furt.platformer.network.PlatformerNetwork.ChatMessages;
 
 /**
  * Platformer Server
@@ -21,6 +25,7 @@ import me.furt.platformer.network.PlatformerNetwork.ServerMessage;
  */
 public class ServerMain extends SimpleApplication {
     private Server server;
+    private ConcurrentLinkedQueue<String> chatMessageQueue;
     
     public static void main(String[] args) {
         PlatformerNetwork.initializeSerializables();
@@ -36,17 +41,31 @@ public class ServerMain extends SimpleApplication {
         } catch (IOException ex) {
             Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
         }
+        chatMessageQueue = new ConcurrentLinkedQueue<String>();
+        server.addMessageListener(new ServerChatListener());
     }
     
     @Override
     public void simpleUpdate(float tpf) {
-        float f = tpf + 0.003f;
-        if(f >= 0.020f) {
-            server.broadcast(new ServerMessage("Hello Newbies!" + f));
+        String message = chatMessageQueue.poll();
+        if (message != null) {
+            // do logic here
+            String[] s = message.split(":");
+            server.broadcast(new ChatMessages(s[0], s[1], s[2]));
         }
         
         //server.getConnection(1).send(null);
-    } 
+    }
+    
+    public class ServerChatListener implements MessageListener<HostedConnection> {
+
+        public void messageReceived(HostedConnection source, Message m) {
+            if (m instanceof ChatMessages) {
+                ChatMessages message = (ChatMessages) m;
+                chatMessageQueue.add(message.getMessage());
+            }
+        }
+    }
     
     @Override
     public void destroy() {
