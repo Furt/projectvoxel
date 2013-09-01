@@ -78,7 +78,6 @@ public class ClientMain extends SimpleApplication {
             String[] s = message.split(":");
             chatbox.receiveMsg(s[0], "<" + s[1] + "> " + s[2]);
         }
-        
         screen.update(tpf);
     }
 
@@ -89,7 +88,6 @@ public class ClientMain extends SimpleApplication {
                 ChatMessages message = (ChatMessages) m;
                 chatMessageQueue.add(message.getMessage());
             }
-            
         }
     }
 
