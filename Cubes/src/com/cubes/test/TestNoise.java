@@ -29,13 +29,13 @@ public class TestNoise extends SimpleApplication {
         CubesTestAssets1.registerBlocks();
 
         BlockTerrainControl blockTerrain = new BlockTerrainControl(CubesTestAssets1.getSettings(this), new Vector3Int(4, 1, 4));
-        blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(64, 50, 64), 0.3f, Block_Grass.class);
+        blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(64, 30, 64), 0.3f, Block_Grass.class);
         Node terrainNode = new Node();
         terrainNode.addControl(blockTerrain);
         rootNode.attachChild(terrainNode);
 
         cam.setLocation(new Vector3f(-64, 187, -55));
         cam.lookAtDirection(new Vector3f(0.64f, -0.45f, 0.6f), Vector3f.UNIT_Y);
-        flyCam.setMoveSpeed(300);
+        flyCam.setMoveSpeed(200);
     }
 }

@@ -10,14 +10,23 @@ public class CubesSettings {
         assetManager = application.getAssetManager();
     }
     private AssetManager assetManager;
+    private static float rowCount = 8;
     private float blockSize = 3;
     private int chunkSizeX = 16;
-    private int chunkSizeY = 256;
+    private int chunkSizeY = 128;
     private int chunkSizeZ = 16;
     private Material blockMaterial;
 
     public AssetManager getAssetManager() {
         return assetManager;
+    }
+    
+    public static float getRowCount() {
+        return rowCount;
+    }
+    
+    public static void setRowCount(float rowCount) {
+        CubesSettings.rowCount = rowCount;
     }
 
     public float getBlockSize() {
