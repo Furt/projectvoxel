@@ -31,7 +31,17 @@ public class CharManager {
     
     public Character getCharacter(String name) {
         Character c = characters.get(name);
-        return c;
+        if(c != null) {
+            return c;
+        }
+        return null;
+    }
+    
+    public void updateCharacter(Character c) {
+        if(characters.get(c.getName()) != null) {
+            characters.remove(c.getName());
+            characters.put(c.getName(), c);
+        }
     }
     
     public String[] characterList() {

@@ -11,11 +11,11 @@ import com.jme3.math.Vector3f;
  * @author Terry
  */
 public class Character {
-    public String name;
-    public Stats stats;
-    public int health;
-    public boolean dead;
-    public Vector3f position;
+    private String name;
+    private Stats stats;
+    private int health;
+    private boolean dead;
+    private Vector3f position;
     
     public Character(String name, Stats stats, Vector3f position) {
         this.name = name;
@@ -23,6 +23,18 @@ public class Character {
         this.position = position;
         this.dead = false;
         this.health = stats.getStamina()*20;
+    }
+    
+    public String getName() {
+        return this.name;
+    }
+    
+    public Stats getStats() {
+        return this.stats;
+    }
+    
+    public Vector3f getPosition() {
+        return this.position;
     }
     
     public int getDefense() {

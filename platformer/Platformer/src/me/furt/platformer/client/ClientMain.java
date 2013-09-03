@@ -11,6 +11,9 @@ import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -22,6 +25,7 @@ import me.furt.platformer.network.PlatformerNetwork.ChatMessages;
 import org.lwjgl.input.Keyboard;
 import tonegod.gui.controls.extras.ChatBoxExt;
 import tonegod.gui.core.Screen;
+import tonegod.skydome.SkyDome;
 
 /**
  * Platformer Server
@@ -35,9 +39,10 @@ public class ClientMain extends SimpleApplication {
     private ChatBoxExt chatbox;
     private ConcurrentLinkedQueue<String> chatMessageQueue;
     public String playerName;
+    public SkyDome skyDome;
 
     public static void main(String[] args) {
-        
+
         PlatformerNetwork.initializeSerializables();
         ClientMain app = new ClientMain();
         app.start();
@@ -53,18 +58,28 @@ public class ClientMain extends SimpleApplication {
         }
         playerName = "player" + new Random().nextInt();
         screen = new Screen(this, "tonegod/gui/style/def/style_map.xml");
-        
-        chatbox = new ChatBoxExt(screen, new Vector2f(screen.getWidth()/2, screen.getHeight()/2)) {
 
+        chatbox = new ChatBoxExt(screen, new Vector2f(screen.getWidth() / 2, screen.getHeight() / 2)) {
             @Override
             public void onSendMsg(Object command, String msg) {
                 client.send(new ChatMessages(command, playerName, msg));
             }
         };
+        flyCam.setEnabled(true);
+        skyDome = new SkyDome(assetManager, cam);
+        skyDome.setEnabled(true);
+        Node sky = new Node();
+        sky.setQueueBucket(Bucket.Sky);
+        sky.addControl(skyDome);
+        sky.setCullHint(Spatial.CullHint.Never);
+        rootNode.attachChild(sky);
+
+        // Server should send channels in a arraw then do a for call to add
         chatbox.addChatChannel("general", "General", "general", "", ColorRGBA.White, true);
+
         chatbox.setSendKey(Keyboard.KEY_RETURN);
         chatbox.showSendButton(false);
-        
+
         screen.addElement(chatbox);
         guiNode.addControl(screen);
         chatMessageQueue = new ConcurrentLinkedQueue<String>();
@@ -79,6 +94,7 @@ public class ClientMain extends SimpleApplication {
             chatbox.receiveMsg(s[0], "<" + s[1] + "> " + s[2]);
         }
         screen.update(tpf);
+        skyDome.update(tpf);
     }
 
     public class ClientMessageListener implements MessageListener<Client> {
