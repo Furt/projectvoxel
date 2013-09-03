@@ -5,33 +5,38 @@ import java.util.Map;
 
 public class Util {
 
-    private static final float MAX_FLOAT_ROUNDING_DIFFERENCE = 1.0E-004F;
+    private static final float MAX_FLOAT_ROUNDING_DIFFERENCE = 0.0001f;
 
     public static boolean isValidIndex(byte[][][] array, Vector3Int index) {
-        return (index.getX() >= 0) && (index.getX() < array.length) && (index.getY() >= 0) && (index.getY() < array[0].length) && (index.getZ() >= 0) && (index.getZ() < array[0][0].length);
+        return ((index.getX() >= 0) && (index.getX() < array.length)
+                && (index.getY() >= 0) && (index.getY() < array[0].length)
+                && (index.getZ() >= 0) && (index.getZ() < array[0][0].length));
     }
 
     public static boolean isValidIndex(Object[][][] array, Vector3Int index) {
-        return (index.getX() >= 0) && (index.getX() < array.length) && (index.getY() >= 0) && (index.getY() < array[0].length) && (index.getZ() >= 0) && (index.getZ() < array[0][0].length);
+        return ((index.getX() >= 0) && (index.getX() < array.length)
+                && (index.getY() >= 0) && (index.getY() < array[0].length)
+                && (index.getZ() >= 0) && (index.getZ() < array[0][0].length));
     }
 
     public static Vector3f compensateFloatRoundingErrors(Vector3f vector) {
-        return new Vector3f(compensateFloatRoundingErrors(vector.getX()), compensateFloatRoundingErrors(vector.getY()), compensateFloatRoundingErrors(vector.getZ()));
+        return new Vector3f(compensateFloatRoundingErrors(vector.getX()),
+                compensateFloatRoundingErrors(vector.getY()),
+                compensateFloatRoundingErrors(vector.getZ()));
     }
 
     public static float compensateFloatRoundingErrors(float number) {
-        float remainder = number % 1.0F;
-        if ((remainder < 1.0E-004F) || (remainder > 0.9999F)) {
+        float remainder = (number % 1);
+        if ((remainder < MAX_FLOAT_ROUNDING_DIFFERENCE) || (remainder > (1 - MAX_FLOAT_ROUNDING_DIFFERENCE))) {
             number = Math.round(number);
         }
         return number;
     }
-    
-    // TODO could be cause 
+
     public static <T, E> T getHashKeyByValue(Map<T, E> map, E value) {
-        for (Map.Entry entry : map.entrySet()) {
+        for (Map.Entry<T, E> entry : map.entrySet()) {
             if (value.equals(entry.getValue())) {
-                return (T) entry.getKey();
+                return entry.getKey();
             }
         }
         return null;

@@ -1,6 +1,6 @@
 package com.cubes;
 
-public abstract interface BlockChunkListener {
+public interface BlockChunkListener {
 
-    public abstract void onSpatialUpdated(BlockChunkControl paramBlockChunkControl);
+    public abstract void onSpatialUpdated(BlockChunkControl blockChunk);
 }

@@ -1,6 +1,6 @@
 package com.cubes;
 
-public abstract interface BlockChunk_MeshMerger {
+public interface BlockChunk_MeshMerger {
 
-    public abstract boolean shouldFaceBeAdded(BlockChunkControl paramBlockChunkControl, Vector3Int paramVector3Int, Block.Face paramFace);
+    public abstract boolean shouldFaceBeAdded(BlockChunkControl chunk, Vector3Int location, Block.Face face);
 }

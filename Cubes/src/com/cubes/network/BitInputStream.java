@@ -3,133 +3,149 @@ package com.cubes.network;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class BitInputStream
-{
-  private InputStream in;
-  private int lastByte;
-  private int bits = 0;
+public class BitInputStream {
 
-  public BitInputStream(InputStream in)
-  {
-    this.in = in;
-  }
-
-  public <T extends Enum<T>> T readEnum(Class<T> enumClass)
-    throws IOException
-  {
-    Enum[] enumConstants = (Enum[])enumClass.getEnumConstants();
-    int bitsCount = BitUtil.getNeededBitsCount(enumConstants.length);
-    return (T) enumConstants[readBits(bitsCount)];
-  }
-
-  public String readString_UTF8(int maximumBytesCountBits) throws IOException {
-    int bytesCount = readBits(maximumBytesCountBits);
-    byte[] bytes = readBytes(bytesCount);
-    return new String(bytes, "UTF-8");
-  }
-
-  public byte[] readBytes(int bytesCount) throws IOException {
-    byte[] bytes = new byte[bytesCount];
-    for (int i = 0; i < bytes.length; i++) {
-      bytes[i] = (byte)readBits(8);
+    public BitInputStream(InputStream in) {
+        this.in = in;
     }
-    return bytes;
-  }
+    private InputStream in;
+    private int lastByte;
+    private int bits = 0;
 
-  public float readFloat() throws IOException {
-    return Float.intBitsToFloat(readBits(32));
-  }
-
-  public int readInteger() throws IOException {
-    return readBits(32);
-  }
-
-  public boolean readBoolean() throws IOException {
-    return readBits(1) == 1;
-  }
-
-  public int readBits(int count) throws IOException {
-    if (count == 0) {
-      throw new IllegalArgumentException("Cannot read 0 bits.");
-    }
-    if (count > 32) {
-      throw new IllegalArgumentException("Bit count overflow: " + count);
+    public <T extends Enum<T>> T readEnum(Class<T> enumClass) throws IOException {
+        T[] enumConstants = enumClass.getEnumConstants();
+        int bitsCount = BitUtil.getNeededBitsCount(enumConstants.length);
+        return enumConstants[readBits(bitsCount)];
     }
 
-    int result = 0;
+    public String readString_UTF8(int maximumBytesCountBits) throws IOException {
+        int bytesCount = readBits(maximumBytesCountBits);
+        byte[] bytes = readBytes(bytesCount);
+        return new String(bytes, "UTF-8");
+    }
 
-    int remainingCount = count;
-    while (remainingCount > 0)
-    {
-      if (this.bits == 0) {
-        int b = this.in.read();
-        if (b < 0) {
-          throw new IOException("End of stream reached.");
+    public byte[] readBytes(int bytesCount) throws IOException {
+        byte[] bytes = new byte[bytesCount];
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i] = (byte) readBits(8);
         }
-        this.lastByte = b;
-        this.bits = 8;
-      }
-
-      int bitsToCopy = this.bits < remainingCount ? this.bits : remainingCount;
-
-      int sourceShift = this.bits - bitsToCopy;
-
-      int targetShift = remainingCount - bitsToCopy;
-
-      result |= this.lastByte >> sourceShift << targetShift;
-
-      remainingCount -= bitsToCopy;
-      this.bits -= bitsToCopy;
-
-      this.lastByte &= 255 >> 8 - this.bits;
-    }
-    return result;
-  }
-
-  public long readLongBits(int count) throws IOException {
-    if (count == 0) {
-      throw new IllegalArgumentException("Cannot read 0 bits.");
-    }
-    if (count > 64) {
-      throw new IllegalArgumentException("Bit count overflow: " + count);
+        return bytes;
     }
 
-    long result = 0L;
+    public float readFloat() throws IOException {
+        return Float.intBitsToFloat(readBits(32));
+    }
 
-    int remainingCount = count;
-    while (remainingCount > 0)
-    {
-      if (this.bits == 0) {
-        int b = this.in.read();
-        if (b < 0) {
-          throw new IOException("End of stream reached.");
+    public int readInteger() throws IOException {
+        return readBits(32);
+    }
+
+    public boolean readBoolean() throws IOException {
+        return (readBits(1) == 1);
+    }
+
+    public int readBits(int count) throws IOException {
+        if (count == 0) {
+            throw new IllegalArgumentException("Cannot read 0 bits.");
+        } else if (count > 32) {
+            throw new IllegalArgumentException("Bit count overflow: " + count);
         }
-        this.lastByte = b;
-        this.bits = 8;
-      }
 
-      int bitsToCopy = this.bits < remainingCount ? this.bits : remainingCount;
+        int result = 0;
 
-      int sourceShift = this.bits - bitsToCopy;
+        // While we still have bits remaining…
+        int remainingCount = count;
+        while (remainingCount > 0) {
+            // See if we need to refill the current read byte
+            if (bits == 0) {
+                int b = in.read();
+                if (b < 0) {
+                    throw new IOException("End of stream reached.");
+                }
+                lastByte = b;
+                bits = 8;
+            }
 
-      int targetShift = remainingCount - bitsToCopy;
+            // Copy the smaller of the two: remaining bits
+            // or bits left in lastByte.
+            int bitsToCopy = bits < remainingCount ? bits : remainingCount;
 
-      result |= this.lastByte >> sourceShift << targetShift;
+            // How much do we have to shift the read byte to just
+            // get the high bits we want?
+            int sourceShift = bits - bitsToCopy;
 
-      remainingCount -= bitsToCopy;
-      this.bits -= bitsToCopy;
+            // And how much do we have to shift those bits to graft
+            // them onto our result?
+            int targetShift = remainingCount - bitsToCopy;
 
-      this.lastByte &= 255 >> 8 - this.bits;
+            // Copy the bits
+            result |= (lastByte >> sourceShift) << targetShift;
+
+            // Keep track of how many bits we have left
+            remainingCount -= bitsToCopy;
+            bits -= bitsToCopy;
+
+            // Now we need to mask off the bits we just copied from
+            // lastByte.  Just keep the bits that are left.
+            lastByte = lastByte & (0xff >> (8 - bits));
+        }
+        return result;
     }
 
-    return result;
-  }
+    public long readLongBits(int count) throws IOException {
+        if (count == 0) {
+            throw new IllegalArgumentException("Cannot read 0 bits.");
+        } else if (count > 64) {
+            throw new IllegalArgumentException("Bit count overflow: " + count);
+        }
 
-  public void close() {
-    try {
-      this.in.close();
-    } catch (IOException ex) {
-      System.out.println("Error while closing bit stream: " + ex.toString());
+        long result = 0;
+
+        // While we still have bits remaining…
+        int remainingCount = count;
+        while (remainingCount > 0) {
+            // See if we need to refill the current read byte
+            if (bits == 0) {
+                int b = in.read();
+                if (b < 0) {
+                    throw new IOException("End of stream reached.");
+                }
+                lastByte = b;
+                bits = 8;
+            }
+
+            // Copy the smaller of the two: remaining bits
+            // or bits left in lastByte.
+            int bitsToCopy = bits < remainingCount ? bits : remainingCount;
+
+            // How much do we have to shift the read byte to just
+            // get the high bits we want?
+            int sourceShift = bits - bitsToCopy;
+
+            // And how much do we have to shift those bits to graft
+            // them onto our result?
+            int targetShift = remainingCount - bitsToCopy;
+
+            // Copy the bits
+            result |= ((long) lastByte >> sourceShift) << targetShift;
+
+            // Keep track of how many bits we have left
+            remainingCount -= bitsToCopy;
+            bits -= bitsToCopy;
+
+            // Now we need to mask off the bits we just copied from
+            // lastByte.  Just keep the bits that are left.
+            lastByte = lastByte & (0xff >> (8 - bits));
+        }
+
+        return result;
     }
-  }
+
+    public void close() {
+        try {
+            in.close();
+        } catch (IOException ex) {
+            System.out.println("Error while closing bit stream: " + ex.toString());
+        }
+    }
 }

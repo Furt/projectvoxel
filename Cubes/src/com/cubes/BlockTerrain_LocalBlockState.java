@@ -2,31 +2,30 @@ package com.cubes;
 
 public class BlockTerrain_LocalBlockState {
 
-    private BlockChunkControl chunk;
-    private Vector3Int localBlockLocation;
-
     public BlockTerrain_LocalBlockState(BlockChunkControl chunk, Vector3Int localBlockLocation) {
         this.chunk = chunk;
         this.localBlockLocation = localBlockLocation;
     }
+    private BlockChunkControl chunk;
+    private Vector3Int localBlockLocation;
 
     public BlockChunkControl getChunk() {
-        return this.chunk;
+        return chunk;
     }
 
     public Vector3Int getLocalBlockLocation() {
-        return this.localBlockLocation;
+        return localBlockLocation;
     }
 
     public BlockType getBlock() {
-        return this.chunk.getBlock(this.localBlockLocation);
+        return chunk.getBlock(localBlockLocation);
     }
 
     public void setBlock(Class<? extends Block> blockClass) {
-        this.chunk.setBlock(this.localBlockLocation, blockClass);
+        chunk.setBlock(localBlockLocation, blockClass);
     }
 
     public void removeBlock() {
-        this.chunk.removeBlock(this.localBlockLocation);
+        chunk.removeBlock(localBlockLocation);
     }
 }

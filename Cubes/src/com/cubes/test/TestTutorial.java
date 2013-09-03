@@ -1,58 +1,63 @@
 package com.cubes.test;
 
-import com.cubes.BlockTerrainControl;
-import com.cubes.Vector3Int;
-import com.cubes.test.blocks.Block_Grass;
-import com.cubes.test.blocks.Block_Stone;
-import com.cubes.test.blocks.Block_Wood;
+import com.cubes.*;
+import com.cubes.test.blocks.*;
 import com.jme3.app.SimpleApplication;
-import com.jme3.input.FlyByCamera;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TestTutorial extends SimpleApplication
-{
-  public static void main(String[] args)
-  {
-    Logger.getLogger("").setLevel(Level.SEVERE);
-    TestTutorial app = new TestTutorial();
-    app.start();
-  }
+public class TestTutorial extends SimpleApplication {
 
-  public TestTutorial() {
-    this.settings = new AppSettings(true);
-    this.settings.setWidth(1280);
-    this.settings.setHeight(720);
-    this.settings.setTitle("Cubes Demo - Tutorial");
-  }
+    public static void main(String[] args) {
+        Logger.getLogger("").setLevel(Level.SEVERE);
+        TestTutorial app = new TestTutorial();
+        app.start();
+    }
 
-  public void simpleInitApp()
-  {
-    CubesTestAssets.registerBlocks();
+    public TestTutorial() {
+        settings = new AppSettings(true);
+        settings.setWidth(1280);
+        settings.setHeight(720);
+        settings.setTitle("Cubes Demo - Tutorial");
+    }
 
-    BlockTerrainControl blockTerrain = new BlockTerrainControl(CubesTestAssets.getSettings(this), new Vector3Int(1, 1, 1));
+    @Override
+    public void simpleInitApp() {
+        CubesTestAssets.registerBlocks();
 
-    blockTerrain.setBlock(new Vector3Int(0, 0, 0), Block_Wood.class);
-    blockTerrain.setBlock(new Vector3Int(0, 0, 1), Block_Wood.class);
-    blockTerrain.setBlock(new Vector3Int(1, 0, 0), Block_Wood.class);
-    blockTerrain.setBlock(new Vector3Int(1, 0, 1), Block_Stone.class);
-    blockTerrain.setBlock(0, 0, 0, Block_Grass.class);
+        //This is your terrain, it contains the whole
+        //block world and offers methods to modify it
+        BlockTerrainControl blockTerrain = new BlockTerrainControl(CubesTestAssets.getSettings(this), new Vector3Int(1, 1, 1));
 
-    blockTerrain.setBlockArea(new Vector3Int(1, 1, 1), new Vector3Int(1, 3, 1), Block_Stone.class);
+        //To set a block, just specify the location and the block object
+        //(Existing blocks will be replaced)
+        blockTerrain.setBlock(new Vector3Int(0, 0, 0), Block_Wood.class);
+        blockTerrain.setBlock(new Vector3Int(0, 0, 1), Block_Wood.class);
+        blockTerrain.setBlock(new Vector3Int(1, 0, 0), Block_Wood.class);
+        blockTerrain.setBlock(new Vector3Int(1, 0, 1), Block_Stone.class);
+        blockTerrain.setBlock(0, 0, 0, Block_Grass.class); //For the lazy users :P
 
-    blockTerrain.removeBlock(new Vector3Int(1, 2, 1));
-    blockTerrain.removeBlock(new Vector3Int(1, 3, 1));
+        //You can place whole areas of blocks too: setBlockArea(location, size, block)
+        //(The specified block will be cloned each time)
+        //The following line will set 3 blocks on top of each other
+        //({1,1,1}, {1,2,3} and {1,3,1})
+        blockTerrain.setBlockArea(new Vector3Int(1, 1, 1), new Vector3Int(1, 3, 1), Block_Stone.class);
 
-    Node terrainNode = new Node();
-    terrainNode.addControl(blockTerrain);
-    this.rootNode.attachChild(terrainNode);
+        //Removing a block works in a similar way
+        blockTerrain.removeBlock(new Vector3Int(1, 2, 1));
+        blockTerrain.removeBlock(new Vector3Int(1, 3, 1));
 
-    this.cam.setLocation(new Vector3f(-10.0F, 10.0F, 16.0F));
-    this.cam.lookAtDirection(new Vector3f(1.0F, -0.56F, -1.0F), Vector3f.UNIT_Y);
-    this.flyCam.setMoveSpeed(50.0F);
-  }
+        //The terrain is a jME-Control, you can add it
+        //to a node of the scenegraph to display it
+        Node terrainNode = new Node();
+        terrainNode.addControl(blockTerrain);
+        rootNode.attachChild(terrainNode);
+
+        cam.setLocation(new Vector3f(-10, 10, 16));
+        cam.lookAtDirection(new Vector3f(1, -0.56f, -1), Vector3f.UNIT_Y);
+        flyCam.setMoveSpeed(50);
+    }
 }

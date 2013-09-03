@@ -6,23 +6,22 @@ import com.jme3.material.Material;
 
 public class CubesSettings {
 
+    public CubesSettings(Application application) {
+        assetManager = application.getAssetManager();
+    }
     private AssetManager assetManager;
-    private float blockSize = 3.0F;
+    private float blockSize = 3;
     private int chunkSizeX = 16;
     private int chunkSizeY = 256;
     private int chunkSizeZ = 16;
     private Material blockMaterial;
 
-    public CubesSettings(Application application) {
-        this.assetManager = application.getAssetManager();
-    }
-
     public AssetManager getAssetManager() {
-        return this.assetManager;
+        return assetManager;
     }
 
     public float getBlockSize() {
-        return this.blockSize;
+        return blockSize;
     }
 
     public void setBlockSize(float blockSize) {
@@ -30,7 +29,7 @@ public class CubesSettings {
     }
 
     public int getChunkSizeX() {
-        return this.chunkSizeX;
+        return chunkSizeX;
     }
 
     public void setChunkSizeX(int chunkSizeX) {
@@ -38,7 +37,7 @@ public class CubesSettings {
     }
 
     public int getChunkSizeY() {
-        return this.chunkSizeY;
+        return chunkSizeY;
     }
 
     public void setChunkSizeY(int chunkSizeY) {
@@ -46,7 +45,7 @@ public class CubesSettings {
     }
 
     public int getChunkSizeZ() {
-        return this.chunkSizeZ;
+        return chunkSizeZ;
     }
 
     public void setChunkSizeZ(int chunkSizeZ) {
@@ -54,11 +53,11 @@ public class CubesSettings {
     }
 
     public Material getBlockMaterial() {
-        return this.blockMaterial;
+        return blockMaterial;
     }
 
     public void setDefaultBlockMaterial(String textureFilePath) {
-        setBlockMaterial(new BlockChunk_Material(this.assetManager, textureFilePath));
+        setBlockMaterial(new BlockChunk_Material(assetManager, textureFilePath));
     }
 
     public void setBlockMaterial(Material blockMaterial) {

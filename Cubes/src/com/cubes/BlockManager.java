@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class BlockManager {
 
-    private static HashMap<Class<? extends Block>, BlockType> BLOCK_TYPES = new HashMap();
+    private static HashMap<Class<? extends Block>, BlockType> BLOCK_TYPES = new HashMap<Class<? extends Block>, BlockType>();
     private static BlockType[] TYPES_BLOCKS = new BlockType[256];
     private static byte nextBlockType = 1;
 
@@ -12,15 +12,15 @@ public class BlockManager {
         BlockType blockType = new BlockType(nextBlockType, skin);
         BLOCK_TYPES.put(blockClass, blockType);
         TYPES_BLOCKS[nextBlockType] = blockType;
-        nextBlockType = (byte) (nextBlockType + 1);
+        nextBlockType++;
     }
 
     public static BlockType getType(Class<? extends Block> blockClass) {
-        return (BlockType) BLOCK_TYPES.get(blockClass);
+        return BLOCK_TYPES.get(blockClass);
     }
 
     public static Class<? extends Block> getClass(byte type) {
-        return (Class) Util.getHashKeyByValue(BLOCK_TYPES, getType(type));
+        return Util.getHashKeyByValue(BLOCK_TYPES, getType(type));
     }
 
     public static BlockType getType(byte type) {

@@ -1,7 +1,9 @@
 package com.cubes.test.blocks;
 
-import com.cubes.Block;
+import com.cubes.*;
 
-public class Block_Brick extends Block
-{
+public class Block_Brick extends Block {
+
+    public Block_Brick() {
+    }
 }

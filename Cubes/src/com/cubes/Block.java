@@ -5,15 +5,15 @@ public class Block {
     private BlockType type;
 
     public Block() {
-        this.type = BlockManager.getType(getClass());
-    }
-
-    public BlockType getType() {
-        return this.type;
+        type = BlockManager.getType(getClass());
     }
 
     public static enum Face {
 
-        Top, Bottom, Left, Right, Front, Back;
+        Top, Bottom, Left, Right, Front, Back
+    };
+
+    public BlockType getType() {
+        return type;
     }
 }

@@ -4,89 +4,115 @@ import java.util.Random;
 
 public class Noise {
 
-    private Random rand_;
-    float roughness_;
-    private float[][] grid_;
-
+    /**
+     * Generate a noise source based upon the midpoint displacement fractal.
+     *
+     * @param rand The random number generator
+     * @param roughness a roughness parameter
+     * @param width the width of the grid
+     * @param height the height of the grid
+     */
     public Noise(Random rand, float roughness, int width, int height) {
-        this.roughness_ = (roughness / width);
-        this.grid_ = new float[width][height];
-        this.rand_ = (rand == null ? new Random() : rand);
+        roughness_ = roughness / width;
+        grid_ = new float[width][height];
+        rand_ = ((rand == null) ? new Random() : rand);
         initialise();
     }
+    /**
+     * Source of entropy
+     */
+    private Random rand_;
+    /**
+     * Amount of roughness
+     */
+    float roughness_;
+    /**
+     * Plasma fractal grid
+     */
+    private float[][] grid_;
 
     public void initialise() {
-        int xh = this.grid_.length - 1;
-        int yh = this.grid_[0].length - 1;
-
-        this.grid_[0][0] = (this.rand_.nextFloat() - 0.5F);
-        this.grid_[0][yh] = (this.rand_.nextFloat() - 0.5F);
-        this.grid_[xh][0] = (this.rand_.nextFloat() - 0.5F);
-        this.grid_[xh][yh] = (this.rand_.nextFloat() - 0.5F);
-
+        int xh = (grid_.length - 1);
+        int yh = (grid_[0].length - 1);
+        //Set the corner points
+        grid_[0][0] = (rand_.nextFloat() - 0.5f);
+        grid_[0][yh] = (rand_.nextFloat() - 0.5f);
+        grid_[xh][0] = (rand_.nextFloat() - 0.5f);
+        grid_[xh][yh] = (rand_.nextFloat() - 0.5f);
+        //Generate the fractal
         generate(0, 0, xh, yh);
     }
 
+    //Generate the fractal
     private void generate(int xl, int yl, int xh, int yh) {
-        int xm = (xl + xh) / 2;
-        int ym = (yl + yh) / 2;
+        int xm = ((xl + xh) / 2);
+        int ym = ((yl + yh) / 2);
         if ((xl == xm) && (yl == ym)) {
             return;
         }
-        this.grid_[xm][yl] = (0.5F * (this.grid_[xl][yl] + this.grid_[xh][yl]));
-        this.grid_[xm][yh] = (0.5F * (this.grid_[xl][yh] + this.grid_[xh][yh]));
-        this.grid_[xl][ym] = (0.5F * (this.grid_[xl][yl] + this.grid_[xl][yh]));
-        this.grid_[xh][ym] = (0.5F * (this.grid_[xh][yl] + this.grid_[xh][yh]));
-        float v = roughen(0.5F * (this.grid_[xm][yl] + this.grid_[xm][yh]), xl + yl, yh + xh);
-        this.grid_[xm][ym] = v;
-        this.grid_[xm][yl] = roughen(this.grid_[xm][yl], xl, xh);
-        this.grid_[xm][yh] = roughen(this.grid_[xm][yh], xl, xh);
-        this.grid_[xl][ym] = roughen(this.grid_[xl][ym], yl, yh);
-        this.grid_[xh][ym] = roughen(this.grid_[xh][ym], yl, yh);
+        grid_[xm][yl] = (0.5f * (grid_[xl][yl] + grid_[xh][yl]));
+        grid_[xm][yh] = (0.5f * (grid_[xl][yh] + grid_[xh][yh]));
+        grid_[xl][ym] = (0.5f * (grid_[xl][yl] + grid_[xl][yh]));
+        grid_[xh][ym] = (0.5f * (grid_[xh][yl] + grid_[xh][yh]));
+        float v = roughen(0.5f * (grid_[xm][yl] + grid_[xm][yh]), xl + yl, yh + xh);
+        grid_[xm][ym] = v;
+        grid_[xm][yl] = roughen(grid_[xm][yl], xl, xh);
+        grid_[xm][yh] = roughen(grid_[xm][yh], xl, xh);
+        grid_[xl][ym] = roughen(grid_[xl][ym], yl, yh);
+        grid_[xh][ym] = roughen(grid_[xh][ym], yl, yh);
         generate(xl, yl, xm, ym);
         generate(xm, yl, xh, ym);
         generate(xl, ym, xm, yh);
         generate(xm, ym, xh, yh);
     }
 
+    //Add a suitable amount of random displacement to a point
     private float roughen(float v, int l, int h) {
-        return (float) (v + this.roughness_ * (this.rand_.nextGaussian() * (h - l)));
+        return (float) (v + (roughness_ * (rand_.nextGaussian() * (h - l))));
     }
 
+    /**
+     * Dump out as a CSV
+     */
     public void printAsCSV() {
-        for (int i = 0; i < this.grid_.length; i++) {
-            for (int j = 0; j < this.grid_[0].length; j++) {
-                System.out.print(this.grid_[i][j]);
+        for (int i = 0; i < grid_.length; i++) {
+            for (int j = 0; j < grid_[0].length; j++) {
+                System.out.print(grid_[i][j]);
                 System.out.print(",");
             }
             System.out.println();
         }
     }
 
+    /**
+     * Convert to a Boolean array
+     *
+     * @return the boolean array
+     */
     public boolean[][] toBooleans() {
-        int w = this.grid_.length;
-        int h = this.grid_[0].length;
+        int w = grid_.length;
+        int h = grid_[0].length;
         boolean[][] ret = new boolean[w][h];
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                ret[i][j] = (this.grid_[i][j] < 0.0F);
+                ret[i][j] = grid_[i][j] < 0;
             }
         }
         return ret;
     }
 
     public float[][] getGrid() {
-        return this.grid_;
+        return grid_;
     }
 
     public float getGridValue(int x, int y) {
-        return this.grid_[x][y];
+        return grid_[x][y];
     }
 
     public float getMinimum() {
-        float minimum = 3.4028235E+38F;
-        for (int i = 0; i < this.grid_.length; i++) {
-            float[] row = this.grid_[i];
+        float minimum = Float.MAX_VALUE;
+        for (int i = 0; i < grid_.length; i++) {
+            float[] row = grid_[i];
             for (int r = 0; r < row.length; r++) {
                 if (row[r] < minimum) {
                     minimum = row[r];
@@ -97,9 +123,9 @@ public class Noise {
     }
 
     public float getMaximum() {
-        float maximum = 1.4E-45F;
-        for (int i = 0; i < this.grid_.length; i++) {
-            float[] row = this.grid_[i];
+        float maximum = Float.MIN_VALUE;
+        for (int i = 0; i < grid_.length; i++) {
+            float[] row = grid_[i];
             for (int r = 0; r < row.length; r++) {
                 if (row[r] > maximum) {
                     maximum = row[r];

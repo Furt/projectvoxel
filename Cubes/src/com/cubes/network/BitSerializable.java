@@ -2,10 +2,9 @@ package com.cubes.network;
 
 import java.io.IOException;
 
-public abstract interface BitSerializable
-{
-  public abstract void write(BitOutputStream paramBitOutputStream);
+public interface BitSerializable {
 
-  public abstract void read(BitInputStream paramBitInputStream)
-    throws IOException;
+    public abstract void write(BitOutputStream outputStream);
+
+    public abstract void read(BitInputStream inputStream) throws IOException;
 }

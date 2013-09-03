@@ -1,17 +1,7 @@
 package com.cubes.test;
 
-import com.cubes.Block;
-import com.cubes.BlockChunkControl;
-import com.cubes.BlockManager;
-import com.cubes.BlockSkin;
-import com.cubes.BlockSkin_TextureLocation;
-import com.cubes.CubesSettings;
-import com.cubes.Vector3Int;
-import com.cubes.test.blocks.Block_Brick;
-import com.cubes.test.blocks.Block_Grass;
-import com.cubes.test.blocks.Block_Stone;
-import com.cubes.test.blocks.Block_Water;
-import com.cubes.test.blocks.Block_Wood;
+import com.cubes.*;
+import com.cubes.test.blocks.*;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
@@ -26,7 +16,7 @@ import java.util.List;
 
 public class CubesTestAssets {
 
-    private static final Vector3f lightDirection = new Vector3f(-0.8F, -1.0F, -0.8F).normalizeLocal();
+    private static final Vector3f lightDirection = new Vector3f(-0.8f, -1, -0.8f).normalizeLocal();
 
     public static CubesSettings getSettings(Application application) {
         CubesSettings settings = new CubesSettings(application);
@@ -35,14 +25,18 @@ public class CubesTestAssets {
     }
 
     public static void registerBlocks() {
-        BlockManager.register(Block_Grass.class, new BlockSkin(new BlockSkin_TextureLocation[]{new BlockSkin_TextureLocation(0, 0), new BlockSkin_TextureLocation(1, 0), new BlockSkin_TextureLocation(2, 0)}, false) {
+        BlockManager.register(Block_Grass.class, new BlockSkin(new BlockSkin_TextureLocation[]{
+                    new BlockSkin_TextureLocation(0, 0),
+                    new BlockSkin_TextureLocation(1, 0),
+                    new BlockSkin_TextureLocation(2, 0),}, false) {
             @Override
             protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                 if (chunk.isBlockOnSurface(blockLocation)) {
-                    switch (face.ordinal()) {
-                        case 1:
+                    switch (face) {
+                        case Top:
                             return 0;
-                        case 2:
+
+                        case Bottom:
                             return 2;
                     }
                     return 1;
@@ -50,8 +44,14 @@ public class CubesTestAssets {
                 return 2;
             }
         });
-        BlockManager.register(Block_Wood.class, new BlockSkin(new BlockSkin_TextureLocation[]{new BlockSkin_TextureLocation(4, 0), new BlockSkin_TextureLocation(4, 0), new BlockSkin_TextureLocation(3, 0), new BlockSkin_TextureLocation(3, 0), new BlockSkin_TextureLocation(3, 0), new BlockSkin_TextureLocation(3, 0)}, false));
-
+        BlockManager.register(Block_Wood.class, new BlockSkin(new BlockSkin_TextureLocation[]{
+                    new BlockSkin_TextureLocation(4, 0),
+                    new BlockSkin_TextureLocation(4, 0),
+                    new BlockSkin_TextureLocation(3, 0),
+                    new BlockSkin_TextureLocation(3, 0),
+                    new BlockSkin_TextureLocation(3, 0),
+                    new BlockSkin_TextureLocation(3, 0)
+                }, false));
         BlockManager.register(Block_Stone.class, new BlockSkin(new BlockSkin_TextureLocation(9, 0), false));
         BlockManager.register(Block_Water.class, new BlockSkin(new BlockSkin_TextureLocation(0, 1), true));
         BlockManager.register(Block_Brick.class, new BlockSkin(new BlockSkin_TextureLocation(11, 0), false));
@@ -60,13 +60,13 @@ public class CubesTestAssets {
     public static void initializeEnvironment(SimpleApplication simpleApplication) {
         DirectionalLight directionalLight = new DirectionalLight();
         directionalLight.setDirection(lightDirection);
-        directionalLight.setColor(new ColorRGBA(1.0F, 1.0F, 1.0F, 1.0F));
+        directionalLight.setColor(new ColorRGBA(1f, 1f, 1f, 1.0f));
         simpleApplication.getRootNode().addLight(directionalLight);
         simpleApplication.getRootNode().attachChild(SkyFactory.createSky(simpleApplication.getAssetManager(), "Textures/cubes/sky.jpg", true));
 
         PssmShadowRenderer pssmShadowRenderer = new PssmShadowRenderer(simpleApplication.getAssetManager(), 2048, 3);
         pssmShadowRenderer.setDirection(lightDirection);
-        pssmShadowRenderer.setShadowIntensity(0.3F);
+        pssmShadowRenderer.setShadowIntensity(0.3f);
         simpleApplication.getViewPort().addProcessor(pssmShadowRenderer);
     }
 
@@ -76,10 +76,10 @@ public class CubesTestAssets {
     }
 
     private static FilterPostProcessor getFilterPostProcessor(SimpleApplication simpleApplication) {
-        List sceneProcessors = simpleApplication.getViewPort().getProcessors();
+        List<SceneProcessor> sceneProcessors = simpleApplication.getViewPort().getProcessors();
         for (int i = 0; i < sceneProcessors.size(); i++) {
-            SceneProcessor sceneProcessor = (SceneProcessor) sceneProcessors.get(i);
-            if ((sceneProcessor instanceof FilterPostProcessor)) {
+            SceneProcessor sceneProcessor = sceneProcessors.get(i);
+            if (sceneProcessor instanceof FilterPostProcessor) {
                 return (FilterPostProcessor) sceneProcessor;
             }
         }

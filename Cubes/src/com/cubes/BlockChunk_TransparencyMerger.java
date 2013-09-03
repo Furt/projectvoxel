@@ -1,24 +1,27 @@
 package com.cubes;
 
-public class BlockChunk_TransparencyMerger
-        implements BlockChunk_MeshMerger {
+import com.cubes.Block.Face;
 
-    public static final BlockChunk_TransparencyMerger OPAQUE = new BlockChunk_TransparencyMerger(false);
-    public static final BlockChunk_TransparencyMerger TRANSPARENT = new BlockChunk_TransparencyMerger(true);
-    private boolean isGeometryTransparent;
+public class BlockChunk_TransparencyMerger implements BlockChunk_MeshMerger {
 
     private BlockChunk_TransparencyMerger(boolean isGeometryTransparent) {
         this.isGeometryTransparent = isGeometryTransparent;
     }
+    public static final BlockChunk_TransparencyMerger OPAQUE = new BlockChunk_TransparencyMerger(false);
+    public static final BlockChunk_TransparencyMerger TRANSPARENT = new BlockChunk_TransparencyMerger(true);
+    private boolean isGeometryTransparent;
 
-    public boolean shouldFaceBeAdded(BlockChunkControl chunk, Vector3Int location, Block.Face face) {
+    @Override
+    public boolean shouldFaceBeAdded(BlockChunkControl chunk, Vector3Int location, Face face) {
         BlockType block = chunk.getBlock(location);
-        if (block.getSkin().isTransparent() == this.isGeometryTransparent) {
+        if (block.getSkin().isTransparent() == isGeometryTransparent) {
             BlockType neighborBlock = chunk.getNeighborBlock_Local(location, face);
             if (neighborBlock != null) {
-                return block.getSkin().isTransparent() != neighborBlock.getSkin().isTransparent();
+                if (block.getSkin().isTransparent() != neighborBlock.getSkin().isTransparent()) {
+                    return true;
+                }
+                return false;
             }
-
             return true;
         }
         return false;
