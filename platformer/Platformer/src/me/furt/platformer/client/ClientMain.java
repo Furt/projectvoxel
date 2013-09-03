@@ -65,7 +65,6 @@ public class ClientMain extends SimpleApplication {
                 client.send(new ChatMessages(command, playerName, msg));
             }
         };
-        flyCam.setEnabled(true);
         skyDome = new SkyDome(assetManager, cam);
         skyDome.setEnabled(true);
         Node sky = new Node();
