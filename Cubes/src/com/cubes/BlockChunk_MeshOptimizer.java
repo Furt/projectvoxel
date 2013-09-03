@@ -117,7 +117,7 @@ public class BlockChunk_MeshOptimizer {
     }
 
     private static Vector2f getTextureCoordinates(BlockSkin_TextureLocation textureLocation, int xUnitsToAdd, int yUnitsToAdd) {
-        float textureCount = 16;
+        float textureCount = 8;
         float textureUnit = 1f / textureCount;
         float x = (((textureLocation.getColumn() + xUnitsToAdd) * textureUnit));
         float y = ((((-1 * textureLocation.getRow()) + (yUnitsToAdd - 1)) * textureUnit) + 1);
