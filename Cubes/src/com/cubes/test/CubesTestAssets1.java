@@ -19,8 +19,10 @@ public class CubesTestAssets1 {
     private static final Vector3f lightDirection = new Vector3f(-0.8f, -1, -0.8f).normalizeLocal();
 
     public static CubesSettings getSettings(Application application) {
+        CubesSettings.setRowCount(8);
         CubesSettings settings = new CubesSettings(application);
         settings.setDefaultBlockMaterial("Textures/cubes/texturepack.png");
+        settings.setBlockSize(4);
         return settings;
     }
 
@@ -58,7 +60,6 @@ public class CubesTestAssets1 {
     }
 
     public static void initializeEnvironment(SimpleApplication simpleApplication) {
-        CubesSettings.setRowCount(8);
         DirectionalLight directionalLight = new DirectionalLight();
         directionalLight.setDirection(lightDirection);
         directionalLight.setColor(new ColorRGBA(1f, 1f, 1f, 1.0f));
