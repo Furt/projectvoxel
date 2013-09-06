@@ -20,36 +20,45 @@ public class CubesTestAssets1 {
 
     public static CubesSettings getSettings(Application application) {
         CubesSettings settings = new CubesSettings(application);
-        settings.setDefaultBlockMaterial("Textures/cubes/test.png");
+        settings.setDefaultBlockMaterial("Textures/cubes/texturepack.png");
         return settings;
     }
 
     public static void registerBlocks() {
         BlockManager.register(Block_Grass.class, new BlockSkin(new BlockSkin_TextureLocation[]{
                     new BlockSkin_TextureLocation(0, 0),
-                    new BlockSkin_TextureLocation(1, 0),}, false) {
+                    new BlockSkin_TextureLocation(1, 0),
+                    new BlockSkin_TextureLocation(2, 0),}, false) {
             @Override
             protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                 if (chunk.isBlockOnSurface(blockLocation)) {
                     switch (face) {
                         case Top:
-                            return 0;
+                            return 1;
 
                         case Bottom:
-                            return 1;
+                            return 0;
                     }
-                    return 0;
+                    return 2;
                 }
-                return 1;
+                return 0;
             }
         });
-        BlockManager.register(Block_Wood.class, new BlockSkin(new BlockSkin_TextureLocation(7, 0), false));
-        BlockManager.register(Block_Stone.class, new BlockSkin(new BlockSkin_TextureLocation(4, 0), false));
-        BlockManager.register(Block_Water.class, new BlockSkin(new BlockSkin_TextureLocation(0, 0), true));
-        BlockManager.register(Block_Brick.class, new BlockSkin(new BlockSkin_TextureLocation(3, 0), false));
+        //BlockManager.register(Block_Leaf.class, new BlockSkin(new BlockSkin_TextureLocation(2, 1), false));
+        //BlockManager.register(Block_Log.class, new BlockSkin(new BlockSkin_TextureLocation(3, 1), false));
+        BlockManager.register(Block_Stone.class, new BlockSkin(new BlockSkin_TextureLocation(5, 0), false));
+        BlockManager.register(Block_Plank.class, new BlockSkin(new BlockSkin_TextureLocation(7, 0), false));
+        BlockManager.register(Block_Dirt.class, new BlockSkin(new BlockSkin_TextureLocation(0, 0), false));
+        BlockManager.register(Block_Sand.class, new BlockSkin(new BlockSkin_TextureLocation(3, 0), false));
+        BlockManager.register(Block_Mud.class, new BlockSkin(new BlockSkin_TextureLocation(4, 0), false));
+        BlockManager.register(Block_Cobble.class, new BlockSkin(new BlockSkin_TextureLocation(6, 0), false));
+        BlockManager.register(Block_Ice.class, new BlockSkin(new BlockSkin_TextureLocation(1, 1), true));
+        BlockManager.register(Block_Water.class, new BlockSkin(new BlockSkin_TextureLocation(0, 1), true));
+        //BlockManager.register(Block_Brick.class, new BlockSkin(new BlockSkin_TextureLocation(2, 1), false));
     }
 
     public static void initializeEnvironment(SimpleApplication simpleApplication) {
+        CubesSettings.setRowCount(8);
         DirectionalLight directionalLight = new DirectionalLight();
         directionalLight.setDirection(lightDirection);
         directionalLight.setColor(new ColorRGBA(1f, 1f, 1f, 1.0f));
