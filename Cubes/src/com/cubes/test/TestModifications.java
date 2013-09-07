@@ -42,7 +42,7 @@ public class TestModifications extends SimpleApplication {
                 }
                 int additionalHeight = (int) (Math.random() * 4);
                 for (int y = 0; y < additionalHeight; y++) {
-                    Class<? extends Block> blockClass = ((y > 0) ? Block_Grass.class : Block_Wood.class);
+                    Class<? extends Block> blockClass = ((y > 0) ? Block_Grass.class : Block_Log.class);
                     blockTerrain.setBlock(x, (groundHeight + y), z, blockClass);
                 }
             }

@@ -89,7 +89,7 @@ public class TestPicking extends SimpleApplication implements ActionListener {
         if (action.equals("set_block") && value) {
             Vector3Int blockLocation = getCurrentPointedBlockLocation(true);
             if (blockLocation != null) {
-                blockTerrain.setBlock(blockLocation, Block_Wood.class);
+                blockTerrain.setBlock(blockLocation, Block_Log.class);
             }
         } else if (action.equals("remove_block") && value) {
             Vector3Int blockLocation = getCurrentPointedBlockLocation(false);

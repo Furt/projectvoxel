@@ -44,7 +44,7 @@ public class CubesTestAssets {
                 return 2;
             }
         });
-        BlockManager.register(Block_Wood.class, new BlockSkin(new BlockSkin_TextureLocation[]{
+        BlockManager.register(Block_Log.class, new BlockSkin(new BlockSkin_TextureLocation[]{
                     new BlockSkin_TextureLocation(4, 0),
                     new BlockSkin_TextureLocation(4, 0),
                     new BlockSkin_TextureLocation(3, 0),

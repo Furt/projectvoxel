@@ -46,8 +46,15 @@ public class CubesTestAssets1 {
                 return 0;
             }
         });
-        //BlockManager.register(Block_Leaf.class, new BlockSkin(new BlockSkin_TextureLocation(2, 1), false));
-        //BlockManager.register(Block_Log.class, new BlockSkin(new BlockSkin_TextureLocation(3, 1), false));
+        BlockManager.register(Block_Leaves.class, new BlockSkin(new BlockSkin_TextureLocation(4, 1), false));
+        BlockManager.register(Block_Log.class, new BlockSkin(new BlockSkin_TextureLocation[]{
+                    new BlockSkin_TextureLocation(3, 1),
+                    new BlockSkin_TextureLocation(3, 1),
+                    new BlockSkin_TextureLocation(2, 1),
+                    new BlockSkin_TextureLocation(2, 1),
+                    new BlockSkin_TextureLocation(2, 1),
+                    new BlockSkin_TextureLocation(2, 1)
+                }, false));
         BlockManager.register(Block_Stone.class, new BlockSkin(new BlockSkin_TextureLocation(5, 0), false));
         BlockManager.register(Block_Plank.class, new BlockSkin(new BlockSkin_TextureLocation(7, 0), false));
         BlockManager.register(Block_Dirt.class, new BlockSkin(new BlockSkin_TextureLocation(0, 0), false));

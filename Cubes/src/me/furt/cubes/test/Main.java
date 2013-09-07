@@ -6,7 +6,7 @@ import com.cubes.Vector3Int;
 import com.cubes.test.CubesTestAssets;
 import com.cubes.test.blocks.Block_Grass;
 import com.cubes.test.blocks.Block_Stone;
-import com.cubes.test.blocks.Block_Wood;
+import com.cubes.test.blocks.Block_Log;
 import com.jme3.app.SimpleApplication;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
@@ -33,9 +33,9 @@ public class Main extends SimpleApplication {
         cubeSettings = CubesTestAssets.getSettings(this);
         blockTerrain = new BlockTerrainControl(cubeSettings, new Vector3Int(1, 1, 1));
 
-        blockTerrain.setBlock(new Vector3Int(0, 0, 0), Block_Wood.class);
-        blockTerrain.setBlock(new Vector3Int(0, 0, 1), Block_Wood.class);
-        blockTerrain.setBlock(new Vector3Int(1, 0, 0), Block_Wood.class);
+        blockTerrain.setBlock(new Vector3Int(0, 0, 0), Block_Log.class);
+        blockTerrain.setBlock(new Vector3Int(0, 0, 1), Block_Log.class);
+        blockTerrain.setBlock(new Vector3Int(1, 0, 0), Block_Log.class);
         blockTerrain.setBlock(new Vector3Int(1, 0, 1), Block_Stone.class);
         blockTerrain.setBlock(0, 0, 0, Block_Grass.class);
 

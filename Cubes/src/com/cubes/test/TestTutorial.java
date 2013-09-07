@@ -34,9 +34,9 @@ public class TestTutorial extends SimpleApplication {
 
         //To set a block, just specify the location and the block object
         //(Existing blocks will be replaced)
-        blockTerrain.setBlock(new Vector3Int(0, 0, 0), Block_Wood.class);
-        blockTerrain.setBlock(new Vector3Int(0, 0, 1), Block_Wood.class);
-        blockTerrain.setBlock(new Vector3Int(1, 0, 0), Block_Wood.class);
+        blockTerrain.setBlock(new Vector3Int(0, 0, 0), Block_Log.class);
+        blockTerrain.setBlock(new Vector3Int(0, 0, 1), Block_Log.class);
+        blockTerrain.setBlock(new Vector3Int(1, 0, 0), Block_Log.class);
         blockTerrain.setBlock(new Vector3Int(1, 0, 1), Block_Stone.class);
         blockTerrain.setBlock(0, 0, 0, Block_Grass.class); //For the lazy users :P
 

@@ -9,6 +9,8 @@ import com.cubes.Vector3Int;
 import com.cubes.test.blocks.Block_Cobble;
 import com.cubes.test.blocks.Block_Grass;
 import com.cubes.test.blocks.Block_Ice;
+import com.cubes.test.blocks.Block_Leaves;
+import com.cubes.test.blocks.Block_Log;
 import com.cubes.test.blocks.Block_Mud;
 import com.cubes.test.blocks.Block_Plank;
 import com.cubes.test.blocks.Block_Stone;
@@ -70,6 +72,10 @@ public class TestTextures extends SimpleApplication {
         blockTerrain.setBlockArea(new Vector3Int(3, 23, 12), new Vector3Int(6, 1, 6), Block_Mud.class);
         // water layer
         blockTerrain.setBlockArea(new Vector3Int(3, 24, 12), new Vector3Int(6, 1, 6), Block_Water.class);
+        // did someone say tree?
+        blockTerrain.setBlockArea(new Vector3Int(3, 25, 20), new Vector3Int(1, 5, 1), Block_Log.class);
+        blockTerrain.setBlockArea(new Vector3Int(2, 28, 19), new Vector3Int(3, 2, 3), Block_Leaves.class);
+        blockTerrain.setBlock(3, 30, 20, Block_Leaves.class);
         //blockTerrain.setBlock(0, 0, 0, Block_Grass.class); //For the lazy users :P
         //blockTerrain.setBlockArea(new Vector3Int(1, 1, 1), new Vector3Int(1, 3, 1), Block_Stone.class);
         //Removing a block works in a similar way
