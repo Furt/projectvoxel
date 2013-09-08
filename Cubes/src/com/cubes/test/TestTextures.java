@@ -38,7 +38,7 @@ public class TestTextures extends SimpleApplication {
         settings = new AppSettings(true);
         settings.setWidth(1280);
         settings.setHeight(720);
-        settings.setTitle("Jerry's Textures Demo");
+        settings.setTitle("Jerry's Texture Demo");
     }
 
     @Override

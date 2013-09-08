@@ -63,7 +63,8 @@ public class CubesTestAssets1 {
         BlockManager.register(Block_Cobble.class, new BlockSkin(new BlockSkin_TextureLocation(6, 0), false));
         BlockManager.register(Block_Ice.class, new BlockSkin(new BlockSkin_TextureLocation(1, 1), true));
         BlockManager.register(Block_Water.class, new BlockSkin(new BlockSkin_TextureLocation(0, 1), true));
-        //BlockManager.register(Block_Brick.class, new BlockSkin(new BlockSkin_TextureLocation(2, 1), false));
+        //BlockManager.register(Block_Glass.class, new BlockSkin(new BlockSkin_TextureLocation(4, 1), true));
+        //BlockManager.register(Block_Lava.class, new BlockSkin(new BlockSkin_TextureLocation(5, 1), true));
     }
 
     public static void initializeEnvironment(SimpleApplication simpleApplication) {
