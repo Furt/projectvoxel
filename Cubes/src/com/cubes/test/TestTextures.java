@@ -7,8 +7,10 @@ package com.cubes.test;
 import com.cubes.BlockTerrainControl;
 import com.cubes.Vector3Int;
 import com.cubes.test.blocks.Block_Cobble;
+import com.cubes.test.blocks.Block_Glass;
 import com.cubes.test.blocks.Block_Grass;
 import com.cubes.test.blocks.Block_Ice;
+import com.cubes.test.blocks.Block_Lava;
 import com.cubes.test.blocks.Block_Leaves;
 import com.cubes.test.blocks.Block_Log;
 import com.cubes.test.blocks.Block_Mud;
@@ -55,6 +57,7 @@ public class TestTextures extends SimpleApplication {
         //Hmm cobblestone house with plank flooring you say??
         //left side
         blockTerrain.setBlockArea(new Vector3Int(3, 25, 3), new Vector3Int(6, 3, 1), Block_Cobble.class);
+        blockTerrain.setBlockArea(new Vector3Int(5, 26, 3), new Vector3Int(2, 1, 1), Block_Glass.class);
         //back side
         blockTerrain.setBlockArea(new Vector3Int(8, 25, 3), new Vector3Int(1, 3, 6), Block_Cobble.class);
         //right side
@@ -67,7 +70,10 @@ public class TestTextures extends SimpleApplication {
         blockTerrain.setBlockArea(new Vector3Int(4, 28, 4), new Vector3Int(4, 1, 4), Block_Ice.class);
         // floor
         blockTerrain.setBlockArea(new Vector3Int(4, 24, 4), new Vector3Int(4, 1, 4), Block_Plank.class);
-        
+        // Lava Pit
+        blockTerrain.setBlockArea(new Vector3Int(10, 24, 12), new Vector3Int(6, 1, 6), Block_Lava.class);
+        // Stone layer
+        blockTerrain.setBlockArea(new Vector3Int(10, 23, 12), new Vector3Int(6, 1, 6), Block_Stone.class);
         // Pond floor
         blockTerrain.setBlockArea(new Vector3Int(3, 23, 12), new Vector3Int(6, 1, 6), Block_Mud.class);
         // water layer
