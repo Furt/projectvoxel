@@ -12,6 +12,9 @@
             <extension file="macapp-impl.xml" id="macapp">
                 <dependency dependsOn="-mac-app" target="jar"/>
             </extension>
+            <extension file="obfuscate-impl.xml" id="obfuscate">
+                <dependency dependsOn="-obfuscate" target="-post-jar"/>
+            </extension>
             <extension file="linuxlauncher-impl.xml" id="linuxlauncher">
                 <dependency dependsOn="-linux-launcher" target="jar"/>
             </extension>
