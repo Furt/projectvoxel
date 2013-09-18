@@ -4,17 +4,16 @@
  */
 package me.furt.projectv.server;
 
-import com.jme3.app.SimpleApplication;
+import me.furt.projectv.event.EventManager;
 
 /**
  *
  * @author Terry
  */
-public class Server extends SimpleApplication {
-
-    @Override
-    public void simpleInitApp() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+public class Server {
+    public EventManager eventManager;
     
+    public EventManager getEventManager() {
+        return eventManager;
+    }
 }
