@@ -12,10 +12,10 @@ public class Main {
     public static void main(String[] args) {
         for (String s : args) {
             if (s.equalsIgnoreCase("-client")) {
-                Client app = new Client();
+                GameClient app = new GameClient();
                 app.start();
             } else if(s.equalsIgnoreCase("-server")) {
-                Server app = new Server();
+                GameServer app = new GameServer();
                 app.start();
             }
         }
