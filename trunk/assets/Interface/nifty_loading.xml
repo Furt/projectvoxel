@@ -3,7 +3,7 @@
     <useStyles filename="nifty-default-styles.xml" />
     <useControls filename="nifty-default-controls.xml" />
  
-    <controlDefinition name = "loadingbar" controller = "me.furt.projectv.test.LoadingText">
+    <controlDefinition name = "loadingbar" controller = "jme3test.TestLoadingScreen1">
         <image filename="Interface/border.png" childLayout="absolute" 
                imageMode="resize:15,2,15,15,15,2,15,2,15,2,15,15">
             <image id="progressbar" x="0" y="0" filename="Interface/inner.png" width="32px" height="100%"
@@ -11,7 +11,7 @@
         </image>
     </controlDefinition>
  
-    <screen id="start" controller = "me.furt.projectv.test.LoadingText">
+    <screen id="start" controller = "jme3test.TestLoadingScreen1">
         <layer id="layer" childLayout="center">
             <panel id = "panel2" height="30%" width="50%" align="center" valign="center" childLayout="vertical"
                    visibleToMouse="true">
@@ -22,7 +22,7 @@
         </layer>
     </screen>
  
-    <screen id="loadlevel" controller = "me.furt.projectv.test.LoadingText">
+    <screen id="loadlevel" controller = "jme3test.TestLoadingScreen1">
         <layer id="loadinglayer" childLayout="center" backgroundColor="#000000">
             <panel id = "loadingpanel" childLayout="vertical" align="center" valign="center" height="32px" width="70%">
                 <control name="loadingbar" align="center" valign="center" width="100%" height="100%" />
@@ -32,7 +32,7 @@
         </layer>
     </screen>
  
-    <screen id="end" controller = "me.furt.projectv.test.LoadingText">
+    <screen id="end" controller = "jme3test.TestLoadingScreen1">
     </screen>
  
 </nifty>
