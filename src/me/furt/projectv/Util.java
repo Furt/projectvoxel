@@ -5,14 +5,16 @@
 package me.furt.projectv;
 
 import com.jme3.network.serializing.Serializer;
-import me.furt.projectv.network.messages.HandshakeMessage;
+import me.furt.projectv.network.messages.LoginMessage;
 
 /**
  *
  * @author Terry
  */
-public class Util {
-    public static void registerSerializers() {
-        Serializer.registerClass(HandshakeMessage.class);
+class Util {
+
+    static void registerSerializers() {
+       Serializer.registerClass(LoginMessage.class);
     }
+    
 }

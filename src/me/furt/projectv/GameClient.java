@@ -1,6 +1,7 @@
 package me.furt.projectv;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
@@ -27,6 +28,8 @@ import javax.imageio.ImageIO;
 public class GameClient extends SimpleApplication implements ScreenController {
 
     private static GameClient app;
+    private World world;
+    private BulletAppState bulletAppState;
     static final Logger log = Logger.getLogger("Project-V");
 
     public static void main(String[] args) {
@@ -39,7 +42,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
         }
         AppSettings settings = new AppSettings(true);
         settings.setFrameRate(Globals.SCENE_FPS);
-        settings.setSettingsDialogImage("/Interface/splash.png");
+        settings.setSettingsDialogImage("/Interface/pv-splash.png");
         settings.setTitle("ProjectV");
         Util.registerSerializers();
         app = new GameClient();
@@ -47,6 +50,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
         app.setPauseOnLostFocus(false);
         app.start();
     }
+    
 
     public GameClient() {
         settings = new AppSettings(true);
@@ -67,6 +71,11 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
     @Override
     public void simpleInitApp() {
+        bulletAppState = new BulletAppState();
+        stateManager.attach(bulletAppState);
+        world = new World(app, bulletAppState);
+        rootNode.attachChild(world.generateTestWorld());
+        // TODO player model and set location
         initHUD();
     }
 
@@ -80,6 +89,8 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
     private void initHUD() {
         guiNode.detachAllChildren();
+        this.setDisplayStatView(false);
+        this.setDisplayFps(true);
         guiFont = assetManager.loadFont("/Interface/Default.fnt");
         BitmapText tittle = new BitmapText(guiFont, false);
         tittle.setSize(guiFont.getCharSet().getRenderedSize());
