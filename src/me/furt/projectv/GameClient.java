@@ -76,6 +76,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
         world = new World(app, bulletAppState);
         rootNode.attachChild(world.generateTestWorld());
         // TODO player model and set location
+        flyCam.setMoveSpeed(50f);
         initHUD();
     }
 
