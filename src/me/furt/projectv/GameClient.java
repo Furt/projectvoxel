@@ -1,7 +1,6 @@
 package me.furt.projectv;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.audio.AudioData;
 import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.collision.CollisionResults;
@@ -11,7 +10,9 @@ import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import tonegod.skydome.SkyDome;
 
 /**
  * Project V
@@ -32,6 +34,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
     private static GameClient app;
     private World world;
     private BulletAppState bulletAppState;
+    public SkyDome skyDome;
     static final Logger log = Logger.getLogger("Project-V");
 
     public static void main(String[] args) {
@@ -73,16 +76,23 @@ public class GameClient extends SimpleApplication implements ScreenController {
         stateManager.attach(bulletAppState);
         world = new World(app, bulletAppState);
         rootNode.attachChild(world.generateTestWorld());
+        skyDome = new SkyDome(assetManager, cam);
+        skyDome.setEnabled(true);
+        Node sky = new Node();
+        sky.setQueueBucket(RenderQueue.Bucket.Sky);
+        sky.addControl(skyDome);
+        sky.setCullHint(Spatial.CullHint.Never);
+        rootNode.attachChild(sky);
         // TODO player model and set location
         cam.setLocation(setBlockVector(1f, 30f, 1f));
         // this is still kinda wonky
-        cam.lookAtDirection(setBlockVector(2f, 30f, 13f), Vector3f.UNIT_Y);
+        cam.lookAtDirection(setBlockVector(2f, -13f, 8f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(50);
         initHUD();
         /**
          * Music Test
          */
-        bgMusic = new AudioNode(assetManager, "Sounds/DayTime.ogg", true);
+        bgMusic = new AudioNode(assetManager, "Sounds/NightTime.ogg", true);
         bgMusic.setLooping(false);
         bgMusic.setVolume(1);
         rootNode.attachChild(bgMusic);
