@@ -1,6 +1,8 @@
 package me.furt.projectv;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.audio.AudioData;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
@@ -46,7 +48,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
         app.setPauseOnLostFocus(false);
         app.start();
     }
-    
+    private AudioNode bgMusic;
 
     public GameClient() {
         settings = new AppSettings(true);
@@ -61,7 +63,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
         } catch (IOException e) {
             log.log(Level.WARNING, "Unable to load program icons", e);
         }
-        
+
         log.info("ProjectV Initialized.");
     }
 
@@ -74,9 +76,20 @@ public class GameClient extends SimpleApplication implements ScreenController {
         // TODO player model and set location
         cam.setLocation(setBlockVector(1f, 30f, 1f));
         // this is still kinda wonky
-        cam.lookAtDirection(setBlockVector(2f, 30f ,13f), Vector3f.UNIT_Y);
+        cam.lookAtDirection(setBlockVector(2f, 30f, 13f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(50);
         initHUD();
+        /**
+         * Music Test
+         */
+        bgMusic = new AudioNode(assetManager, "Sounds/DayTime.ogg", true);
+        bgMusic.setLooping(false);
+        bgMusic.setVolume(1);
+        rootNode.attachChild(bgMusic);
+        bgMusic.play();
+        /**
+         *
+         */
     }
 
     @Override
@@ -116,7 +129,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
         node.collideWith(ray, results);
         return results;
     }
-    
+
     public static AppSettings getSettings() {
         AppSettings settings = new AppSettings(true);
         settings.setFrameRate(Globals.SCENE_FPS);
@@ -136,7 +149,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
     public void onEndScreen() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     public Vector3f setBlockVector(float x, float y, float z) {
         float blockSize = WorldSettings.getSettings(app).getBlockSize();
         return new Vector3f(x * blockSize, y * blockSize, z * blockSize);
