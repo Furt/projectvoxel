@@ -40,13 +40,9 @@ public class GameClient extends SimpleApplication implements ScreenController {
                 return;
             }
         }
-        AppSettings settings = new AppSettings(true);
-        settings.setFrameRate(Globals.SCENE_FPS);
-        settings.setSettingsDialogImage("/Interface/pv-splash.png");
-        settings.setTitle("ProjectV");
         Util.registerSerializers();
         app = new GameClient();
-        app.setSettings(settings);
+        app.setSettings(getSettings());
         app.setPauseOnLostFocus(false);
         app.start();
     }
@@ -76,7 +72,10 @@ public class GameClient extends SimpleApplication implements ScreenController {
         world = new World(app, bulletAppState);
         rootNode.attachChild(world.generateTestWorld());
         // TODO player model and set location
-        flyCam.setMoveSpeed(50f);
+        cam.setLocation(setBlockVector(1f, 30f, 1f));
+        // this is still kinda wonky
+        cam.lookAtDirection(setBlockVector(2f, 30f ,13f), Vector3f.UNIT_Y);
+        flyCam.setMoveSpeed(50);
         initHUD();
     }
 
@@ -117,6 +116,14 @@ public class GameClient extends SimpleApplication implements ScreenController {
         node.collideWith(ray, results);
         return results;
     }
+    
+    public static AppSettings getSettings() {
+        AppSettings settings = new AppSettings(true);
+        settings.setFrameRate(Globals.SCENE_FPS);
+        settings.setSettingsDialogImage("/Interface/pv-splash.png");
+        settings.setTitle("ProjectV");
+        return settings;
+    }
 
     public void bind(Nifty nifty, Screen screen) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -128,5 +135,10 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
     public void onEndScreen() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public Vector3f setBlockVector(float x, float y, float z) {
+        float blockSize = WorldSettings.getSettings(app).getBlockSize();
+        return new Vector3f(x * blockSize, y * blockSize, z * blockSize);
     }
 }
