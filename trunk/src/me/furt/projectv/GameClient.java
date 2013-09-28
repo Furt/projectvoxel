@@ -5,6 +5,7 @@ import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
+import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
@@ -84,6 +85,17 @@ public class GameClient extends SimpleApplication implements ScreenController {
         sky.setCullHint(Spatial.CullHint.Never);
         rootNode.attachChild(sky);
         // TODO player model and set location
+        // Load a model from test_data (OgreXML + material + texture)
+        Spatial ninja = assetManager.loadModel("Models/Ninja/Ninja.mesh.xml");
+        ninja.scale(0.05f, 0.05f, 0.05f);
+        ninja.rotate(0.0f, -3.0f, 0.0f);
+        ninja.setLocalTranslation(4.0f, 104.0f, 4.0f);
+        rootNode.attachChild(ninja);
+        // You must add a light to make the model visible
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
+        rootNode.addLight(sun);
+        
         cam.setLocation(setBlockVector(1f, 30f, 1f));
         // this is still kinda wonky
         cam.lookAtDirection(setBlockVector(2f, -13f, 8f), Vector3f.UNIT_Y);
