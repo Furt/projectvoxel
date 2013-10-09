@@ -68,11 +68,11 @@ public class GameClient extends SimpleApplication implements ScreenController {
     @Override
     public void simpleInitApp() {
         client = Network.createClient(Globals.VERSION, Globals.CLIENT_VERSION);
-        client.start();
+        //client.start();
         screen = new Screen(this);
         guiNode.addControl(screen);
-        //stateManager.attach(new IngameState(settings));
-        stateManager.attach(new LoginState(this, screen, client));
+        stateManager.attach(new IngameState(settings));
+        //stateManager.attach(new LoginState(this, screen, client));
     }
 
     @Override
