@@ -5,15 +5,13 @@
 package me.furt.platformer.client;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.network.Client;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
-import com.jme3.renderer.queue.RenderQueue.Bucket;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -40,6 +38,7 @@ public class ClientMain extends SimpleApplication {
     private ConcurrentLinkedQueue<String> chatMessageQueue;
     public String playerName;
     public SkyDome skyDome;
+    public CharacterControl character;
 
     public static void main(String[] args) {
 
@@ -56,28 +55,31 @@ public class ClientMain extends SimpleApplication {
         } catch (IOException ex) {
             Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
         }
+        settings.setTitle("Platformer");
+        inputManager.setCursorVisible(true);
         playerName = "player" + new Random().nextInt();
         screen = new Screen(this, "tonegod/gui/style/def/style_map.xml");
-
         chatbox = new ChatBoxExt(screen, new Vector2f(screen.getWidth() / 2, screen.getHeight() / 2)) {
             @Override
             public void onSendMsg(Object command, String msg) {
                 client.send(new ChatMessages(command, playerName, msg));
             }
         };
-        skyDome = new SkyDome(assetManager, cam);
+        chatbox.setIsMovable(true);
+        /*skyDome = new SkyDome(assetManager, cam);
         skyDome.setEnabled(true);
         Node sky = new Node();
         sky.setQueueBucket(Bucket.Sky);
         sky.addControl(skyDome);
         sky.setCullHint(Spatial.CullHint.Never);
         rootNode.attachChild(sky);
-
+*/
         // Server should send channels in a arraw then do a for call to add
         chatbox.addChatChannel("general", "General", "general", "", ColorRGBA.White, true);
+        chatbox.addChatChannel("trade", "Trade", "trade", "", ColorRGBA.Yellow, true);
 
         chatbox.setSendKey(Keyboard.KEY_RETURN);
-        chatbox.showSendButton(false);
+        chatbox.showSendButton(true);
 
         screen.addElement(chatbox);
         guiNode.addControl(screen);
@@ -92,8 +94,8 @@ public class ClientMain extends SimpleApplication {
             String[] s = message.split(":");
             chatbox.receiveMsg(s[0], "<" + s[1] + "> " + s[2]);
         }
-        screen.update(tpf);
-        skyDome.update(tpf);
+        //screen.update(tpf);
+        //skyDome.update(tpf);
     }
 
     public class ClientMessageListener implements MessageListener<Client> {
