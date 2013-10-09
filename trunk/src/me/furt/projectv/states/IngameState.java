@@ -22,6 +22,7 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import me.furt.projectv.World;
 import me.furt.projectv.WorldSettings;
 import tonegod.skydome.SkyDome;
@@ -43,6 +44,7 @@ public class IngameState extends AbstractAppState {
     public SkyDome skyDome;
     private AudioNode bgMusic;
     private BitmapFont guiFont;
+    private ConcurrentLinkedQueue<String> chatMessageQueue;
     
     public IngameState(AppSettings settings) {
         this.settings = settings;
@@ -69,7 +71,7 @@ public class IngameState extends AbstractAppState {
         rootNode.attachChild(sky);
         // TODO player model and set location
         // Load a model from test_data (OgreXML + material + texture)
-        Spatial test = assetManager.loadModel("Models/Steve.j3o");
+        Spatial test = assetManager.loadModel("Models/Sinbad/Sinbad.mesh.j3o");
         //ninja.scale(0.05f, 0.05f, 0.05f);
         test.rotate(0.0f, -3.0f, 0.0f);
         test.setLocalTranslation(setBlockVector(1f, 25f, 1f));

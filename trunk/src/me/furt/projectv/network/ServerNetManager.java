@@ -10,7 +10,7 @@ import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Server;
 import me.furt.projectv.GameServer;
-import me.furt.projectv.network.messages.HandshakeMessage;
+import me.furt.projectv.network.messages.*;
 
 /**
  *
@@ -24,7 +24,7 @@ public class ServerNetManager implements MessageListener<HostedConnection>, Conn
         this.app = app;
         this.server = server;
         server.addConnectionListener(this);
-        server.addMessageListener(this, HandshakeMessage.class);
+        server.addMessageListener(this, HandshakeMessage.class, LoginMessage.class, ChatMessage.class);
     }
     
     public void messageReceived(HostedConnection source, Message m) {

@@ -34,13 +34,15 @@ public class LoginMessage extends AbstractMessage {
         String hash = this.username + ":" + this.password;
         byte[] bytesOfMessage = hash.getBytes(Charset.forName("UTF-8"));
 
-        MessageDigest md;
-        byte[] thedigest;
+        
+        
         try {
+            MessageDigest md;
+            byte[] thedigest;
             md = MessageDigest.getInstance("SHA");
             thedigest = md.digest(bytesOfMessage);
             Logger.getLogger(LoginMessage.class.getName()).log(Level.INFO, String.valueOf(md).trim());
-            return String.valueOf(md).trim();
+            return this.username + ":" + String.valueOf(thedigest).trim();
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(LoginMessage.class.getName()).log(Level.SEVERE, null, ex);
         }
