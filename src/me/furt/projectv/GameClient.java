@@ -1,16 +1,16 @@
 package me.furt.projectv;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.audio.AudioNode;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.network.Client;
+import com.jme3.network.Network;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -18,15 +18,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import me.furt.projectv.states.IngameState;
+import me.furt.projectv.states.LoginState;
+import tonegod.gui.core.Screen;
 
 /**
  * Project V
  *
  * @author Furt
  */
-public class GameClient extends SimpleApplication {
+public class GameClient extends SimpleApplication implements ScreenController {
 
     private static GameClient app;
+    public Client client;
+    public Screen screen;
     static final Logger log = Logger.getLogger("Project-V");
 
     public static void main(String[] args) {
@@ -63,7 +67,12 @@ public class GameClient extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        stateManager.attach(new IngameState(settings));
+        client = Network.createClient(Globals.VERSION, Globals.CLIENT_VERSION);
+        client.start();
+        screen = new Screen(this);
+        guiNode.addControl(screen);
+        //stateManager.attach(new IngameState(settings));
+        stateManager.attach(new LoginState(this, screen, client));
     }
 
     @Override
@@ -90,5 +99,17 @@ public class GameClient extends SimpleApplication {
         settings.setSettingsDialogImage("/Interface/pv-splash.png");
         settings.setTitle("ProjectV");
         return settings;
+    }
+
+    public void bind(Nifty nifty, de.lessvoid.nifty.screen.Screen screen) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void onStartScreen() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void onEndScreen() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
