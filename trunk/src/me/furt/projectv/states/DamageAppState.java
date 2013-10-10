@@ -8,9 +8,11 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.Entity;
+import com.simsilica.es.EntityComponent;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
+import com.simsilica.es.PersistentComponent;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,22 +29,33 @@ public class DamageAppState extends AbstractAppState {
     EntityData entityData;
     EntitySet damageSet;
     EntitySet healthSet;
+    EntitySet entitySet;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         entityData = ((GameClient) app).getEntityData();
+
+        //method #1
         damageSet = entityData.getEntities(DamageComponent.class);
         healthSet = entityData.getEntities(HealthComponent.class);
+
+        //method #2
+        entitySet = entityData.getEntities(DamageComponent.class, HealthComponent.class);
     }
 
     @Override
     public void update(float tpf) {
-
+        //method #1
         Map<EntityId, Float> damageSummary = new HashMap();
 
+        //method #1
         damageSet.applyChanges();
         healthSet.applyChanges();
 
+        //method #2
+        entitySet.applyChanges();
+
+        //method #1 start
         Iterator<Entity> iterator = damageSet.iterator();
         while (iterator.hasNext()) {
             Entity entity = iterator.next();
@@ -74,5 +87,36 @@ public class DamageAppState extends AbstractAppState {
                 }
             }
         }
+        //end
+
+        //method #2 start
+        Iterator<Entity> mainiterator = entitySet.iterator();
+        while (iterator.hasNext()) {
+            Entity entity = mainiterator.next();
+            if (entity != null) {
+                EntityComponent[] pc = entity.getComponents();
+                
+                float health = 0;
+                float newLife = 0;
+                float damage = 0;
+                
+                for (EntityComponent c : pc) {
+                    if (c instanceof HealthComponent) {
+                        health = ((HealthComponent) c).getHealth();
+                    } else if (c instanceof DamageComponent) {
+                        damage = ((DamageComponent) c).getDamage();
+                    }
+                }
+                //leave more of a gap to add modifiers and such compared to the other method
+                newLife = health - damage;
+
+                if (newLife < 0) {
+                    entityData.removeComponent(entity.getId(), HealthComponent.class);
+                } else {
+                    entity.set(new HealthComponent(newLife));
+                }
+            }
+        }
+        //end
     }
 }
