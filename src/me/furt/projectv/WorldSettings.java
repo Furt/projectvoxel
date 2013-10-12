@@ -11,6 +11,7 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.SceneProcessor;
@@ -41,12 +42,12 @@ public class WorldSettings {
                 if (chunk.isBlockOnSurface(blockLocation)) {
                     switch (face) {
                         case Top:
-                            return 1;
+                            return FastMath.nextRandomInt(1, 2);
 
                         case Bottom:
                             return 0;
                     }
-                    return 2;
+                    return FastMath.nextRandomInt(1, 2);
                 }
                 return 0;
             }
