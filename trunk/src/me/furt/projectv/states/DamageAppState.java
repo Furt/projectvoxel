@@ -8,11 +8,9 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.simsilica.es.Entity;
-import com.simsilica.es.EntityComponent;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.EntityId;
 import com.simsilica.es.EntitySet;
-import com.simsilica.es.PersistentComponent;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,7 +27,7 @@ public class DamageAppState extends AbstractAppState {
     EntityData entityData;
     EntitySet damageSet;
     EntitySet healthSet;
-    EntitySet entitySet;
+    //EntitySet entitySet;
 
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
@@ -39,8 +37,8 @@ public class DamageAppState extends AbstractAppState {
         damageSet = entityData.getEntities(DamageComponent.class);
         healthSet = entityData.getEntities(HealthComponent.class);
 
-        //method #2
-        entitySet = entityData.getEntities(DamageComponent.class, HealthComponent.class);
+        //method #2 - this would only work if damage was attached to target entity
+        //entitySet = entityData.getEntities(DamageComponent.class, HealthComponent.class);
     }
 
     @Override
@@ -53,7 +51,7 @@ public class DamageAppState extends AbstractAppState {
         healthSet.applyChanges();
 
         //method #2
-        entitySet.applyChanges();
+        //entitySet.applyChanges();
 
         //method #1 start
         Iterator<Entity> iterator = damageSet.iterator();
@@ -89,7 +87,7 @@ public class DamageAppState extends AbstractAppState {
         }
         //end
 
-        //method #2 start
+        /** method #2 start
         Iterator<Entity> mainiterator = entitySet.iterator();
         while (iterator.hasNext()) {
             Entity entity = mainiterator.next();
@@ -117,6 +115,6 @@ public class DamageAppState extends AbstractAppState {
                 }
             }
         }
-        //end
+        end */
     }
 }

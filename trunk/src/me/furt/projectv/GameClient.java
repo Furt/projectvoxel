@@ -12,10 +12,12 @@ import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.base.DefaultEntityData;
+import com.simsilica.es.sql.SqlEntityData;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.ScreenController;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -74,7 +76,12 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
     @Override
     public void simpleInitApp() {
-        entityData = new DefaultEntityData();
+        try {
+            entityData = new SqlEntityData("/data", 20000L);
+        } catch (SQLException ex) {
+            Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //entityData = new DefaultEntityData();
         client = Network.createClient(Globals.VERSION, Globals.CLIENT_VERSION);
         //client.start();
         screen = new Screen(this);
