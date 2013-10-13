@@ -50,7 +50,6 @@ public class GameClient extends SimpleApplication implements ScreenController {
         }
         Util.registerSerializers();
         app = new GameClient();
-        app.setSettings(getSettings());
         app.setPauseOnLostFocus(false);
         app.start();
     }
@@ -60,6 +59,9 @@ public class GameClient extends SimpleApplication implements ScreenController {
         settings.setWidth(Globals.WINDOW_WIDTH);
         settings.setHeight(Globals.WINDOW_HEIGHT);
         settings.setTitle(Globals.VERSION);
+        settings.setFrameRate(Globals.SCENE_FPS);
+        settings.setSettingsDialogImage("/Interface/pv-splash.png");
+        settings.setTitle("ProjectV");
         try {
             settings.setIcons(new BufferedImage[]{
                         ImageIO.read(getClass().getResourceAsStream("/Textures/magex16.png")),
@@ -120,14 +122,6 @@ public class GameClient extends SimpleApplication implements ScreenController {
         CollisionResults results = new CollisionResults();
         node.collideWith(ray, results);
         return results;
-    }
-
-    public static AppSettings getSettings() {
-        AppSettings settings = new AppSettings(true);
-        settings.setFrameRate(Globals.SCENE_FPS);
-        settings.setSettingsDialogImage("/Interface/pv-splash.png");
-        settings.setTitle("ProjectV");
-        return settings;
     }
 
     public void bind(Nifty nifty, de.lessvoid.nifty.screen.Screen screen) {
