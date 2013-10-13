@@ -1,8 +1,8 @@
 package com.cubes;
 
-public class BlockTerrain_LocalBlockState {
+public class LocalBlockState {
 
-    public BlockTerrain_LocalBlockState(BlockChunkControl chunk, Vector3Int localBlockLocation) {
+    public LocalBlockState(BlockChunkControl chunk, Vector3Int localBlockLocation) {
         this.chunk = chunk;
         this.localBlockLocation = localBlockLocation;
     }
