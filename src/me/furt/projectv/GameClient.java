@@ -11,7 +11,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import com.simsilica.es.EntityData;
-import com.simsilica.es.base.DefaultEntityData;
 import com.simsilica.es.sql.SqlEntityData;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.ScreenController;
@@ -25,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import me.furt.projectv.states.IngameState;
-import me.furt.projectv.states.LoginState;
 import tonegod.gui.core.Screen;
 
 /**
@@ -71,7 +69,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
             log.log(Level.WARNING, "Unable to load program icons", e);
         }
 
-        log.info("ProjectV Initialized.");
+        log.info("ProjectV has started.");
     }
 
     @Override
@@ -88,11 +86,12 @@ public class GameClient extends SimpleApplication implements ScreenController {
         guiNode.addControl(screen);
         stateManager.attach(new IngameState(settings));
         //stateManager.attach(new LoginState(this, screen, client));
-        
+
         // attach logic
         exec = Executors.newSingleThreadScheduledExecutor();
         exec.scheduleAtFixedRate(new GameLogic(this), 0, 20, TimeUnit.MILLISECONDS);
     }
+
     public EntityData getEntityData() {
         return entityData;
     }
@@ -103,6 +102,14 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
     @Override
     public void simpleRender(RenderManager rm) {
+    }
+
+    @Override
+    public void destroy() {
+        exec.shutdown();
+        //entityData.close();
+        //client.close();
+        super.destroy();
     }
 
     private CollisionResults getRayCastingResults(Node node) {

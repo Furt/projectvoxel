@@ -78,8 +78,7 @@ public class WorldSettings {
         DirectionalLight directionalLight = new DirectionalLight();
         directionalLight.setDirection(lightDirection);
         directionalLight.setColor(new ColorRGBA(1f, 1f, 1f, 1.0f));
-        //simpleApplication.getRootNode().addLight(directionalLight);
-        //simpleApplication.getRootNode().attachChild(SkyFactory.createSky(simpleApplication.getAssetManager(), "Textures/cubes/sky.jpg", true));
+        simpleApplication.getRootNode().addLight(directionalLight);
 
         PssmShadowRenderer pssmShadowRenderer = new PssmShadowRenderer(simpleApplication.getAssetManager(), 2048, 3);
         pssmShadowRenderer.setDirection(lightDirection);

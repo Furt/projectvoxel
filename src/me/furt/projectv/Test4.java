@@ -50,7 +50,8 @@ public class Test4 extends SimpleApplication {
         Slider slider = new Slider(screen, new Vector2f(100, 100), Slider.Orientation.HORIZONTAL, true) {
             @Override
             public void onChange(int selectedIndex, Object value) {
-                float blend = selectedIndex * 0.01f;
+                float blend = (float)value.hashCode() * 0.01f;
+                float blend1 = selectedIndex * 0.01f;
                 color.interpolate(ColorRGBA.Red, ColorRGBA.Green, blend);
                 ind.setIndicatorColor(color);
                 ind.setCurrentValue((Integer) value);

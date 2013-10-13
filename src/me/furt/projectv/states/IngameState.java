@@ -14,7 +14,6 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.input.FlyByCamera;
-import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -77,9 +76,7 @@ public class IngameState extends AbstractAppState {
         test.setLocalTranslation(setBlockVector(1f, 25f, 1f));
         rootNode.attachChild(test);
         // You must add a light to make the model visible
-        DirectionalLight sun = new DirectionalLight();
-        sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
-        rootNode.addLight(sun);
+        WorldSettings.initializeEnvironment(this.app);
         
         cam.setLocation(setBlockVector(1f, 30f, 1f));
         // this is still kinda wonky

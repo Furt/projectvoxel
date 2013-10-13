@@ -7,6 +7,7 @@ package me.furt.projectv;
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
 import me.furt.projectv.states.DamageAppState;
+import me.furt.projectv.states.GuiAppState;
 
 /**
  *
@@ -23,6 +24,7 @@ public class GameLogic implements Runnable {
         stateManager = new AppStateManager(app);
  
         //add the logic AppStates to this thread
+        stateManager.attach(new GuiAppState());
         stateManager.attach(new DamageAppState());
     }
  
