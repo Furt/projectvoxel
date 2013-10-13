@@ -1,8 +1,8 @@
 package com.cubes;
 
-public class BlockSkin_TextureLocation {
+public class TextureLocation {
 
-    public BlockSkin_TextureLocation(int column, int row) {
+    public TextureLocation(int column, int row) {
         this.column = column;
         this.row = row;
     }

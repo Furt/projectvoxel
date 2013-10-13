@@ -7,18 +7,18 @@ import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.util.BufferUtils;
 import java.util.ArrayList;
 
-public class BlockChunk_MeshOptimizer {
+public class MeshOptimizer {
 
     private static Vector3f[] vertices;
     private static Vector2f[] textureCoordinates;
     private static int[] indices;
 
-    public static Mesh generateOptimizedMesh(BlockChunkControl blockChunk, BlockChunk_MeshMerger meshMerger) {
+    public static Mesh generateOptimizedMesh(BlockChunkControl blockChunk, MeshMerger meshMerger) {
         loadMeshData(blockChunk, meshMerger);
         return generateMesh();
     }
 
-    private static void loadMeshData(BlockChunkControl chunk, BlockChunk_MeshMerger meshMerger) {
+    private static void loadMeshData(BlockChunkControl chunk, MeshMerger meshMerger) {
         ArrayList<Vector3f> verticeList = new ArrayList<Vector3f>();
         ArrayList<Vector2f> textureCoordinateList = new ArrayList<Vector2f>();
         ArrayList<Integer> indicesList = new ArrayList<Integer>();
@@ -109,14 +109,14 @@ public class BlockChunk_MeshOptimizer {
         }
     }
 
-    private static void addBlockTextureCoordinates(ArrayList<Vector2f> textureCoordinatesList, BlockSkin_TextureLocation textureLocation) {
+    private static void addBlockTextureCoordinates(ArrayList<Vector2f> textureCoordinatesList, TextureLocation textureLocation) {
         textureCoordinatesList.add(getTextureCoordinates(textureLocation, 0, 0));
         textureCoordinatesList.add(getTextureCoordinates(textureLocation, 1, 0));
         textureCoordinatesList.add(getTextureCoordinates(textureLocation, 0, 1));
         textureCoordinatesList.add(getTextureCoordinates(textureLocation, 1, 1));
     }
 
-    private static Vector2f getTextureCoordinates(BlockSkin_TextureLocation textureLocation, int xUnitsToAdd, int yUnitsToAdd) {
+    private static Vector2f getTextureCoordinates(TextureLocation textureLocation, int xUnitsToAdd, int yUnitsToAdd) {
         float textureCount = CubesSettings.getRowCount();
         float textureUnit = 1f / textureCount;
         float x = (((textureLocation.getColumn() + xUnitsToAdd) * textureUnit));

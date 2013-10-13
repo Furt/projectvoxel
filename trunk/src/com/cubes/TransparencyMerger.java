@@ -2,13 +2,13 @@ package com.cubes;
 
 import com.cubes.Block.Face;
 
-public class BlockChunk_TransparencyMerger implements BlockChunk_MeshMerger {
+public class TransparencyMerger implements MeshMerger {
 
-    private BlockChunk_TransparencyMerger(boolean isGeometryTransparent) {
+    private TransparencyMerger(boolean isGeometryTransparent) {
         this.isGeometryTransparent = isGeometryTransparent;
     }
-    public static final BlockChunk_TransparencyMerger OPAQUE = new BlockChunk_TransparencyMerger(false);
-    public static final BlockChunk_TransparencyMerger TRANSPARENT = new BlockChunk_TransparencyMerger(true);
+    public static final TransparencyMerger OPAQUE = new TransparencyMerger(false);
+    public static final TransparencyMerger TRANSPARENT = new TransparencyMerger(true);
     private boolean isGeometryTransparent;
 
     @Override

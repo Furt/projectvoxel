@@ -116,8 +116,8 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
                 node.attachChild(optimizedGeometry_Transparent);
                 updateBlockMaterial();
             }
-            optimizedGeometry_Opaque.setMesh(BlockChunk_MeshOptimizer.generateOptimizedMesh(this, BlockChunk_TransparencyMerger.OPAQUE));
-            optimizedGeometry_Transparent.setMesh(BlockChunk_MeshOptimizer.generateOptimizedMesh(this, BlockChunk_TransparencyMerger.TRANSPARENT));
+            optimizedGeometry_Opaque.setMesh(MeshOptimizer.generateOptimizedMesh(this, TransparencyMerger.OPAQUE));
+            optimizedGeometry_Transparent.setMesh(MeshOptimizer.generateOptimizedMesh(this, TransparencyMerger.TRANSPARENT));
             needsMeshUpdate = false;
             return true;
         }

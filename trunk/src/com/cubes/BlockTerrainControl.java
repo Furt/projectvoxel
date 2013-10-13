@@ -69,7 +69,7 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
     }
 
     public BlockType getBlock(Vector3Int location) {
-        BlockTerrain_LocalBlockState localBlockState = getLocalBlockState(location);
+        LocalBlockState localBlockState = getLocalBlockState(location);
         if (localBlockState != null) {
             return localBlockState.getBlock();
         }
@@ -93,7 +93,7 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
     }
 
     public void setBlock(Vector3Int location, Class<? extends Block> blockClass) {
-        BlockTerrain_LocalBlockState localBlockState = getLocalBlockState(location);
+        LocalBlockState localBlockState = getLocalBlockState(location);
         if (localBlockState != null) {
             localBlockState.setBlock(blockClass);
         }
@@ -116,20 +116,20 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
     }
 
     public void removeBlock(Vector3Int location) {
-        BlockTerrain_LocalBlockState localBlockState = getLocalBlockState(location);
+        LocalBlockState localBlockState = getLocalBlockState(location);
         if (localBlockState != null) {
             localBlockState.removeBlock();
         }
     }
 
-    private BlockTerrain_LocalBlockState getLocalBlockState(Vector3Int blockLocation) {
+    private LocalBlockState getLocalBlockState(Vector3Int blockLocation) {
         if (blockLocation.hasNegativeCoordinate()) {
             return null;
         }
         BlockChunkControl chunk = getChunk(blockLocation);
         if (chunk != null) {
             Vector3Int localBlockLocation = getLocalBlockLocation(blockLocation, chunk);
-            return new BlockTerrain_LocalBlockState(chunk, localBlockLocation);
+            return new LocalBlockState(chunk, localBlockLocation);
         }
         return null;
     }
