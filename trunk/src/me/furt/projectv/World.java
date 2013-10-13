@@ -35,7 +35,7 @@ public class World {
 
     public Node generateTestWorld() {
         WorldSettings.registerBlocks();
-        blockTerrain = new BlockTerrainControl(WorldSettings.getSettings(app), new Vector3Int(20, 1, 20));
+        blockTerrain = new BlockTerrainControl(WorldSettings.getSettings(app), new Vector3Int(10, 1, 10));
         // World base
         blockTerrain.setBlockArea(new Vector3Int(0, 0, 0), new Vector3Int(320, 20, 320), Block_Stone.class);
         blockTerrain.setBlockArea(new Vector3Int(0, 20, 0), new Vector3Int(320, 5, 320), Block_Grass.class);
