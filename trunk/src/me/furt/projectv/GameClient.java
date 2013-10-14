@@ -44,8 +44,6 @@ public class GameClient extends SimpleApplication implements ScreenController {
         for (int i = 0; i < args.length; i++) {
             String string = args[i];
             if ("-server".equals(string)) {
-                GameServer.main(args);
-                return;
             }
         }
         Util.registerSerializers();
