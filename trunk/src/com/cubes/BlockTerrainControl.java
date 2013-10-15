@@ -145,7 +145,7 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         return null;
     }
 
-    private boolean isValidChunkLocation(Vector3Int location) {
+    public boolean isValidChunkLocation(Vector3Int location) {
         return Util.isValidIndex(chunks, location);
     }
 
