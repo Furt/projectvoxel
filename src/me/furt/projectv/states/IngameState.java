@@ -44,6 +44,7 @@ public class IngameState extends AbstractAppState {
     private AudioNode bgMusic;
     private BitmapFont guiFont;
     private ConcurrentLinkedQueue<String> chatMessageQueue;
+    private AppStateManager stateManager;
     
     public IngameState(AppSettings settings) {
         this.settings = settings;
@@ -52,17 +53,22 @@ public class IngameState extends AbstractAppState {
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
+        this.stateManager = stateManager;
         this.assetManager = this.app.getAssetManager();
         this.rootNode = this.app.getRootNode();
         this.guiNode = this.app.getGuiNode();
         this.cam = this.app.getCamera();
         this.flyCam = this.app.getFlyByCamera();
         bulletAppState = new BulletAppState();
+        stateManager.detach(stateManager.getState(LoginState.class));
         stateManager.attach(bulletAppState);
         world = new World(this.app, bulletAppState);
         rootNode.attachChild(world.generateTestWorld());
         skyDome = new SkyDome(assetManager, cam);
         skyDome.setEnabled(true);
+        skyDome.setDayNightTransitionSpeed(0.1f);
+        skyDome.setSunMoonSpeed(0.1f);
+        
         Node sky = new Node();
         sky.setQueueBucket(RenderQueue.Bucket.Sky);
         sky.addControl(skyDome);
@@ -86,7 +92,7 @@ public class IngameState extends AbstractAppState {
         /**
          * Music Test
          */
-        bgMusic = new AudioNode(assetManager, "Sounds/NightTime.ogg", true);
+        bgMusic = new AudioNode(assetManager, "Sounds/Music/NightTime.ogg", true);
         bgMusic.setLooping(false);
         bgMusic.setVolume(1);
         rootNode.attachChild(bgMusic);
@@ -94,6 +100,11 @@ public class IngameState extends AbstractAppState {
         /**
          *
          */
+    }
+    
+    @Override
+    public void update(float tpf) {
+        skyDome.update(tpf);
     }
     
     private void initHUD() {

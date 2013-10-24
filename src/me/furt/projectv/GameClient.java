@@ -13,10 +13,12 @@ import com.jme3.system.AppSettings;
 import com.simsilica.es.EntityData;
 import com.simsilica.es.sql.SqlEntityData;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.ScreenController;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import me.furt.projectv.states.IngameState;
+import me.furt.projectv.states.LoginState;
 import tonegod.gui.core.Screen;
 
 /**
@@ -37,10 +40,12 @@ public class GameClient extends SimpleApplication implements ScreenController {
     public Client client;
     public Screen screen;
     public EntityData entityData;
+    private TextRenderer statusText;
     private ScheduledExecutorService exec;
     static final Logger log = Logger.getLogger("Project-V");
 
     public static void main(String[] args) {
+        log.setLevel(Level.WARNING);
         for (int i = 0; i < args.length; i++) {
             String string = args[i];
             if ("-server".equals(string)) {
@@ -56,36 +61,42 @@ public class GameClient extends SimpleApplication implements ScreenController {
         settings = new AppSettings(true);
         settings.setWidth(Globals.WINDOW_WIDTH);
         settings.setHeight(Globals.WINDOW_HEIGHT);
-        settings.setTitle(Globals.VERSION);
+        settings.setTitle(Globals.NAME);
         settings.setFrameRate(Globals.SCENE_FPS);
         settings.setSettingsDialogImage("/Interface/pv-splash.png");
         settings.setTitle("ProjectV");
         try {
             settings.setIcons(new BufferedImage[]{
-                        ImageIO.read(getClass().getResourceAsStream("/Textures/magex16.png")),
-                        ImageIO.read(getClass().getResourceAsStream("/Textures/magex32.png"))
+                        ImageIO.read(getClass().getResourceAsStream("/Interface/magex16.png")),
+                        ImageIO.read(getClass().getResourceAsStream("/Interface/magex32.png"))
                     });
         } catch (IOException e) {
             log.log(Level.WARNING, "Unable to load program icons", e);
         }
-
+        Util.registerSerializers();
         log.info("ProjectV has started.");
     }
 
     @Override
     public void simpleInitApp() {
         try {
-            entityData = new SqlEntityData("/data", 20000L);
+            entityData = new SqlEntityData("/Data", 20000L);
         } catch (SQLException ex) {
             Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //entityData = new DefaultEntityData();
-        client = Network.createClient(Globals.VERSION, Globals.CLIENT_VERSION);
-        //client.start();
+
+        try {
+            //entityData = new DefaultEntityData();
+            client = Network.connectToServer(Globals.NAME, Globals.CLIENT_VERSION, Globals.DEFAULT_SERVER, Globals.DEFAULT_PORT_TCP, Globals.DEFAULT_PORT_UDP);
+            client.start();
+        } catch (IOException ex) {
+            Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         screen = new Screen(this);
         guiNode.addControl(screen);
-        stateManager.attach(new IngameState(settings));
-        //stateManager.attach(new LoginState(this, screen, client));
+        //stateManager.attach(new IngameState(settings));
+        stateManager.attach(new LoginState(this, settings, screen, client));
 
         // attach logic
         exec = Executors.newSingleThreadScheduledExecutor();
@@ -107,8 +118,8 @@ public class GameClient extends SimpleApplication implements ScreenController {
     @Override
     public void destroy() {
         exec.shutdown();
-        //entityData.close();
-        //client.close();
+        entityData.close();
+        client.close();
         super.destroy();
     }
 
@@ -120,6 +131,16 @@ public class GameClient extends SimpleApplication implements ScreenController {
         CollisionResults results = new CollisionResults();
         node.collideWith(ray, results);
         return results;
+    }
+    
+    public void setStatusText(final String text) {
+        enqueue(new Callable<Void>() {
+
+            public Void call() throws Exception {
+                statusText.setText(text);
+                return null;
+            }
+        });
     }
 
     public void bind(Nifty nifty, de.lessvoid.nifty.screen.Screen screen) {

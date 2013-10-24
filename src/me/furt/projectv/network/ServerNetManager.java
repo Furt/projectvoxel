@@ -9,7 +9,10 @@ import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Server;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.furt.projectv.GameServer;
+import me.furt.projectv.Globals;
 import me.furt.projectv.network.messages.*;
 
 /**
@@ -27,16 +30,25 @@ public class ServerNetManager implements MessageListener<HostedConnection>, Conn
         server.addMessageListener(this, HandshakeMessage.class, LoginMessage.class, ChatMessage.class);
     }
     
-    public void messageReceived(HostedConnection source, Message m) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void messageReceived(HostedConnection source, Message message) {
+        if (message instanceof HandshakeMessage) {
+            HandshakeMessage msg = (HandshakeMessage) message;
+            Logger.getLogger(ServerNetManager.class.getName()).log(Level.INFO, "Got handshake message");
+            if (msg.protocol_version != Globals.PROTOCOL_VERSION) {
+                source.close("Connection Protocol Mismatch - Update Client");
+                Logger.getLogger(ServerNetManager.class.getName()).log(Level.INFO, "Client protocol mismatch, disconnecting");
+                return;
+            }
+            msg.server_version = Globals.SERVER_VERSION;
+            source.send(msg);
+            Logger.getLogger(ServerNetManager.class.getName()).log(Level.INFO, "Sent back handshake message");
+        }
     }
 
     public void connectionAdded(Server server, HostedConnection conn) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void connectionRemoved(Server server, HostedConnection conn) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

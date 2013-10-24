@@ -47,7 +47,7 @@ public class GameServer extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         try {
-            server = Network.createServer(Globals.DEFAULT_PORT_TCP, Globals.DEFAULT_PORT_UDP);
+            server = Network.createServer(Globals.NAME, Globals.SERVER_VERSION, Globals.DEFAULT_PORT_TCP, Globals.DEFAULT_PORT_UDP);
             server.start();
         } catch (IOException ex) {
             Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
