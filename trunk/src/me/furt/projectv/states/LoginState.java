@@ -13,6 +13,7 @@ import com.jme3.input.InputManager;
 import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.math.Vector2f;
 import com.jme3.network.Client;
+import com.jme3.system.AppSettings;
 import me.furt.projectv.network.messages.LoginMessage;
 import tonegod.gui.controls.windows.LoginBox;
 import tonegod.gui.core.Screen;
@@ -29,11 +30,14 @@ public class LoginState extends AbstractAppState {
     FlyByCamera flyCam;
     InputManager inputManager;
     LoginBox loginWindow;
+    AppStateManager stateManager;
+    AppSettings settings;
 
-    public LoginState(SimpleApplication app, Screen screen, Client client) {
+    public LoginState(SimpleApplication app, AppSettings settings, Screen screen, Client client) {
         this.app = app;
         this.screen = screen;
         this.client = client;
+        this.settings = settings;
     }
 
     @Override
@@ -41,6 +45,7 @@ public class LoginState extends AbstractAppState {
         super.initialize(stateManager, app);
         this.flyCam = this.app.getFlyByCamera();
         this.inputManager = this.app.getInputManager();
+        this.stateManager = stateManager;
         initLoginWindow();
     }
 
@@ -54,7 +59,9 @@ public class LoginState extends AbstractAppState {
                 new Vector2f(screen.getWidth() / 2 - 175, screen.getHeight() / 2 - 125)) {
             @Override
             public void onButtonLoginPressed(MouseButtonEvent evt, boolean toggled) {
-                client.send(new LoginMessage(getTextUserName(), getTextPassword()));
+                //client.send(new LoginMessage(getTextUserName(), getTextPassword()));
+                System.out.println(getTextUserName() + " : " + getTextPassword());
+                stateManager.attach(new IngameState(settings));
             }
 
             @Override

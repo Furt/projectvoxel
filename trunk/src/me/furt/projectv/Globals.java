@@ -9,7 +9,7 @@ package me.furt.projectv;
  * @author Terry
  */
 public class Globals {
-    public static final String VERSION = "Project V - v0.0.1";
+    public static final String NAME = "Project V - v0.0.1";
     public static final String DEFAULT_SERVER = "127.0.0.1";
     public static final int PROTOCOL_VERSION = 1;
     public static final int CLIENT_VERSION = 1;

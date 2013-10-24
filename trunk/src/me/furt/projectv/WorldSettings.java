@@ -28,12 +28,13 @@ public class WorldSettings {
     public static CubesSettings getSettings(Application application) {
         CubesSettings.setRowCount(10);
         CubesSettings settings = new CubesSettings(application);
-        settings.setDefaultBlockMaterial("Textures/blocktextures.png");
+        settings.setDefaultBlockMaterial("Textures/Blocks/blocktextures.png");
         settings.setBlockSize(4);
         return settings;
     }
 
     public static void registerBlocks() {
+        
         BlockManager.register(Block_Grass.class, new BlockSkin(new TextureLocation[]{
                     new TextureLocation(0, 0),
                     new TextureLocation(1, 0),
@@ -43,8 +44,6 @@ public class WorldSettings {
                     new TextureLocation(0, 1),}, false) {
             @Override
             protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-                //BlockType bt = chunk.getBlock(blockLocation);
-                //if (bt.equals(Block_Grass.class)) {
                     if (chunk.isBlockOnSurface(blockLocation)) {
                         switch (face) {
                             case Top:
@@ -55,13 +54,12 @@ public class WorldSettings {
                         }
                         return 4;
                     }
-                //} else if (bt.equals(Block_Glass.class)) {
-                    // method for connected glass textures
-                //}
                 return 5;
             }
         });
+        
         BlockManager.register(Block_Leaves.class, new BlockSkin(new TextureLocation(2, 4), false));
+        
         BlockManager.register(Block_Log.class, new BlockSkin(new TextureLocation[]{
                     new TextureLocation(1, 4),
                     new TextureLocation(1, 4),
@@ -70,17 +68,35 @@ public class WorldSettings {
                     new TextureLocation(0, 4),
                     new TextureLocation(0, 4)
                 }, false));
+        
         BlockManager.register(Block_Stone.class, new BlockSkin(new TextureLocation(0, 2), false));
+        
         BlockManager.register(Block_Plank.class, new BlockSkin(new TextureLocation(0, 3), false));
+        
         BlockManager.register(Block_Dirt.class, new BlockSkin(new TextureLocation(0, 1), false));
+        
         BlockManager.register(Block_Sand.class, new BlockSkin(new TextureLocation(4, 1), false));
+        
         BlockManager.register(Block_Mud.class, new BlockSkin(new TextureLocation(1, 1), false));
+        
         BlockManager.register(Block_Cobble.class, new BlockSkin(new TextureLocation(1, 3), false));
+        
         BlockManager.register(Block_Ice.class, new BlockSkin(new TextureLocation(3, 5), true));
+        
         BlockManager.register(Block_Water.class, new BlockSkin(new TextureLocation(0, 5), true));
+        
         BlockManager.register(Block_Gravel.class, new BlockSkin(new TextureLocation(1, 2), false));
+        
         BlockManager.register(Block_Glass.class, new BlockSkin(new TextureLocation(2, 3), true));
+        
         BlockManager.register(Block_Lava.class, new BlockSkin(new TextureLocation(0, 6), true));
+        
+        // For creating and texturing a new block first you must create a new block class view Test_Block.java for more info.
+        // Next you must determine how many textures you are gonna use.
+        // The follow example is for a block that uses only 1 texture for all sides.
+        //BlockManager.register(Test_Block.class, new BlockSkin(new TextureLocation(0,0), false));
+        
+        
     }
 
     public static void initializeEnvironment(SimpleApplication simpleApplication) {

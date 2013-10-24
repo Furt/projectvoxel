@@ -14,14 +14,15 @@ import com.simsilica.es.PersistentComponent;
  * @author Terry
  */
 @Serializable
-public class SessionComponent extends AbstractMessage implements EntityComponent, PersistentComponent {
-    int sessionId;
+public class NameComponent extends AbstractMessage implements EntityComponent, PersistentComponent {
+    private String name;
     
-    public SessionComponent(int session) {
-        this.sessionId = session;
+    public NameComponent(String name) {
+        this.name = name;
     }
     
-    public int getSessionId() {
-        return sessionId;
+    public String getName() {
+        return this.name;
     }
+    
 }
