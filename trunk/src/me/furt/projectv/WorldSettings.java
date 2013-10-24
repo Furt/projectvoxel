@@ -40,7 +40,8 @@ public class WorldSettings {
                     new TextureLocation(2, 0),
                     new TextureLocation(3, 0),
                     new TextureLocation(4, 0),
-                    new TextureLocation(0, 1),}, false) {
+                    new TextureLocation(0, 1),
+                    new TextureLocation(5, 1),}, false) {
             @Override
             protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                 if (chunk.isBlockOnSurface(blockLocation)) {
@@ -53,7 +54,7 @@ public class WorldSettings {
                     }
                     return 4;
                 }
-                return 5;
+                return FastMath.nextRandomInt(5,6);
             }
         });
 
@@ -72,15 +73,7 @@ public class WorldSettings {
 
         BlockManager.register(Block_Plank.class, new BlockSkin(new TextureLocation(0, 3), false));
 
-        //BlockManager.register(Block_Dirt.class, new BlockSkin(new TextureLocation(0, 1), false));
-        BlockManager.register(Block_Dirt.class, new BlockSkin(new TextureLocation[]{
-                    new TextureLocation(0, 1),
-                    new TextureLocation(5, 1),}, false) {
-            @Override
-            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-                return FastMath.nextRandomInt(0, 1);
-            }
-        });
+        BlockManager.register(Block_Dirt.class, new BlockSkin(new TextureLocation(0, 1), false));
 
         BlockManager.register(Block_Sand.class, new BlockSkin(new TextureLocation(4, 1), false));
 
