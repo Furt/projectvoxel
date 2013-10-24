@@ -69,7 +69,15 @@ public class WorldSettings {
                     new TextureLocation(0, 4)
                 }, false));
 
-        BlockManager.register(Block_Stone.class, new BlockSkin(new TextureLocation(0, 2), false));
+        BlockManager.register(Block_Stone.class, new BlockSkin(new TextureLocation[]{
+                    new TextureLocation(0, 2),
+                    new TextureLocation(2, 2),}, false) {
+            @Override
+            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                return FastMath.nextRandomInt(0,1);
+            }
+        });
+        
 
         BlockManager.register(Block_Plank.class, new BlockSkin(new TextureLocation(0, 3), false));
 
