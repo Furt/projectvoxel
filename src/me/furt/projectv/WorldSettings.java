@@ -81,11 +81,27 @@ public class WorldSettings {
 
         BlockManager.register(Block_Plank.class, new BlockSkin(new TextureLocation(0, 3), false));
 
-        BlockManager.register(Block_Dirt.class, new BlockSkin(new TextureLocation(0, 1), false));
+        BlockManager.register(Block_Dirt.class, new BlockSkin(new TextureLocation[]{
+                    new TextureLocation(0, 1),
+                    new TextureLocation(5, 1),}, false) {
+            @Override
+            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                return FastMath.nextRandomInt(0,1);
+            }
+        });
 
-        BlockManager.register(Block_Sand.class, new BlockSkin(new TextureLocation(4, 1), false));
+        BlockManager.register(Block_Sand.class, new BlockSkin(new TextureLocation[]{
+                    new TextureLocation(4, 1),
+                    new TextureLocation(6, 1),}, false) {
+            @Override
+            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                return FastMath.nextRandomInt(0,1);
+            }
+        });
 
         BlockManager.register(Block_Mud.class, new BlockSkin(new TextureLocation(1, 1), false));
+        
+        BlockManager.register(Block_Red_Clay.class, new BlockSkin(new TextureLocation(2, 1), false));
 
         BlockManager.register(Block_Cobble.class, new BlockSkin(new TextureLocation(1, 3), false));
 
