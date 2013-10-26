@@ -27,7 +27,7 @@ public class WorldSettings {
     public static CubesSettings getSettings(Application application) {
         CubesSettings.setRowCount(10);
         CubesSettings settings = new CubesSettings(application);
-        settings.setDefaultBlockMaterial("Textures/Blocks/blocktextures2.png");
+        settings.setDefaultBlockMaterial("Textures/Blocks/blocktextures.png");
         settings.setBlockSize(4);
         return settings;
     }
@@ -69,6 +69,19 @@ public class WorldSettings {
                     new TextureLocation(0, 4)
                 }, false));
 
+
+        BlockManager.register(Block_Stone.class, new BlockSkin(new TextureLocation[]{
+                    new TextureLocation(0, 2),
+                    new TextureLocation(2, 2)
+                }, false) {
+                @Override
+                protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                     return FastMath.nextRandomInt(0, 1);
+                }
+                });
+        
+        BlockManager.register(Block_Stone_Slab.class, new BlockSkin(new TextureLocation(5, 3), false));
+        
         BlockManager.register(Block_Stone.class, new BlockSkin(new TextureLocation[]{
                     new TextureLocation(0, 2),
                     new TextureLocation(2, 2),}, false) {
@@ -77,8 +90,6 @@ public class WorldSettings {
                 return FastMath.nextRandomInt(0,1);
             }
         });
-        
-
         BlockManager.register(Block_Plank.class, new BlockSkin(new TextureLocation(0, 3), false));
 
         BlockManager.register(Block_Dirt.class, new BlockSkin(new TextureLocation[]{
@@ -89,7 +100,15 @@ public class WorldSettings {
                 return FastMath.nextRandomInt(0,1);
             }
         });
-
+        BlockManager.register(Block_Sand.class, new BlockSkin(new TextureLocation[]{
+            new TextureLocation(4, 1),
+            new TextureLocation(6, 1)
+            }, false){
+                @Override
+                protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                     return FastMath.nextRandomInt(0, 1);
+                }
+            });
         BlockManager.register(Block_Sand.class, new BlockSkin(new TextureLocation[]{
                     new TextureLocation(4, 1),
                     new TextureLocation(6, 1),}, false) {
@@ -98,12 +117,20 @@ public class WorldSettings {
                 return FastMath.nextRandomInt(0,1);
             }
         });
-
         BlockManager.register(Block_Mud.class, new BlockSkin(new TextureLocation(1, 1), false));
         
         BlockManager.register(Block_Red_Clay.class, new BlockSkin(new TextureLocation(2, 1), false));
 
-        BlockManager.register(Block_Cobble.class, new BlockSkin(new TextureLocation(1, 3), false));
+        BlockManager.register(Block_Cobble.class, new BlockSkin(new TextureLocation[]{
+            new TextureLocation(1, 3), 
+            new TextureLocation(3, 3), 
+            new TextureLocation(4, 3)
+            }, false){
+                @Override
+                protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                     return FastMath.nextRandomInt(0, 2);
+                }
+            });
 
         BlockManager.register(Block_Ice.class, new BlockSkin(new TextureLocation(3, 5), true));
 
