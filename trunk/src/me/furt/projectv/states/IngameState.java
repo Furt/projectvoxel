@@ -92,7 +92,7 @@ public class IngameState extends AbstractAppState {
         /**
          * Music Test
          */
-        bgMusic = new AudioNode(assetManager, "Sounds/Music/NightTime.ogg", true);
+        bgMusic = new AudioNode(assetManager, "Sounds/Music/DayTime.ogg", true);
         bgMusic.setLooping(false);
         bgMusic.setVolume(1);
         rootNode.attachChild(bgMusic);

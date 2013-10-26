@@ -54,7 +54,8 @@ public class World {
         blockTerrain.setBlockArea(new Vector3Int(3, 27, 5), new Vector3Int(1, 1, 2), Block_Cobble.class);
         blockTerrain.setBlockArea(new Vector3Int(3, 25, 7), new Vector3Int(1, 3, 1), Block_Cobble.class);
         //roof
-        blockTerrain.setBlockArea(new Vector3Int(4, 28, 4), new Vector3Int(4, 1, 4), Block_Gravel.class);
+        blockTerrain.setBlockArea(new Vector3Int(4, 28, 4), new Vector3Int(4, 1, 4), Block_Stone_Slab.class);
+        //used to be gravel; testing stone slabs
         // floor
         blockTerrain.setBlockArea(new Vector3Int(4, 24, 4), new Vector3Int(4, 1, 4), Block_Plank.class);
 
@@ -68,6 +69,9 @@ public class World {
         blockTerrain.setBlockArea(new Vector3Int(3, 23, 12), new Vector3Int(6, 1, 6), Block_Mud.class);
         // water layer
         blockTerrain.setBlockArea(new Vector3Int(3, 24, 12), new Vector3Int(6, 1, 6), Block_Water.class);
+        
+        //Sand Pit 
+        blockTerrain.setBlockArea(new Vector3Int(10, 24, 3), new Vector3Int(6, 1, 6), Block_Sand.class);
 
         // Tree
         blockTerrain.setBlockArea(new Vector3Int(3, 25, 20), new Vector3Int(1, 5, 1), Block_Log.class);
