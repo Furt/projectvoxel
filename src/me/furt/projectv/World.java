@@ -72,6 +72,9 @@ public class World {
         
         //Sand Pit 
         blockTerrain.setBlockArea(new Vector3Int(10, 24, 3), new Vector3Int(6, 1, 6), Block_Sand.class);
+        
+        //clay deposit
+        blockTerrain.setBlockArea(new Vector3Int(18, 24, 3), new Vector3Int(6, 1, 6), Block_Red_Clay.class);
 
         // Tree
         blockTerrain.setBlockArea(new Vector3Int(3, 25, 20), new Vector3Int(1, 5, 1), Block_Log.class);
