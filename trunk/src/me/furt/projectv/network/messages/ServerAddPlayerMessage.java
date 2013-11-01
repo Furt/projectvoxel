@@ -4,8 +4,9 @@ import com.jme3.network.serializing.Serializable;
 import me.furt.projectv.network.physics.PhysicsSyncMessage;
 
 /**
- * used by the server to add a player on the client
- * @author Terry
+ * Project V
+ *
+ * @author Furt
  */
 @Serializable()
 public class ServerAddPlayerMessage extends PhysicsSyncMessage{

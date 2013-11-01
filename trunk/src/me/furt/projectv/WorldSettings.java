@@ -20,6 +20,11 @@ import com.jme3.water.WaterFilter;
 import java.util.List;
 import me.furt.projectv.block.*;
 
+/**
+ * Project V
+ *
+ * @author Furt
+ */
 public class WorldSettings {
 
     private static final Vector3f lightDirection = new Vector3f(-0.8f, -1, -0.8f).normalizeLocal();

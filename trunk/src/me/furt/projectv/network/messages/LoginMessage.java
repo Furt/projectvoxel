@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.furt.projectv.network.messages;
 
 import com.jme3.network.AbstractMessage;
@@ -13,8 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Project V
  *
- * @author Terry
+ * @author Furt
  */
 @Serializable()
 public class LoginMessage extends AbstractMessage {

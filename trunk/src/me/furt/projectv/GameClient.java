@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import me.furt.projectv.states.IngameState;
+import me.furt.projectv.network.ClientNetManager;
 import me.furt.projectv.states.LoginState;
 import tonegod.gui.core.Screen;
 
@@ -42,6 +42,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
     public EntityData entityData;
     private TextRenderer statusText;
     private ScheduledExecutorService exec;
+    private ClientNetManager listenerManager;
     static final Logger log = Logger.getLogger("Project-V");
 
     public static void main(String[] args) {
@@ -79,28 +80,42 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
     @Override
     public void simpleInitApp() {
+        /**
+         * Setup network connection
+         */
         try {
-            entityData = new SqlEntityData("/Data", 20000L);
-        } catch (SQLException ex) {
-            Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try {
-            //entityData = new DefaultEntityData();
             client = Network.connectToServer(Globals.NAME, Globals.CLIENT_VERSION, Globals.DEFAULT_SERVER, Globals.DEFAULT_PORT_TCP, Globals.DEFAULT_PORT_UDP);
             client.start();
         } catch (IOException ex) {
             Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        /**
+         * Entity system
+         */
+        try {
+            entityData = new SqlEntityData("./Data", 20000L);
+        } catch (SQLException ex) {
+            Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        /**
+         * Setup startup screen which is currently login
+         */
         screen = new Screen(this);
         guiNode.addControl(screen);
-        //stateManager.attach(new IngameState(settings));
         stateManager.attach(new LoginState(this, settings, screen, client));
 
-        // attach logic
+        /**
+         * Attach logic controllers
+         */
         exec = Executors.newSingleThreadScheduledExecutor();
         exec.scheduleAtFixedRate(new GameLogic(this), 0, 20, TimeUnit.MILLISECONDS);
+
+        /**
+         * Setup Network Listener
+         */
+        listenerManager = new ClientNetManager(app, client);
     }
 
     public EntityData getEntityData() {
@@ -132,12 +147,19 @@ public class GameClient extends SimpleApplication implements ScreenController {
         node.collideWith(ray, results);
         return results;
     }
-    
+
     public void setStatusText(final String text) {
         enqueue(new Callable<Void>() {
-
             public Void call() throws Exception {
                 statusText.setText(text);
+                return null;
+            }
+        });
+    }
+
+    public void addChat(final String text) {
+        enqueue(new Callable<Void>() {
+            public Void call() throws Exception {
                 return null;
             }
         });

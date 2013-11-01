@@ -4,9 +4,9 @@ import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 /**
- * used to load a level on the client and to report that a level has been loaded
- * to the server.
- * @author Terry
+ * Project V
+ *
+ * @author Furt
  */
 @Serializable()
 public class StartGameMessage extends AbstractMessage{

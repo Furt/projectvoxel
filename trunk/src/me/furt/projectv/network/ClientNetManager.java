@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.furt.projectv.network;
 
 import com.jme3.network.Client;
@@ -16,30 +12,36 @@ import me.furt.projectv.network.messages.ChatMessage;
 import me.furt.projectv.network.messages.ClientJoinMessage;
 import me.furt.projectv.network.messages.HandshakeMessage;
 import me.furt.projectv.network.messages.ServerJoinMessage;
+import me.furt.projectv.network.messages.ServerTerrainMessage;
 
 /**
+ * Project V
  *
- * @author Terry
+ * @author Furt
  */
 public class ClientNetManager implements MessageListener, ClientStateListener {
+
     private GameClient app;
     private Client client;
     private String name = "";
     private String pass = "";
-    
+
     public ClientNetManager(GameClient app, Client client) {
         this.app = app;
         this.client = client;
         client.addClientStateListener(this);
-        client.addMessageListener(this, HandshakeMessage.class, ServerJoinMessage.class, ChatMessage.class);
+        client.addMessageListener(this, HandshakeMessage.class, ServerJoinMessage.class, ServerTerrainMessage.class, ChatMessage.class);
     }
-    
-    public void clientConnected(Client clienst) {
+
+    public void clientConnected(Client client) {
+        setStatusText("Requesting login..");
         HandshakeMessage msg = new HandshakeMessage(Globals.PROTOCOL_VERSION, Globals.CLIENT_VERSION, -1);
         client.send(msg);
+        Logger.getLogger(ClientNetManager.class.getName()).log(Level.INFO, "Sent handshake message");
     }
-    
+
     public void clientDisconnected(Client c, DisconnectInfo info) {
+        setStatusText("Server connection failed!");
     }
 
     public void messageReceived(Object source, Message message) {
@@ -52,13 +54,42 @@ public class ClientNetManager implements MessageListener, ClientStateListener {
                 return;
             }
             client.send(new ClientJoinMessage(name, pass));
+
+        } else if (message instanceof ServerJoinMessage) {
+            final ServerJoinMessage msg = (ServerJoinMessage) message;
+            if (!msg.rejected) {
+                Logger.getLogger(ClientNetManager.class.getName()).log(Level.INFO, "Got login message back, we're in");
+                setStatusText("Connected!");
+                client.send(new ServerTerrainMessage());
+                Logger.getLogger(ClientNetManager.class.getName()).log(Level.INFO, "Requested world data.");
+
+            } else {
+                Logger.getLogger(ClientNetManager.class.getName()).log(Level.INFO, "Server ditched us! Cant login.");
+                setStatusText("Server rejected login!");
+            }
+        } else if (message instanceof ChatMessage) {
+            final ChatMessage msg = (ChatMessage) message;
+            app.addChat(msg.getPlayer() + ": " + msg.getMessage());
         }
     }
 
     private void setStatusText(String message) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        app.setStatusText(message);
     }
 
-    
-    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
 }

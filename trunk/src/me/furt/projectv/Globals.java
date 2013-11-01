@@ -11,7 +11,7 @@ package me.furt.projectv;
 public class Globals {
     public static final String NAME = "Project V - v0.0.1";
     public static final String DEFAULT_SERVER = "127.0.0.1";
-    public static final int PROTOCOL_VERSION = 1;
+    public static final int PROTOCOL_VERSION = 2;
     public static final int CLIENT_VERSION = 1;
     public static final int SERVER_VERSION = 1;
     public static final float NETWORK_SYNC_FREQUENCY = 0.25f;

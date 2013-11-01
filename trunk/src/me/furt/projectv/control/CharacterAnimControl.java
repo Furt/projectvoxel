@@ -12,9 +12,9 @@ import com.jme3.scene.control.Control;
 import java.io.IOException;
 
 /**
- * Handles animation of character
+ * Project V
  *
- * @author normenhansen
+ * @author Furt
  */
 public class CharacterAnimControl implements Control {
 
