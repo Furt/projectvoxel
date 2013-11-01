@@ -4,8 +4,9 @@ import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 /**
- * sent from client to join server
- * @author Terry
+ * Project V
+ *
+ * @author Furt
  */
 @Serializable()
 public class ClientJoinMessage extends AbstractMessage{

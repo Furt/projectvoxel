@@ -1,14 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.furt.projectv;
 
 import java.util.HashMap;
 
 /**
+ * Project V
  *
- * @author Terry
+ * @author Furt
  */
 public class PlayerManager {
     
@@ -17,5 +14,9 @@ public class PlayerManager {
     
     public PlayerManager(long id) {
         this.id = id;
+    }
+    
+    public HashMap<Long, PlayerManager> getPlayerList() {
+        return playerList;
     }
 }

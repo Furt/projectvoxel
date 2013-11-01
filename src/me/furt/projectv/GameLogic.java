@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.furt.projectv;
 
 import com.jme3.app.Application;
@@ -10,11 +6,10 @@ import me.furt.projectv.states.DamageAppState;
 import me.furt.projectv.states.GuiAppState;
 
 /**
+ * Project V
  *
- * @author Terry
+ * @author Furt
  */
-
-
 public class GameLogic implements Runnable {
  
     private final float tpf = 0.02f;

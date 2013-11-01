@@ -1,15 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.furt.projectv.network.messages;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 /**
+ * Project V
  *
- * @author Terry
+ * @author Furt
  */
 @Serializable
 public class ChatMessage extends AbstractMessage {
@@ -28,7 +25,19 @@ public class ChatMessage extends AbstractMessage {
 
     }
 
-    public String getMessage() {
+    public String getMessageData() {
         return channel + ":" + player + ":" + message;
+    }
+    
+    public Object getChannel() {
+        return channel;
+    }
+    
+    public String getPlayer() {
+        return player;
+    }
+    
+    public String getMessage() {
+        return message;
     }
 }

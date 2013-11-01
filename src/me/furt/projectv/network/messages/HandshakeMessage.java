@@ -4,9 +4,9 @@ import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 /**
- * used for first handshake. contains protocol, client and server version.
- * should never change.
- * @author Terry
+ * Project V
+ *
+ * @author Furt
  */
 @Serializable()
 public class HandshakeMessage extends AbstractMessage {

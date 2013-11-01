@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package me.furt.projectv;
 
 import com.cubes.BlockChunkControl;
 import com.cubes.BlockChunkListener;
 import com.cubes.BlockTerrainControl;
 import com.cubes.Vector3Int;
+import com.cubes.network.CubesSerializer;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.MeshCollisionShape;
@@ -18,24 +15,32 @@ import com.jme3.scene.Node;
 import me.furt.projectv.block.*;
 
 /**
+ * Project V
  *
- * @author Terry
+ * @author Furt
  */
 public class World {
 
-    private BlockTerrainControl blockTerrain;
-    private Node terrainNode = new Node();
     private final BulletAppState bas;
     private final SimpleApplication app;
 
     public World(SimpleApplication app, BulletAppState bas) {
         this.app = app;
         this.bas = bas;
+        WorldSettings.registerBlocks();
     }
 
-    public Node generateTestWorld() {
-        WorldSettings.registerBlocks();
-        blockTerrain = new BlockTerrainControl(WorldSettings.getSettings(app), new Vector3Int(10, 1, 10));
+    public Node generateTestWorld(BlockTerrainControl btc) {
+        Node terrainNode = new Node("World");
+        terrainNode.addControl(btc);
+        terrainNode.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        terrainNode.addControl(new RigidBodyControl(0));
+        bas.getPhysicsSpace().addAll(terrainNode);
+        return terrainNode;
+    }
+
+    public BlockTerrainControl setupControl() {
+        BlockTerrainControl blockTerrain = new BlockTerrainControl(WorldSettings.getSettings(app), new Vector3Int(10, 1, 10));
         // World base
         blockTerrain.setBlockArea(new Vector3Int(0, 0, 0), new Vector3Int(320, 20, 320), Block_Stone.class);
         blockTerrain.setBlockArea(new Vector3Int(0, 20, 0), new Vector3Int(320, 5, 320), Block_Grass.class);
@@ -69,7 +74,7 @@ public class World {
         blockTerrain.setBlockArea(new Vector3Int(3, 23, 12), new Vector3Int(6, 1, 6), Block_Mud.class);
         // water layer
         blockTerrain.setBlockArea(new Vector3Int(3, 24, 12), new Vector3Int(6, 1, 6), Block_Water.class);
-        
+
         //Sand Pit 
         blockTerrain.setBlockArea(new Vector3Int(10, 24, 3), new Vector3Int(6, 1, 6), Block_Sand.class);
         
@@ -93,11 +98,17 @@ public class World {
                 rigidBodyControl.setCollisionShape(new MeshCollisionShape(optimizedGeometry.getMesh()));
             }
         });
-        terrainNode.addControl(blockTerrain);
-        terrainNode.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        terrainNode.addControl(new RigidBodyControl(0));
-        bas.getPhysicsSpace().addAll(terrainNode);
-        return terrainNode;
 
+        return blockTerrain;
+    }
+
+    public BlockTerrainControl decodeWorld(byte[] worldData) {
+        BlockTerrainControl btc = new BlockTerrainControl(WorldSettings.getSettings(app), new Vector3Int(10, 1, 10));
+        CubesSerializer.readFromBytes(btc, worldData);
+        return btc;
+    }
+
+    public byte[] encodeWorld(BlockTerrainControl blockTerrain) {
+        return CubesSerializer.writeToBytes(blockTerrain);
     }
 }

@@ -4,8 +4,9 @@ import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 /**
- * sent to client to signal that if it has logged in, contains human players id
- * @author Terry
+ * Project V
+ *
+ * @author Furt
  */
 @Serializable()
 public class ServerJoinMessage extends AbstractMessage{
