@@ -1,22 +1,24 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package me.furt.projectv;
 
 import java.util.HashMap;
 
 /**
- * Project V
  *
- * @author Furt
+ * @author Terry
  */
 public class PlayerManager {
     
-    private static HashMap<Long, PlayerManager> playerList = new HashMap<Long, PlayerManager>();
-    private long id;
+    private static HashMap<Long, PlayerData> playerList;
     
-    public PlayerManager(long id) {
-        this.id = id;
+    public PlayerManager() {
+        playerList = new HashMap<Long, PlayerData>();
     }
     
-    public HashMap<Long, PlayerManager> getPlayerList() {
+    public HashMap<Long, PlayerData> getPlayerList() {
         return playerList;
     }
 }

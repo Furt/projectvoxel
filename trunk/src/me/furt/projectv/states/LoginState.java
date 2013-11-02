@@ -61,7 +61,7 @@ public class LoginState extends AbstractAppState {
             public void onButtonLoginPressed(MouseButtonEvent evt, boolean toggled) {
                 //client.send(new LoginMessage(getTextUserName(), getTextPassword()));
                 System.out.println(getTextUserName() + " : " + getTextPassword());
-                stateManager.attach(new IngameState(settings, client));
+                stateManager.attach(new IngameState(settings));
             }
 
             @Override

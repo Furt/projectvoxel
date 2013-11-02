@@ -1,6 +1,9 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package me.furt.projectv.states;
 
-import com.cubes.BlockTerrainControl;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
@@ -13,9 +16,6 @@ import com.jme3.font.BitmapText;
 import com.jme3.input.FlyByCamera;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.network.Client;
-import com.jme3.network.Message;
-import com.jme3.network.MessageListener;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
@@ -24,21 +24,17 @@ import com.jme3.system.AppSettings;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import me.furt.projectv.World;
 import me.furt.projectv.WorldSettings;
-import me.furt.projectv.network.messages.ServerTerrainMessage;
 import tonegod.skydome.SkyDome;
 
 /**
- * Project V
  *
- * @author Furt
+ * @author Terry
  */
 public class IngameState extends AbstractAppState {
-
     private SimpleApplication app;
     private AppSettings settings;
     private Node rootNode;
     private Node guiNode;
-    private Node worldNode;
     private AssetManager assetManager;
     private Camera cam;
     private FlyByCamera flyCam;
@@ -47,17 +43,13 @@ public class IngameState extends AbstractAppState {
     public SkyDome skyDome;
     private AudioNode bgMusic;
     private BitmapFont guiFont;
-    private Client client;
     private ConcurrentLinkedQueue<String> chatMessageQueue;
-    private ConcurrentLinkedQueue<byte[]> worldDataQueue;
     private AppStateManager stateManager;
-    private BlockTerrainControl blockTerrain;
-
-    public IngameState(AppSettings settings, Client client) {
+    
+    public IngameState(AppSettings settings) {
         this.settings = settings;
-        this.client = client;
     }
-
+    
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
@@ -67,94 +59,54 @@ public class IngameState extends AbstractAppState {
         this.guiNode = this.app.getGuiNode();
         this.cam = this.app.getCamera();
         this.flyCam = this.app.getFlyByCamera();
-
-        /**
-         * Setup Physics
-         */
         bulletAppState = new BulletAppState();
         stateManager.detach(stateManager.getState(LoginState.class));
         stateManager.attach(bulletAppState);
-
-        /**
-         * Setup skydome
-         *
+        world = new World(this.app, bulletAppState);
+        rootNode.attachChild(world.generateTestWorld());
         skyDome = new SkyDome(assetManager, cam);
         skyDome.setEnabled(true);
+        skyDome.setDayNightTransitionSpeed(0.1f);
+        skyDome.setSunMoonSpeed(0.1f);
+        
         Node sky = new Node();
         sky.setQueueBucket(RenderQueue.Bucket.Sky);
         sky.addControl(skyDome);
         sky.setCullHint(Spatial.CullHint.Never);
         rootNode.attachChild(sky);
-        */
-
-        /**
-         * Prepare world for network updates
-         */
-        worldDataQueue = new ConcurrentLinkedQueue<byte[]>();
-        world = new World(this.app, bulletAppState);
+        // TODO player model and set location
+        // Load a model from test_data (OgreXML + material + texture)
+        Spatial test = assetManager.loadModel("Models/Sinbad/Sinbad.mesh.j3o");
+        //ninja.scale(0.05f, 0.05f, 0.05f);
+        test.rotate(0.0f, -3.0f, 0.0f);
+        test.setLocalTranslation(setBlockVector(1f, 25f, 1f));
+        rootNode.attachChild(test);
+        // You must add a light to make the model visible
         WorldSettings.initializeEnvironment(this.app);
-
-        /**
-         * Test model
-         */
-        /*
-         Spatial test = assetManager.loadModel("Models/Sinbad/Sinbad.mesh.j3o");
-         //ninja.scale(0.05f, 0.05f, 0.05f);
-         test.rotate(0.0f, -3.0f, 0.0f);
-         test.setLocalTranslation(setBlockVector(1f, 25f, 1f));
-         rootNode.attachChild(test);
-         */
-        /**
-         * Player camera position/location
-         */
+        
         cam.setLocation(setBlockVector(1f, 30f, 1f));
+        // this is still kinda wonky
         cam.lookAtDirection(setBlockVector(2f, -13f, 8f), Vector3f.UNIT_Y);
         this.flyCam.setMoveSpeed(50);
-
-        /**
-         * Setup hud
-         */
         initHUD();
-
         /**
-         * Setup music
+         * Music Test
          */
         bgMusic = new AudioNode(assetManager, "Sounds/Music/DayTime.ogg", true);
         bgMusic.setLooping(false);
         bgMusic.setVolume(1);
         rootNode.attachChild(bgMusic);
         bgMusic.play();
-
         /**
-         * Setup network listener
+         *
          */
-        client.addMessageListener(new IngameMessageListener());
     }
-
+    
     @Override
     public void update(float tpf) {
-        byte[] worldData = worldDataQueue.poll();
-        if (worldData != null) {
-            generateWorld(worldData);
-        }
+        skyDome.update(tpf);
     }
-
-    public class IngameMessageListener implements MessageListener<Client> {
-
-        public void messageReceived(Client source, Message m) {
-            if (m instanceof ServerTerrainMessage) {
-                ServerTerrainMessage message = (ServerTerrainMessage) m;
-                worldDataQueue.add(message.getTerrainData());
-            }
-        }
-    }
-
-    private void generateWorld(byte[] b) {
-        blockTerrain = world.decodeWorld(b);
-        worldNode = world.generateTestWorld(blockTerrain);
-        rootNode.attachChild(worldNode);
-    }
-
+    
     private void initHUD() {
         guiNode.detachAllChildren();
         this.app.setDisplayStatView(false);
@@ -174,7 +126,7 @@ public class IngameState extends AbstractAppState {
         guiNode.attachChild(ch);
 
     }
-
+    
     public Vector3f setBlockVector(float x, float y, float z) {
         float blockSize = WorldSettings.getSettings(app).getBlockSize();
         return new Vector3f(x * blockSize, y * blockSize, z * blockSize);
