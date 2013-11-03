@@ -14,10 +14,13 @@ import com.jme3.network.serializing.Serializer;
 import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.furt.projectv.WorldSettings;
 import me.furt.projectv.block.Block_Grass;
+import org.apache.log4j.Appender;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 
 /**
  * ProjectV
@@ -30,17 +33,24 @@ public class ServerMain extends SimpleApplication {
         ServerMain app = new ServerMain();
         app.start(JmeContext.Type.Headless); // headless type for servers!
     }
+    public static final Logger log = Logger.getLogger("[WorldTest]");
+    public static Appender appender;
     public Server server;
-    public byte[] worldData;
+    public byte[] worldData = new byte[100];
 
     @Override
     public void simpleInitApp() {
+        log.setLevel(Level.ALL);
+        // Define Appender     
+        appender = new ConsoleAppender(new SimpleLayout());
+        //myAppender.setLayout(new SimpleLayout());  
+        log.addAppender(appender);
         Serializer.registerClass(TerrainMessage.class);
         try {
             server = Network.createServer(25570);
             server.start();
         } catch (IOException ex) {
-            Logger.getLogger(ServerMain.class.getName()).log(Level.SEVERE, null, ex);
+            log.error(ex);
         }
         WorldSettings.registerBlocks();
         BlockTerrainControl blockTerrain = new BlockTerrainControl(WorldSettings.getSettings(this), new Vector3Int(4, 1, 4));
@@ -49,6 +59,11 @@ public class ServerMain extends SimpleApplication {
         terrainNode.addControl(blockTerrain);
         rootNode.attachChild(terrainNode);
         worldData = CubesSerializer.writeToBytes(blockTerrain);
+        try {
+            worldData = CompressionUtil.compress(worldData);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(ServerMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
 
 
         cam.setLocation(new Vector3f(-64, 187, -55));
@@ -65,7 +80,7 @@ public class ServerMain extends SimpleApplication {
             }
         }
     }
-    
+
     @Override
     public void destroy() {
         server.close();
