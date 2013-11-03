@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.DataFormatException;
 import me.furt.projectv.WorldSettings;
 
 /**
@@ -52,7 +53,7 @@ public class ClientMain extends SimpleApplication {
         cam.setLocation(new Vector3f(-64, 187, -55));
         cam.lookAtDirection(new Vector3f(0.64f, -0.45f, 0.6f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(200);
-        
+
         terrainMessageQueue = new ConcurrentLinkedQueue<byte[]>();
         client.addMessageListener(new TerrainMessageListener());
         client.send(new TerrainMessage());
@@ -63,11 +64,21 @@ public class ClientMain extends SimpleApplication {
         public void messageReceived(Client source, Message m) {
             if (m instanceof TerrainMessage) {
                 final TerrainMessage msg = (TerrainMessage) m;
-                terrainMessageQueue.add(msg.getWorldData());
+                byte[] temp = msg.getWorldData();
+                
+                try {
+                    temp = CompressionUtil.decompress(temp);
+                } catch (IOException ex) {
+                    Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (DataFormatException ex) {
+                    Logger.getLogger(ClientMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                terrainMessageQueue.add(temp);
             }
         }
     }
-    
+
     @Override
     public void simpleUpdate(float tpf) {
         byte[] message = terrainMessageQueue.poll();
@@ -75,7 +86,7 @@ public class ClientMain extends SimpleApplication {
             CubesSerializer.readFromBytes(blockTerrain, message);
         }
     }
-    
+
     @Override
     public void destroy() {
         client.close();
