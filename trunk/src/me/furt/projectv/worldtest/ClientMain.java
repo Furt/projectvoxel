@@ -27,16 +27,15 @@ public class ClientMain extends SimpleApplication {
 
     public static void main(String[] args) {
         ClientMain app = new ClientMain();
-        Serializer.registerClass(TerrainMessage.class);
         app.start(JmeContext.Type.Display); // standard display type
     }
     public Client client;
     public BlockTerrainControl blockTerrain;
-    public TerrainMessageListener terrainListener;
     private ConcurrentLinkedQueue<byte[]> terrainMessageQueue;
 
     @Override
     public void simpleInitApp() {
+        Serializer.registerClass(TerrainMessage.class);
         try {
             client = Network.connectToServer("localhost", 25570);
             client.start();
@@ -49,17 +48,14 @@ public class ClientMain extends SimpleApplication {
         Node terrainNode = new Node();
         terrainNode.addControl(blockTerrain);
         rootNode.attachChild(terrainNode);
-        // This goes in listener
-        //CubesSerializer.readFromBytes(blockTerrainClone, msg.getWorldData());
 
         cam.setLocation(new Vector3f(-64, 187, -55));
         cam.lookAtDirection(new Vector3f(0.64f, -0.45f, 0.6f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(200);
         
         terrainMessageQueue = new ConcurrentLinkedQueue<byte[]>();
-        
-        terrainListener = new TerrainMessageListener();
-        client.addMessageListener(terrainListener);
+        client.addMessageListener(new TerrainMessageListener());
+        client.send(new TerrainMessage());
     }
 
     public class TerrainMessageListener implements MessageListener<Client> {
@@ -78,5 +74,11 @@ public class ClientMain extends SimpleApplication {
         if (message != null) {
             CubesSerializer.readFromBytes(blockTerrain, message);
         }
+    }
+    
+    @Override
+    public void destroy() {
+        client.close();
+        super.destroy();
     }
 }

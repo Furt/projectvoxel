@@ -28,15 +28,14 @@ public class ServerMain extends SimpleApplication {
 
     public static void main(String[] args) {
         ServerMain app = new ServerMain();
-        Serializer.registerClass(TerrainMessage.class);
         app.start(JmeContext.Type.Headless); // headless type for servers!
     }
     public Server server;
     public byte[] worldData;
-    public ServerTerrainListener terrainListener;
 
     @Override
     public void simpleInitApp() {
+        Serializer.registerClass(TerrainMessage.class);
         try {
             server = Network.createServer(25570);
             server.start();
@@ -50,15 +49,14 @@ public class ServerMain extends SimpleApplication {
         terrainNode.addControl(blockTerrain);
         rootNode.attachChild(terrainNode);
         worldData = CubesSerializer.writeToBytes(blockTerrain);
-        
-        
+
+
         cam.setLocation(new Vector3f(-64, 187, -55));
         cam.lookAtDirection(new Vector3f(0.64f, -0.45f, 0.6f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(200);
-        terrainListener = new ServerTerrainListener();
-        server.addMessageListener(terrainListener);
+        server.addMessageListener(new ServerTerrainListener());
     }
-    
+
     public class ServerTerrainListener implements MessageListener<HostedConnection> {
 
         public void messageReceived(HostedConnection source, Message m) {
@@ -66,5 +64,11 @@ public class ServerMain extends SimpleApplication {
                 source.send(new TerrainMessage(worldData));
             }
         }
+    }
+    
+    @Override
+    public void destroy() {
+        server.close();
+        super.destroy();
     }
 }
