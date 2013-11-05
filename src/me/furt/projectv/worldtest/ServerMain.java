@@ -1,6 +1,6 @@
 package me.furt.projectv.worldtest;
 
-import com.cubes.BlockTerrainControl;
+import com.cubes.TerrainControl;
 import com.cubes.Vector3Int;
 import com.cubes.network.CubesSerializer;
 import com.jme3.app.SimpleApplication;
@@ -10,8 +10,8 @@ import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
+import com.jme3.network.serializing.Serializable;
 import com.jme3.network.serializing.Serializer;
-import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import java.io.IOException;
 import me.furt.projectv.WorldSettings;
@@ -53,14 +53,13 @@ public class ServerMain extends SimpleApplication {
             log.error(ex);
         }
         WorldSettings.registerBlocks();
-        BlockTerrainControl blockTerrain = new BlockTerrainControl(WorldSettings.getSettings(this), new Vector3Int(4, 1, 4));
+        TerrainControl blockTerrain = new TerrainControl(WorldSettings.getSettings(this), new Vector3Int(4, 1, 4));
         blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(64, 30, 64), 0.3f, Block_Grass.class);
-        Node terrainNode = new Node();
-        terrainNode.addControl(blockTerrain);
-        rootNode.attachChild(terrainNode);
         worldData = CubesSerializer.writeToBytes(blockTerrain);
+        System.out.println("Server Raw: "+worldData.toString()+", Length: "+worldData.length);
         try {
             worldData = CompressionUtil.compress(worldData);
+            System.out.println("Server Compressed: "+worldData.toString()+", Length: "+worldData.length);
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(ServerMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
@@ -69,6 +68,7 @@ public class ServerMain extends SimpleApplication {
         cam.setLocation(new Vector3f(-64, 187, -55));
         cam.lookAtDirection(new Vector3f(0.64f, -0.45f, 0.6f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(200);
+        
         server.addMessageListener(new ServerTerrainListener());
     }
 

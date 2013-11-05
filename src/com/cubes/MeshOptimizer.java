@@ -13,16 +13,22 @@ public class MeshOptimizer {
     private static Vector2f[] textureCoordinates;
     private static int[] indices;
 
-    public static Mesh generateOptimizedMesh(BlockChunkControl blockChunk, MeshMerger meshMerger) {
+    /**
+     *
+     * @param blockChunk
+     * @param meshMerger
+     * @return
+     */
+    public static Mesh generateOptimizedMesh(ChunkControl blockChunk, MeshMerger meshMerger) {
         loadMeshData(blockChunk, meshMerger);
         return generateMesh();
     }
 
-    private static void loadMeshData(BlockChunkControl chunk, MeshMerger meshMerger) {
+    private static void loadMeshData(ChunkControl chunk, MeshMerger meshMerger) {
         ArrayList<Vector3f> verticeList = new ArrayList<Vector3f>();
         ArrayList<Vector2f> textureCoordinateList = new ArrayList<Vector2f>();
         ArrayList<Integer> indicesList = new ArrayList<Integer>();
-        BlockTerrainControl blockTerrain = chunk.getTerrain();
+        TerrainControl blockTerrain = chunk.getTerrain();
         Vector3Int tmpLocation = new Vector3Int();
         for (int x = 0; x < blockTerrain.getSettings().getChunkSizeX(); x++) {
             for (int y = 0; y < blockTerrain.getSettings().getChunkSizeY(); y++) {

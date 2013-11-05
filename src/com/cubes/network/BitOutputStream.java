@@ -6,6 +6,10 @@ import java.io.UnsupportedEncodingException;
 
 public class BitOutputStream {
 
+    /**
+     *
+     * @param out
+     */
     public BitOutputStream(OutputStream out) {
         this.out = out;
     }
@@ -13,12 +17,22 @@ public class BitOutputStream {
     private int currentByte = 0;
     private int bits = 8;
 
+    /**
+     *
+     * @param <T>
+     * @param value
+     */
     public <T extends Enum<T>> void writeEnum(T value) {
         T[] enumConstants = value.getDeclaringClass().getEnumConstants();
         int bitsCount = BitUtil.getNeededBitsCount(enumConstants.length);
         writeBits(value.ordinal(), bitsCount);
     }
 
+    /**
+     *
+     * @param string
+     * @param maximumBytesCountBits
+     */
     public void writeString_UTF8(String string, int maximumBytesCountBits) {
         try {
             byte[] bytes = string.getBytes("UTF-8");
@@ -29,6 +43,11 @@ public class BitOutputStream {
         }
     }
 
+    /**
+     *
+     * @param bytes
+     * @param count
+     */
     public void writeBytes(byte[] bytes, int count) {
         for (int i = 0; i < count; i++) {
             byte value = ((i < bytes.length) ? bytes[i] : 0);
@@ -36,18 +55,35 @@ public class BitOutputStream {
         }
     }
 
+    /**
+     *
+     * @param value
+     */
     public void writeFloat(float value) {
         writeBits(Float.floatToIntBits(value), 32);
     }
 
+    /**
+     *
+     * @param value
+     */
     public void writeInteger(int value) {
         writeBits(value, 32);
     }
 
+    /**
+     *
+     * @param value
+     */
     public void writeBoolean(boolean value) {
         writeBits((value ? 1 : 0), 1);
     }
 
+    /**
+     *
+     * @param value
+     * @param count
+     */
     public void writeBits(int value, int count) {
         if (count == 0) {
             throw new IllegalArgumentException("Cannot write 0 bits.");
@@ -77,6 +113,11 @@ public class BitOutputStream {
         }
     }
 
+    /**
+     *
+     * @param value
+     * @param count
+     */
     public void writeLongBits(long value, int count) {
         if (count == 0) {
             throw new IllegalArgumentException("Cannot write 0 bits.");
@@ -107,6 +148,9 @@ public class BitOutputStream {
         }
     }
 
+    /**
+     *
+     */
     protected void flush() {
         try {
             out.write(currentByte);
@@ -117,6 +161,9 @@ public class BitOutputStream {
         }
     }
 
+    /**
+     *
+     */
     public void close() {
         flush();
         try {
@@ -126,6 +173,10 @@ public class BitOutputStream {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPendingBits() {
         return bits;
     }

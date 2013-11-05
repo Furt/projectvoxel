@@ -7,6 +7,11 @@ import com.jme3.texture.Texture;
 
 public class BlockMaterial extends Material {
 
+    /**
+     *
+     * @param assetManager
+     * @param blockTextureFilePath
+     */
     public BlockMaterial(AssetManager assetManager, String blockTextureFilePath) {
         super(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture texture = assetManager.loadTexture(blockTextureFilePath);

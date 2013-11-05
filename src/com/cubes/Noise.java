@@ -18,20 +18,28 @@ public class Noise {
         rand_ = ((rand == null) ? new Random() : rand);
         initialise();
     }
+    
     /**
      * Source of entropy
      */
     private Random rand_;
+    
+    /**
+     * Seed
+     */
+    private float seed;
+    
     /**
      * Amount of roughness
      */
     float roughness_;
+    
     /**
      * Plasma fractal grid
      */
     private float[][] grid_;
 
-    public void initialise() {
+    private void initialise() {
         int xh = (grid_.length - 1);
         int yh = (grid_[0].length - 1);
         //Set the corner points
@@ -101,14 +109,28 @@ public class Noise {
         return ret;
     }
 
+    /**
+     *
+     * @return
+     */
     public float[][] getGrid() {
         return grid_;
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public float getGridValue(int x, int y) {
         return grid_[x][y];
     }
 
+    /**
+     *
+     * @return
+     */
     public float getMinimum() {
         float minimum = Float.MAX_VALUE;
         for (int i = 0; i < grid_.length; i++) {
@@ -122,6 +144,10 @@ public class Noise {
         return minimum;
     }
 
+    /**
+     *
+     * @return
+     */
     public float getMaximum() {
         float maximum = Float.MIN_VALUE;
         for (int i = 0; i < grid_.length; i++) {

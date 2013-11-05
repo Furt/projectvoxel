@@ -4,9 +4,9 @@
  */
 package me.furt.projectv;
 
-import com.cubes.BlockChunkControl;
-import com.cubes.BlockChunkListener;
-import com.cubes.BlockTerrainControl;
+import com.cubes.ChunkControl;
+import com.cubes.ChunkListener;
+import com.cubes.TerrainControl;
 import com.cubes.Vector3Int;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
@@ -23,7 +23,7 @@ import me.furt.projectv.block.*;
  */
 public class World {
 
-    private BlockTerrainControl blockTerrain;
+    private TerrainControl blockTerrain;
     private Node terrainNode = new Node();
     private final BulletAppState bas;
     private final SimpleApplication app;
@@ -35,7 +35,7 @@ public class World {
 
     public Node generateTestWorld() {
         WorldSettings.registerBlocks();
-        blockTerrain = new BlockTerrainControl(WorldSettings.getSettings(app), new Vector3Int(10, 1, 10));
+        blockTerrain = new TerrainControl(WorldSettings.getSettings(app), new Vector3Int(10, 1, 10));
         // World base
         blockTerrain.setBlockArea(new Vector3Int(0, 0, 0), new Vector3Int(320, 20, 320), Block_Stone.class);
         blockTerrain.setBlockArea(new Vector3Int(0, 20, 0), new Vector3Int(320, 5, 320), Block_Grass.class);
@@ -78,8 +78,8 @@ public class World {
         blockTerrain.setBlockArea(new Vector3Int(2, 28, 19), new Vector3Int(3, 2, 3), Block_Leaves.class);
         blockTerrain.setBlock(3, 30, 20, Block_Leaves.class);
 
-        blockTerrain.addChunkListener(new BlockChunkListener() {
-            public void onSpatialUpdated(BlockChunkControl blockChunk) {
+        blockTerrain.addChunkListener(new ChunkListener() {
+            public void onSpatialUpdated(ChunkControl blockChunk) {
                 Geometry optimizedGeometry = blockChunk.getOptimizedGeometry_Opaque();
                 RigidBodyControl rigidBodyControl = optimizedGeometry.getControl(RigidBodyControl.class);
                 if (rigidBodyControl == null) {
