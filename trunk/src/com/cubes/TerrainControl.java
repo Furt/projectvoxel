@@ -11,28 +11,53 @@ import com.jme3.texture.Texture;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class BlockTerrainControl extends AbstractControl implements BitSerializable {
+public class TerrainControl extends AbstractControl implements BitSerializable {
 
-    public BlockTerrainControl(CubesSettings settings, Vector3Int chunksCount) {
+    /**
+     *
+     * @param settings
+     * @param chunksCount
+     */
+    public TerrainControl(CubesSettings settings, Vector3Int chunksCount) {
         this.settings = settings;
         initializeChunks(chunksCount);
     }
+    
     private CubesSettings settings;
-    private BlockChunkControl[][][] chunks;
-    private ArrayList<BlockChunkListener> chunkListeners = new ArrayList<BlockChunkListener>();
+    private ChunkControl[][][] chunks;
+    private ArrayList<ChunkListener> chunkListeners = new ArrayList<ChunkListener>();
 
+    /**
+     *
+     * @param chunksCount
+     */
     private void initializeChunks(Vector3Int chunksCount) {
-        chunks = new BlockChunkControl[chunksCount.getX()][chunksCount.getY()][chunksCount.getZ()];
+        chunks = new ChunkControl[chunksCount.getX()][chunksCount.getY()][chunksCount.getZ()];
         for (int x = 0; x < chunks.length; x++) {
             for (int y = 0; y < chunks[0].length; y++) {
                 for (int z = 0; z < chunks[0][0].length; z++) {
-                    BlockChunkControl chunk = new BlockChunkControl(this, x, y, z);
+                    ChunkControl chunk = new ChunkControl(this, x, y, z);
                     chunks[x][y][z] = chunk;
                 }
             }
         }
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     */
+    public void addChunk(int x, int y, int z) {
+        ChunkControl chunk = new ChunkControl(this, x, y, z);
+        chunks[x][y][z] = chunk;
+    }
+
+    /**
+     *
+     * @param spatial
+     */
     @Override
     public void setSpatial(Spatial spatial) {
         Spatial oldSpatial = this.spatial;
@@ -50,24 +75,50 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @param lastTimePerFrame
+     */
     @Override
     protected void controlUpdate(float lastTimePerFrame) {
         updateSpatial();
     }
 
+    /**
+     *
+     * @param renderManager
+     * @param viewPort
+     */
     @Override
     protected void controlRender(RenderManager renderManager, ViewPort viewPort) {
     }
 
+    /**
+     *
+     * @param spatial
+     * @return
+     */
     @Override
     public Control cloneForSpatial(Spatial spatial) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
     public BlockType getBlock(int x, int y, int z) {
         return getBlock(new Vector3Int(x, y, z));
     }
 
+    /**
+     *
+     * @param location
+     * @return
+     */
     public BlockType getBlock(Vector3Int location) {
         LocalBlockState localBlockState = getLocalBlockState(location);
         if (localBlockState != null) {
@@ -76,6 +127,12 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         return null;
     }
 
+    /**
+     *
+     * @param location
+     * @param size
+     * @param blockClass
+     */
     public void setBlockArea(Vector3Int location, Vector3Int size, Class<? extends Block> blockClass) {
         Vector3Int tmpLocation = new Vector3Int();
         for (int x = 0; x < size.getX(); x++) {
@@ -88,10 +145,22 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param blockClass
+     */
     public void setBlock(int x, int y, int z, Class<? extends Block> blockClass) {
         setBlock(new Vector3Int(x, y, z), blockClass);
     }
 
+    /**
+     *
+     * @param location
+     * @param blockClass
+     */
     public void setBlock(Vector3Int location, Class<? extends Block> blockClass) {
         LocalBlockState localBlockState = getLocalBlockState(location);
         if (localBlockState != null) {
@@ -99,6 +168,11 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @param location
+     * @param size
+     */
     public void removeBlockArea(Vector3Int location, Vector3Int size) {
         Vector3Int tmpLocation = new Vector3Int();
         for (int x = 0; x < size.getX(); x++) {
@@ -111,10 +185,20 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     */
     public void removeBlock(int x, int y, int z) {
         removeBlock(new Vector3Int(x, y, z));
     }
 
+    /**
+     *
+     * @param location
+     */
     public void removeBlock(Vector3Int location) {
         LocalBlockState localBlockState = getLocalBlockState(location);
         if (localBlockState != null) {
@@ -122,11 +206,16 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @param blockLocation
+     * @return
+     */
     private LocalBlockState getLocalBlockState(Vector3Int blockLocation) {
         if (blockLocation.hasNegativeCoordinate()) {
             return null;
         }
-        BlockChunkControl chunk = getChunk(blockLocation);
+        ChunkControl chunk = getChunk(blockLocation);
         if (chunk != null) {
             Vector3Int localBlockLocation = getLocalBlockLocation(blockLocation, chunk);
             return new LocalBlockState(chunk, localBlockLocation);
@@ -134,7 +223,35 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         return null;
     }
 
-    public BlockChunkControl getChunk(Vector3Int blockLocation) {
+    /**
+     *
+     * @return
+     */
+    public ChunkControl[][][] getChunks() {
+        return chunks;
+    }
+
+    /**
+     *
+     * @param chunkX
+     * @param chunkY
+     * @param chunkZ
+     * @return
+     */
+    public ChunkControl getChunk(int chunkX, int chunkY, int chunkZ) {
+        ChunkControl chunkControl = chunks[chunkX][chunkY][chunkY];
+        if (chunkControl != null) {
+            return chunkControl;
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param blockLocation
+     * @return
+     */
+    public ChunkControl getChunk(Vector3Int blockLocation) {
         if (blockLocation.hasNegativeCoordinate()) {
             return null;
         }
@@ -145,10 +262,20 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         return null;
     }
 
+    /**
+     *
+     * @param location
+     * @return
+     */
     public boolean isValidChunkLocation(Vector3Int location) {
         return Util.isValidIndex(chunks, location);
     }
 
+    /**
+     *
+     * @param blockLocation
+     * @return
+     */
     private Vector3Int getChunkLocation(Vector3Int blockLocation) {
         Vector3Int chunkLocation = new Vector3Int();
         int chunkX = (blockLocation.getX() / settings.getChunkSizeX());
@@ -158,7 +285,13 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         return chunkLocation;
     }
 
-    public static Vector3Int getLocalBlockLocation(Vector3Int blockLocation, BlockChunkControl chunk) {
+    /**
+     *
+     * @param blockLocation
+     * @param chunk
+     * @return
+     */
+    public static Vector3Int getLocalBlockLocation(Vector3Int blockLocation, ChunkControl chunk) {
         Vector3Int localLocation = new Vector3Int();
         int localX = (blockLocation.getX() - chunk.getBlockLocation().getX());
         int localY = (blockLocation.getY() - chunk.getBlockLocation().getY());
@@ -167,16 +300,20 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         return localLocation;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean updateSpatial() {
         boolean wasUpdatedNeeded = false;
         for (int x = 0; x < chunks.length; x++) {
             for (int y = 0; y < chunks[0].length; y++) {
                 for (int z = 0; z < chunks[0][0].length; z++) {
-                    BlockChunkControl chunk = chunks[x][y][z];
+                    ChunkControl chunk = chunks[x][y][z];
                     if (chunk.updateSpatial()) {
                         wasUpdatedNeeded = true;
                         for (int i = 0; i < chunkListeners.size(); i++) {
-                            BlockChunkListener blockTerrainListener = chunkListeners.get(i);
+                            ChunkListener blockTerrainListener = chunkListeners.get(i);
                             blockTerrainListener.onSpatialUpdated(chunk);
                         }
                     }
@@ -186,6 +323,9 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         return wasUpdatedNeeded;
     }
 
+    /**
+     *
+     */
     public void updateBlockMaterial() {
         for (int x = 0; x < chunks.length; x++) {
             for (int y = 0; y < chunks[0].length; y++) {
@@ -196,23 +336,37 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
-    public void addChunkListener(BlockChunkListener blockChunkListener) {
+    /**
+     *
+     * @param blockChunkListener
+     */
+    public void addChunkListener(ChunkListener blockChunkListener) {
         chunkListeners.add(blockChunkListener);
     }
 
-    public void removeChunkListener(BlockChunkListener blockChunkListener) {
+    /**
+     *
+     * @param blockChunkListener
+     */
+    public void removeChunkListener(ChunkListener blockChunkListener) {
         chunkListeners.remove(blockChunkListener);
     }
 
+    /**
+     *
+     * @return
+     */
     public CubesSettings getSettings() {
         return settings;
     }
 
-    public BlockChunkControl[][][] getChunks() {
-        return chunks;
-    }
-
-    //Tools
+    /**
+     *
+     * @param location
+     * @param heightmapPath
+     * @param maximumHeight
+     * @param blockClass
+     */
     public void setBlocksFromHeightmap(Vector3Int location, String heightmapPath, int maximumHeight, Class<? extends Block> blockClass) {
         try {
             Texture heightmapTexture = settings.getAssetManager().loadTexture(heightmapPath);
@@ -225,6 +379,12 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @param heightmapData
+     * @param length
+     * @return
+     */
     private static int[][] getHeightmapBlockData(float[] heightmapData, int length) {
         int[][] data = new int[heightmapData.length / length][length];
         int x = 0;
@@ -240,6 +400,12 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         return data;
     }
 
+    /**
+     *
+     * @param location
+     * @param heightmap
+     * @param blockClass
+     */
     public void setBlocksFromHeightmap(Vector3Int location, int[][] heightmap, Class<? extends Block> blockClass) {
         Vector3Int tmpLocation = new Vector3Int();
         Vector3Int tmpSize = new Vector3Int();
@@ -252,9 +418,16 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @param location
+     * @param size
+     * @param roughness
+     * @param blockClass
+     */
     public void setBlocksFromNoise(Vector3Int location, Vector3Int size, float roughness, Class<? extends Block> blockClass) {
         Noise noise = new Noise(null, roughness, size.getX(), size.getZ());
-        noise.initialise();
+        //noise.initialise();
         float gridMinimum = noise.getMinimum();
         float gridLargestDifference = (noise.getMaximum() - gridMinimum);
         float[][] grid = noise.getGrid();
@@ -276,6 +449,12 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @param location
+     * @param size
+     * @param blockClass
+     */
     public void setBlocksForMaximumFaces(Vector3Int location, Vector3Int size, Class<? extends Block> blockClass) {
         Vector3Int tmpLocation = new Vector3Int();
         for (int x = 0; x < size.getX(); x++) {
@@ -290,17 +469,29 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public BlockTerrainControl clone() {
-        BlockTerrainControl blockTerrain = new BlockTerrainControl(settings, new Vector3Int());
+    public TerrainControl clone() {
+        TerrainControl blockTerrain = new TerrainControl(settings, new Vector3Int());
         blockTerrain.setBlocksFromTerrain(this);
         return blockTerrain;
     }
 
-    public void setBlocksFromTerrain(BlockTerrainControl blockTerrain) {
+    /**
+     *
+     * @param blockTerrain
+     */
+    public void setBlocksFromTerrain(TerrainControl blockTerrain) {
         CubesSerializer.readFromBytes(this, CubesSerializer.writeToBytes(blockTerrain));
     }
 
+    /**
+     *
+     * @param outputStream
+     */
     @Override
     public void write(BitOutputStream outputStream) {
         outputStream.writeInteger(chunks.length);
@@ -315,6 +506,11 @@ public class BlockTerrainControl extends AbstractControl implements BitSerializa
         }
     }
 
+    /**
+     *
+     * @param inputStream
+     * @throws IOException
+     */
     @Override
     public void read(BitInputStream inputStream) throws IOException {
         int chunksCountX = inputStream.readInteger();

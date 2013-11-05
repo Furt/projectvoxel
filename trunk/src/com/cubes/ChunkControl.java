@@ -12,9 +12,16 @@ import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
 
-public class BlockChunkControl extends AbstractControl implements BitSerializable {
+public class ChunkControl extends AbstractControl implements BitSerializable {
 
-    public BlockChunkControl(BlockTerrainControl terrain, int x, int y, int z) {
+    /**
+     *
+     * @param terrain
+     * @param x
+     * @param y
+     * @param z
+     */
+    public ChunkControl(TerrainControl terrain, int x, int y, int z) {
         this.terrain = terrain;
         location.set(x, y, z);
         blockLocation.set(location.mult(terrain.getSettings().getChunkSizeX(), terrain.getSettings().getChunkSizeY(), terrain.getSettings().getChunkSizeZ()));
@@ -22,7 +29,7 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
         blockTypes = new byte[terrain.getSettings().getChunkSizeX()][terrain.getSettings().getChunkSizeY()][terrain.getSettings().getChunkSizeZ()];
         blocks_IsOnSurface = new boolean[terrain.getSettings().getChunkSizeX()][terrain.getSettings().getChunkSizeY()][terrain.getSettings().getChunkSizeZ()];
     }
-    private BlockTerrainControl terrain;
+    private TerrainControl terrain;
     private Vector3Int location = new Vector3Int();
     private Vector3Int blockLocation = new Vector3Int();
     private byte[][][] blockTypes;
@@ -32,6 +39,10 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
     private Geometry optimizedGeometry_Transparent;
     private boolean needsMeshUpdate;
 
+    /**
+     *
+     * @param spatial
+     */
     @Override
     public void setSpatial(Spatial spatial) {
         Spatial oldSpatial = this.spatial;
@@ -45,34 +56,71 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
         }
     }
 
+    /**
+     *
+     * @param lastTimePerFrame
+     */
     @Override
     protected void controlUpdate(float lastTimePerFrame) {
     }
 
+    /**
+     *
+     * @param renderManager
+     * @param viewPort
+     */
     @Override
     protected void controlRender(RenderManager renderManager, ViewPort viewPort) {
     }
 
+    /**
+     *
+     * @param spatial
+     * @return
+     */
     @Override
     public Control cloneForSpatial(Spatial spatial) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     *
+     * @param location
+     * @param face
+     * @return
+     */
     public BlockType getNeighborBlock_Local(Vector3Int location, Block.Face face) {
         Vector3Int neighborLocation = BlockNavigator.getNeighborBlockLocalLocation(location, face);
         return getBlock(neighborLocation);
     }
 
+    /**
+     *
+     * @param location
+     * @param face
+     * @return
+     */
     public BlockType getNeighborBlock_Global(Vector3Int location, Block.Face face) {
         return terrain.getBlock(getNeighborBlockGlobalLocation(location, face));
     }
 
+    /**
+     *
+     * @param location
+     * @param face
+     * @return
+     */
     private Vector3Int getNeighborBlockGlobalLocation(Vector3Int location, Block.Face face) {
         Vector3Int neighborLocation = BlockNavigator.getNeighborBlockLocalLocation(location, face);
         neighborLocation.addLocal(blockLocation);
         return neighborLocation;
     }
 
+    /**
+     *
+     * @param location
+     * @return
+     */
     public BlockType getBlock(Vector3Int location) {
         if (isValidBlockLocation(location)) {
             byte blockType = blockTypes[location.getX()][location.getY()][location.getZ()];
@@ -81,6 +129,11 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
         return null;
     }
 
+    /**
+     *
+     * @param location
+     * @param blockClass
+     */
     public void setBlock(Vector3Int location, Class<? extends Block> blockClass) {
         if (isValidBlockLocation(location)) {
             BlockType blockType = BlockManager.getType(blockClass);
@@ -90,6 +143,10 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
         }
     }
 
+    /**
+     *
+     * @param location
+     */
     public void removeBlock(Vector3Int location) {
         if (isValidBlockLocation(location)) {
             blockTypes[location.getX()][location.getY()][location.getZ()] = 0;
@@ -98,10 +155,19 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
         }
     }
 
+    /**
+     *
+     * @param location
+     * @return
+     */
     private boolean isValidBlockLocation(Vector3Int location) {
         return Util.isValidIndex(blockTypes, location);
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean updateSpatial() {
         if (needsMeshUpdate) {
             if (optimizedGeometry_Opaque == null) {
@@ -124,6 +190,9 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
         return false;
     }
 
+    /**
+     *
+     */
     public void updateBlockMaterial() {
         if (optimizedGeometry_Opaque != null) {
             optimizedGeometry_Opaque.setMaterial(terrain.getSettings().getBlockMaterial());
@@ -133,50 +202,91 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
         }
     }
 
+    /**
+     *
+     * @param location
+     */
     private void updateBlockState(Vector3Int location) {
         updateBlockInformation(location);
         for (int i = 0; i < Block.Face.values().length; i++) {
             Vector3Int neighborLocation = getNeighborBlockGlobalLocation(location, Block.Face.values()[i]);
-            BlockChunkControl chunk = terrain.getChunk(neighborLocation);
+            ChunkControl chunk = terrain.getChunk(neighborLocation);
             if (chunk != null) {
                 chunk.updateBlockInformation(neighborLocation.subtract(chunk.getBlockLocation()));
             }
         }
     }
 
+    /**
+     *
+     * @param location
+     */
     private void updateBlockInformation(Vector3Int location) {
         BlockType neighborBlock_Top = terrain.getBlock(getNeighborBlockGlobalLocation(location, Block.Face.Top));
         blocks_IsOnSurface[location.getX()][location.getY()][location.getZ()] = (neighborBlock_Top == null);
     }
 
+    /**
+     *
+     * @param location
+     * @return
+     */
     public boolean isBlockOnSurface(Vector3Int location) {
         return blocks_IsOnSurface[location.getX()][location.getY()][location.getZ()];
     }
 
-    public BlockTerrainControl getTerrain() {
+    /**
+     *
+     * @return
+     */
+    public TerrainControl getTerrain() {
         return terrain;
     }
 
+    /**
+     *
+     * @return
+     */
     public Vector3Int getLocation() {
         return location;
     }
 
+    /**
+     *
+     * @return
+     */
     public Vector3Int getBlockLocation() {
         return blockLocation;
     }
 
+    /**
+     *
+     * @return
+     */
     public Node getNode() {
         return node;
     }
 
+    /**
+     *
+     * @return
+     */
     public Geometry getOptimizedGeometry_Opaque() {
         return optimizedGeometry_Opaque;
     }
 
+    /**
+     *
+     * @return
+     */
     public Geometry getOptimizedGeometry_Transparent() {
         return optimizedGeometry_Transparent;
     }
 
+    /**
+     *
+     * @param outputStream
+     */
     @Override
     public void write(BitOutputStream outputStream) {
         for (int x = 0; x < blockTypes.length; x++) {
@@ -188,6 +298,11 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
         }
     }
 
+    /**
+     *
+     * @param inputStream
+     * @throws IOException
+     */
     @Override
     public void read(BitInputStream inputStream) throws IOException {
         for (int x = 0; x < blockTypes.length; x++) {
@@ -209,6 +324,11 @@ public class BlockChunkControl extends AbstractControl implements BitSerializabl
         needsMeshUpdate = true;
     }
 
+    /**
+     *
+     * @param blocksCount
+     * @return
+     */
     private Vector3Int getNeededBlockChunks(Vector3Int blocksCount) {
         int chunksCountX = (int) Math.ceil(((float) blocksCount.getX()) / terrain.getSettings().getChunkSizeX());
         int chunksCountY = (int) Math.ceil(((float) blocksCount.getY()) / terrain.getSettings().getChunkSizeY());

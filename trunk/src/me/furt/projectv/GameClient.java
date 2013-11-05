@@ -1,5 +1,8 @@
 package me.furt.projectv;
 
+import com.cubes.BlockNavigator;
+import com.cubes.TerrainControl;
+import com.cubes.Vector3Int;
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
@@ -123,9 +126,18 @@ public class GameClient extends SimpleApplication implements ScreenController {
         super.destroy();
     }
 
+    private Vector3Int getCurrentPointedBlockLocation(Node terrainNode, TerrainControl blockTerrain, boolean getNeighborLocation) {
+        CollisionResults results = getRayCastingResults(terrainNode);
+        if (results.size() > 0) {
+            Vector3f collisionContactPoint = results.getClosestCollision().getContactPoint();
+            return BlockNavigator.getPointedBlockLocation(blockTerrain, collisionContactPoint, getNeighborLocation);
+        }
+        return null;
+    }
+
     private CollisionResults getRayCastingResults(Node node) {
-        Vector3f origin = cam.getWorldCoordinates(new Vector2f(settings.getWidth() / 2, settings.getHeight() / 2), 0.0F);
-        Vector3f direction = cam.getWorldCoordinates(new Vector2f(settings.getWidth() / 2, settings.getHeight() / 2), 0.3F);
+        Vector3f origin = cam.getWorldCoordinates(new Vector2f((settings.getWidth() / 2), (settings.getHeight() / 2)), 0.0f);
+        Vector3f direction = cam.getWorldCoordinates(new Vector2f((settings.getWidth() / 2), (settings.getHeight() / 2)), 0.3f);
         direction.subtractLocal(origin).normalizeLocal();
         Ray ray = new Ray(origin, direction);
         CollisionResults results = new CollisionResults();

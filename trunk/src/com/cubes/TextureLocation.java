@@ -2,6 +2,11 @@ package com.cubes;
 
 public class TextureLocation {
 
+    /**
+     *
+     * @param column
+     * @param row
+     */
     public TextureLocation(int column, int row) {
         this.column = column;
         this.row = row;
@@ -9,10 +14,18 @@ public class TextureLocation {
     private int column;
     private int row;
 
+    /**
+     *
+     * @return
+     */
     public int getColumn() {
         return column;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getRow() {
         return row;
     }

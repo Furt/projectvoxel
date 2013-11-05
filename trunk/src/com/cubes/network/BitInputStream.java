@@ -5,6 +5,10 @@ import java.io.InputStream;
 
 public class BitInputStream {
 
+    /**
+     *
+     * @param in
+     */
     public BitInputStream(InputStream in) {
         this.in = in;
     }
@@ -12,18 +16,37 @@ public class BitInputStream {
     private int lastByte;
     private int bits = 0;
 
+    /**
+     *
+     * @param <T>
+     * @param enumClass
+     * @return
+     * @throws IOException
+     */
     public <T extends Enum<T>> T readEnum(Class<T> enumClass) throws IOException {
         T[] enumConstants = enumClass.getEnumConstants();
         int bitsCount = BitUtil.getNeededBitsCount(enumConstants.length);
         return enumConstants[readBits(bitsCount)];
     }
 
+    /**
+     *
+     * @param maximumBytesCountBits
+     * @return
+     * @throws IOException
+     */
     public String readString_UTF8(int maximumBytesCountBits) throws IOException {
         int bytesCount = readBits(maximumBytesCountBits);
         byte[] bytes = readBytes(bytesCount);
         return new String(bytes, "UTF-8");
     }
 
+    /**
+     *
+     * @param bytesCount
+     * @return
+     * @throws IOException
+     */
     public byte[] readBytes(int bytesCount) throws IOException {
         byte[] bytes = new byte[bytesCount];
         for (int i = 0; i < bytes.length; i++) {
@@ -32,18 +55,39 @@ public class BitInputStream {
         return bytes;
     }
 
+    /**
+     *
+     * @return
+     * @throws IOException
+     */
     public float readFloat() throws IOException {
         return Float.intBitsToFloat(readBits(32));
     }
 
+    /**
+     *
+     * @return
+     * @throws IOException
+     */
     public int readInteger() throws IOException {
         return readBits(32);
     }
 
+    /**
+     *
+     * @return
+     * @throws IOException
+     */
     public boolean readBoolean() throws IOException {
         return (readBits(1) == 1);
     }
 
+    /**
+     *
+     * @param count
+     * @return
+     * @throws IOException
+     */
     public int readBits(int count) throws IOException {
         if (count == 0) {
             throw new IllegalArgumentException("Cannot read 0 bits.");
@@ -92,6 +136,12 @@ public class BitInputStream {
         return result;
     }
 
+    /**
+     *
+     * @param count
+     * @return
+     * @throws IOException
+     */
     public long readLongBits(int count) throws IOException {
         if (count == 0) {
             throw new IllegalArgumentException("Cannot read 0 bits.");
@@ -141,6 +191,9 @@ public class BitInputStream {
         return result;
     }
 
+    /**
+     *
+     */
     public void close() {
         try {
             in.close();

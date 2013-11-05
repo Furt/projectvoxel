@@ -1,7 +1,7 @@
 package me.furt.projectv;
 
 import com.cubes.Block;
-import com.cubes.BlockChunkControl;
+import com.cubes.ChunkControl;
 import com.cubes.BlockManager;
 import com.cubes.BlockSkin;
 import com.cubes.CubesSettings;
@@ -48,7 +48,7 @@ public class WorldSettings {
                     new TextureLocation(0, 1),
                     new TextureLocation(5, 1),}, false) {
             @Override
-            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                 if (chunk.isBlockOnSurface(blockLocation)) {
                     switch (face) {
                         case Top:
@@ -72,7 +72,7 @@ public class WorldSettings {
                     new TextureLocation(4, 4)
                 }, false){
                  @Override
-            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                 if (chunk.isBlockOnSurface(blockLocation)) {
                     switch(face)
                     {
@@ -93,7 +93,7 @@ public class WorldSettings {
                     new TextureLocation(2, 2)
                 }, false) {
                 @Override
-                protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                      return FastMath.nextRandomInt(0, 1);
                 }
                 });
@@ -104,7 +104,7 @@ public class WorldSettings {
                     new TextureLocation(0, 2),
                     new TextureLocation(2, 2),}, false) {
             @Override
-            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                 return FastMath.nextRandomInt(0,1);
             }
         });
@@ -114,7 +114,7 @@ public class WorldSettings {
                     new TextureLocation(0, 1),
                     new TextureLocation(5, 1),}, false) {
             @Override
-            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                 return FastMath.nextRandomInt(0,1);
             }
         });
@@ -123,7 +123,7 @@ public class WorldSettings {
             new TextureLocation(6, 1)
             }, false){
                 @Override
-                protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                      return FastMath.nextRandomInt(0, 1);
                 }
             });
@@ -131,7 +131,7 @@ public class WorldSettings {
                     new TextureLocation(4, 1),
                     new TextureLocation(6, 1),}, false) {
             @Override
-            protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                 return FastMath.nextRandomInt(0,1);
             }
         });
@@ -145,7 +145,7 @@ public class WorldSettings {
             new TextureLocation(4, 3)
             }, false){
                 @Override
-                protected int getTextureLocationIndex(BlockChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+                protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
                      return FastMath.nextRandomInt(0, 2);
                 }
             });

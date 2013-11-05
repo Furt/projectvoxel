@@ -4,12 +4,23 @@ import com.jme3.math.Vector3f;
 
 public class BlockNavigator{
     
+    /**
+     *
+     * @param location
+     * @param face
+     * @return
+     */
     public static Vector3Int getNeighborBlockLocalLocation(Vector3Int location, Block.Face face){
         Vector3Int neighborLocation = getNeighborBlockLocation_Relative(face);
         neighborLocation.addLocal(location);
         return neighborLocation;
     }
     
+    /**
+     *
+     * @param face
+     * @return
+     */
     public static Vector3Int getNeighborBlockLocation_Relative(Block.Face face){
         Vector3Int neighborLocation = new Vector3Int();
         switch(face){
@@ -40,7 +51,14 @@ public class BlockNavigator{
         return neighborLocation;
     }
     
-    public static Vector3Int getPointedBlockLocation(BlockTerrainControl blockTerrain, Vector3f collisionContactPoint, boolean getNeighborLocation){
+    /**
+     *
+     * @param blockTerrain
+     * @param collisionContactPoint
+     * @param getNeighborLocation
+     * @return
+     */
+    public static Vector3Int getPointedBlockLocation(TerrainControl blockTerrain, Vector3f collisionContactPoint, boolean getNeighborLocation){
         Vector3f collisionLocation = Util.compensateFloatRoundingErrors(collisionContactPoint);
         Vector3Int blockLocation = new Vector3Int(
                 (int) (collisionLocation.getX() / blockTerrain.getSettings().getBlockSize()),
