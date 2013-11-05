@@ -3,6 +3,7 @@ package me.furt.projectv;
 import com.cubes.*;
 import com.jme3.app.SimpleApplication;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import java.util.logging.Level;
@@ -33,16 +34,18 @@ public class TestNoise extends SimpleApplication {
         System.out.println("There are " + Material.values().length + " blocks.");
         
         WorldSettings.registerBlocks();
+        WorldSettings.initializeEnvironment(this);
 
         // Setup initial world generation
         blockTerrain = new TerrainControl(WorldSettings.getSettings(this), new Vector3Int(100, 1, 100));
         // setBlocksFromNoise(Vector3Int location, Vector3Int size, float roughness, Block blockClass)
-        blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 10, 16), 0.3f, Block_Grass.class);
-        blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 0), new Vector3Int(16, 10, 16), 0.3f, Block_Grass.class);
-        blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 16), new Vector3Int(16, 10, 16), 0.3f, Block_Grass.class);
-        blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 16), new Vector3Int(16, 10, 16), 0.3f, Block_Grass.class);
+        blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
+        blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
+        blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 16), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
+        blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 16), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
         Node terrainNode = new Node();
         terrainNode.addControl(blockTerrain);
+        terrainNode.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         rootNode.attachChild(terrainNode);
 
         // Setup camera
