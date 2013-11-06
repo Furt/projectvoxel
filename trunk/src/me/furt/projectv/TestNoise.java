@@ -2,6 +2,13 @@ package me.furt.projectv;
 
 import com.cubes.*;
 import com.jme3.app.SimpleApplication;
+import com.jme3.collision.CollisionResults;
+import com.jme3.font.BitmapText;
+import com.jme3.input.MouseInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.math.Ray;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
@@ -10,10 +17,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.furt.projectv.block.*;
 
-public class TestNoise extends SimpleApplication {
+public class TestNoise extends SimpleApplication implements ActionListener {
 
     public TerrainControl blockTerrain;
-    
+    public Node terrainNode;
+
     public static void main(String[] args) {
         Logger.getLogger("").setLevel(Level.SEVERE);
         TestNoise app = new TestNoise();
@@ -29,45 +37,94 @@ public class TestNoise extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        System.out.println(Material.COBBLESTONE.toString());
-        System.out.println(Material.valueOf("COBBLESTONE").getId());
-        System.out.println("There are " + Material.values().length + " blocks.");
-        
         WorldSettings.registerBlocks();
         WorldSettings.initializeEnvironment(this);
+        initControls();
+        initBlockTerrain();
+        initGUI();
+        initPlayer();
+    }
 
-        // Setup initial world generation
+    @Override
+    public void simpleUpdate(float tpf) {
+    }
+
+    private void initBlockTerrain() {
         blockTerrain = new TerrainControl(WorldSettings.getSettings(this), new Vector3Int(100, 1, 100));
         // setBlocksFromNoise(Vector3Int location, Vector3Int size, float roughness, Block blockClass)
         blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
         blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
         blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 16), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
         blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 16), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
-        Node terrainNode = new Node();
+        terrainNode = new Node("Terrain");
         terrainNode.addControl(blockTerrain);
         terrainNode.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         rootNode.attachChild(terrainNode);
+    }
 
-        // Setup camera
+    private void initPlayer() {
         cam.setLocation(new Vector3f(0, 187, 0));
         cam.lookAtDirection(new Vector3f(0.64f, 5f, 0.6f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(200);
-        
-        
     }
-    
+
+    private void initControls() {
+        inputManager.addMapping("set_block", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addListener(this, "set_block");
+        inputManager.addMapping("remove_block", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+        inputManager.addListener(this, "remove_block");
+    }
+
+    private void initGUI() {
+        //Crosshair
+        BitmapText crosshair = new BitmapText(guiFont);
+        crosshair.setText("+");
+        crosshair.setSize(guiFont.getCharSet().getRenderedSize() * 2);
+        crosshair.setLocalTranslation(
+                (settings.getWidth() / 2) - (guiFont.getCharSet().getRenderedSize() / 3 * 2),
+                (settings.getHeight() / 2) + (crosshair.getLineHeight() / 2), 0);
+        guiNode.attachChild(crosshair);
+    }
+
+    @Override
+    public void onAction(String action, boolean value, float lastTimePerFrame) {
+        if (action.equals("set_block") && value) {
+            Vector3Int blockLocation = getCurrentPointedBlockLocation(true);
+            if (blockLocation != null) {
+                blockTerrain.setBlock(blockLocation, Block_Log.class);
+            }
+        } else if (action.equals("remove_block") && value) {
+            Vector3Int blockLocation = getCurrentPointedBlockLocation(false);
+            if ((blockLocation != null) && (blockLocation.getY() > 0)) {
+                blockTerrain.removeBlock(blockLocation);
+            }
+        }
+    }
+
+    private Vector3Int getCurrentPointedBlockLocation(boolean getNeighborLocation) {
+        CollisionResults results = getRayCastingResults(terrainNode);
+        if (results.size() > 0) {
+            Vector3f collisionContactPoint = results.getClosestCollision().getContactPoint();
+            return BlockNavigator.getPointedBlockLocation(blockTerrain, collisionContactPoint, getNeighborLocation);
+        }
+        return null;
+    }
+
+    private CollisionResults getRayCastingResults(Node node) {
+        Vector3f origin = cam.getWorldCoordinates(new Vector2f((settings.getWidth() / 2), (settings.getHeight() / 2)), 0.0f);
+        Vector3f direction = cam.getWorldCoordinates(new Vector2f((settings.getWidth() / 2), (settings.getHeight() / 2)), 0.3f);
+        direction.subtractLocal(origin).normalizeLocal();
+        Ray ray = new Ray(origin, direction);
+        CollisionResults results = new CollisionResults();
+        node.collideWith(ray, results);
+        return results;
+    }
+
     public Vector3f getCameraView() {
-       return cam.getDirection();
+        return cam.getDirection();
     }
-    
+
     public Vector3f getCameraLoc() {
         return cam.getLocation();
-    }
-    
-    
-    
-    @Override
-    public void simpleUpdate(float tpf) {
-        
     }
 }
