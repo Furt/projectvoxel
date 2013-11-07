@@ -104,7 +104,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
                 blockTerrain.removeBlock(blockLocation);
             }
         } else if (action.equals("block_select") && value) {
-            if (itemInHand >= 5) {
+            if (itemInHand >= 15) {
                 itemInHand = 0;
             } else {
                 itemInHand++;
@@ -146,6 +146,26 @@ public class TestNoise extends SimpleApplication implements ActionListener {
             c = Block_Grass.class;
         } else if (id == 5) {
             c = Block_Gravel.class;
+        } else if (id == 6) {
+            c = Block_Ice.class;
+        } else if (id == 7) {
+            c = Block_Lava.class;
+        } else if (id == 8) {
+            c = Block_Log.class;
+        } else if (id == 9) {
+            c = Block_Mud.class;
+        } else if (id == 10) {
+            c = Block_Red_Clay.class;
+        } else if (id == 11) {
+            c = Block_Sand.class;
+        } else if (id == 12) {
+            c = Block_Stone.class;
+        } else if (id == 13) {
+            c = Block_Stone_Slab.class;
+        } else if (id == 14) {
+            c = Block_Water.class;
+        } else if (id == 15) {
+            c = Block_Leaves.class;
         } else {
             c = Block_Grass.class;
         }
