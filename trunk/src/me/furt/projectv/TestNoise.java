@@ -21,6 +21,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
 
     public TerrainControl blockTerrain;
     public Node terrainNode;
+    public int itemInHand;
 
     public static void main(String[] args) {
         Logger.getLogger("").setLevel(Level.SEVERE);
@@ -63,6 +64,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     }
 
     private void initPlayer() {
+        itemInHand = 0;
         cam.setLocation(new Vector3f(0, 187, 0));
         cam.lookAtDirection(new Vector3f(0.64f, 5f, 0.6f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(200);
@@ -73,6 +75,8 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         inputManager.addListener(this, "set_block");
         inputManager.addMapping("remove_block", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
         inputManager.addListener(this, "remove_block");
+        inputManager.addMapping("block_select", new MouseButtonTrigger(MouseInput.AXIS_WHEEL));
+        inputManager.addListener(this, "block_select");
     }
 
     private void initGUI() {
@@ -91,12 +95,19 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         if (action.equals("set_block") && value) {
             Vector3Int blockLocation = getCurrentPointedBlockLocation(true);
             if (blockLocation != null) {
-                blockTerrain.setBlock(blockLocation, Block_Log.class);
+                Class<? extends Block> c = getBlockSelected(itemInHand);
+                blockTerrain.setBlock(blockLocation, c);
             }
         } else if (action.equals("remove_block") && value) {
             Vector3Int blockLocation = getCurrentPointedBlockLocation(false);
             if ((blockLocation != null) && (blockLocation.getY() > 0)) {
                 blockTerrain.removeBlock(blockLocation);
+            }
+        } else if (action.equals("block_select") && value) {
+            if (itemInHand >= 5) {
+                itemInHand = 0;
+            } else {
+                itemInHand++;
             }
         }
     }
@@ -118,6 +129,28 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         CollisionResults results = new CollisionResults();
         node.collideWith(ray, results);
         return results;
+    }
+
+    // Very quick and dirty method to select a block type
+    public Class<? extends Block> getBlockSelected(int id) {
+        Class<? extends Block> c;
+        if (id == 0) {
+            c = Block_Plank.class;
+        } else if (id == 1) {
+            c = Block_Cobble.class;
+        } else if (id == 2) {
+            c = Block_Dirt.class;
+        } else if (id == 3) {
+            c = Block_Glass.class;
+        } else if (id == 4) {
+            c = Block_Grass.class;
+        } else if (id == 5) {
+            c = Block_Gravel.class;
+        } else {
+            c = Block_Grass.class;
+        }
+
+        return c;
     }
 
     public Vector3f getCameraView() {
