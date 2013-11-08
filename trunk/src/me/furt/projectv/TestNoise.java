@@ -10,6 +10,7 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -146,8 +147,10 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         inputManager.addListener(this, "set_block");
         inputManager.addMapping("remove_block", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
         inputManager.addListener(this, "remove_block");
-        inputManager.addMapping("block_select", new MouseButtonTrigger(MouseInput.AXIS_WHEEL));
-        inputManager.addListener(this, "block_select");
+        inputManager.addMapping("block_plus", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
+        inputManager.addListener(this, "block_plus");
+        inputManager.addMapping("block_minus", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
+        inputManager.addListener(this, "block_minus");
     }
 
     private void initGUI() {
@@ -199,13 +202,20 @@ public class TestNoise extends SimpleApplication implements ActionListener {
             if ((blockLocation != null) && (blockLocation.getY() > 0)) {
                 blockTerrain.removeBlock(blockLocation);
             }
-        } else if (action.equals("block_select") && value) {
+        } else if (action.equals("block_plus") && value) {
 
-            int temp = BlockManager.getTypes().length;
-            if (itemInHand >= temp) {
+            int temp = 15;
+            if (itemInHand == temp) {
                 itemInHand = 0;
             } else {
                 itemInHand++;
+            }
+        } else if (action.equals("block_minus") && value) {
+            int temp = 15;
+            if (itemInHand == 0) {
+                itemInHand = temp;
+            } else {
+                itemInHand--;
             }
         }
     }
