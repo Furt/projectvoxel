@@ -12,9 +12,11 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -27,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import me.furt.projectv.block.*;
+import tonegod.skydome.FogFilter;
 
 public class TestNoise extends SimpleApplication implements ActionListener {
 
@@ -70,37 +73,16 @@ public class TestNoise extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleUpdate(float tpf) {
-        chunkLoc.setText("Chunk   Location: X= " + cam.getLocation().getX()/4/16 + ", Y= " + cam.getLocation().getY()/4/16  + ", Z= " + cam.getLocation().getZ()/4/16);
-        blockLoc.setText("Block   Location: X= " + cam.getLocation().getX()/4 + ", Y= " + cam.getLocation().getY()/4  + ", Z= " + cam.getLocation().getZ()/4);
-        playerLoc.setText("Player  Location: X= " + cam.getLocation().getX() + ", Y= " + cam.getLocation().getY()  + ", Z= " + cam.getLocation().getZ());
-//        if (this.screen == null) {
-//            return;
-//        }
-//
-//        int percentage = Progress.getTotalPercent();
-//        String message = Progress.getLastMessage();
-//        if ((this.lastPercent != percentage) || (!ObjectUtils.areEqual(message, this.lastMessage))) {
-//            this.lastPercent = percentage;
-//            this.lastMessage = message;
-//            Label progress = (Label) this.screen.findNiftyControl("progress", Label.class);
-//
-//            if (percentage > 0) {
-//                String text = percentage + " %";
-//                progress.setText(text);
-//                if (percentage == 100) {
-//                    startGame();
-//                }
-//            } else {
-//                progress.setText("");
-//            }
-//
-//            Label status = (Label) this.screen.findNiftyControl("status", Label.class);
-//            if (message != null) {
-//                status.setText(message);
-//            } else {
-//                status.setText("");
-//            }
-//        }
+        Vector3f loc = cam.getLocation();
+        Vector3f dir = cam.getDirection();
+        chunkLoc.setText("Chunk  : X= " + getBlockLoc(loc.getX()) / 16 + ", Y= " + getBlockLoc(loc.getY()) / 128 + ", Z= " + getBlockLoc(loc.getZ()) / 16);
+        blockLoc.setText("Block   : X= " + getBlockLoc(loc.getX()) + ", Y= " + getBlockLoc(loc.getY()) + ", Z= " + getBlockLoc(loc.getZ()));
+        playerLoc.setText("Player : X= " + String.format("%.3f", loc.getX()) + ", Y= " + String.format("%.3f", loc.getY()) + ", Z= " + String.format("%.3f", loc.getZ()));
+    }
+
+    public int getBlockLoc(float f) {
+        int i = (int) WorldSettings.getSettings(this).getBlockSize();
+        return (int) Math.ceil(f / i);
     }
 
     private void initBlockTerrain() {
@@ -118,9 +100,23 @@ public class TestNoise extends SimpleApplication implements ActionListener {
 
     private void initPlayer() {
         itemInHand = 0;
-        cam.setLocation(new Vector3f(0, 187, 0));
+        cam.setLocation(new Vector3f(76, 50, 76));
         cam.lookAtDirection(new Vector3f(0.64f, 5f, 0.6f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(200);
+    }
+
+    private void initFog() {
+        /**
+         * Add fog to a scene
+         */
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        FogFilter fog = new FogFilter();
+        fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
+        fog.setFogStartDistance(450);
+        fog.setFogDensity(0.5f);
+        fpp.addFilter(fog);
+        viewPort.addProcessor(fpp);
+
     }
 
     /*
@@ -144,7 +140,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         cube_tex.setMaterial(mat_tex);
         guiNode.attachChild(cube_tex);
     }
-    
+
     private void initControls() {
         inputManager.addMapping("set_block", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(this, "set_block");
@@ -155,6 +151,9 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     }
 
     private void initGUI() {
+        Vector3f loc = cam.getLocation();
+        Vector3f dir = cam.getDirection();
+
         //Crosshair
         BitmapText crosshair = new BitmapText(guiFont);
         crosshair.setText("+");
@@ -163,27 +162,27 @@ public class TestNoise extends SimpleApplication implements ActionListener {
                 (settings.getWidth() / 2) - (guiFont.getCharSet().getRenderedSize() / 3 * 2),
                 (settings.getHeight() / 2) + (crosshair.getLineHeight() / 2), 0);
         guiNode.attachChild(crosshair);
-        
+
         //Camera Location
         guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
         playerLoc = new BitmapText(guiFont, false);
         playerLoc.setSize(guiFont.getCharSet().getRenderedSize());
-        playerLoc.setText("Player Location: X= " + cam.getLocation().getX() + ", Y= " + cam.getLocation().getY()  + ", Z= " + cam.getLocation().getZ());
+        playerLoc.setText("Player : X= " + String.format("%.3f", loc.getX()) + ", Y= " + String.format("%.3f", loc.getY()) + ", Z= " + String.format("%.3f", loc.getZ()));
         playerLoc.setLocalTranslation(300, playerLoc.getLineHeight(), 0);
         guiNode.attachChild(playerLoc);
-        
+
         //Block Location
         blockLoc = new BitmapText(guiFont, false);
         blockLoc.setSize(guiFont.getCharSet().getRenderedSize());
-        blockLoc.setText("Block   Location: X= " + cam.getLocation().getX()/4 + ", Y= " + cam.getLocation().getY()/4  + ", Z= " + cam.getLocation().getZ()/4);
-        blockLoc.setLocalTranslation(300, blockLoc.getLineHeight()*2, 0);
+        blockLoc.setText("Block   : X= " + getBlockLoc(loc.getX()) + ", Y= " + getBlockLoc(loc.getY()) + ", Z= " + getBlockLoc(loc.getZ()));
+        blockLoc.setLocalTranslation(300, blockLoc.getLineHeight() * 2, 0);
         guiNode.attachChild(blockLoc);
-        
+
         //Chunk Location
         chunkLoc = new BitmapText(guiFont, false);
         chunkLoc.setSize(guiFont.getCharSet().getRenderedSize());
-        chunkLoc.setText("Chunk   Location: X= " + cam.getLocation().getX()/4/16 + ", Y= " + cam.getLocation().getY()/4/16  + ", Z= " + cam.getLocation().getZ()/4/16);
-        chunkLoc.setLocalTranslation(300, chunkLoc.getLineHeight()*3, 0);
+        chunkLoc.setText("Chunk  : X= " + getBlockLoc(loc.getX()) / 16 + ", Y= " + getBlockLoc(loc.getY()) / 128 + ", Z= " + getBlockLoc(loc.getZ()) / 16);
+        chunkLoc.setLocalTranslation(300, chunkLoc.getLineHeight() * 3, 0);
         guiNode.attachChild(chunkLoc);
     }
 
@@ -283,48 +282,6 @@ public class TestNoise extends SimpleApplication implements ActionListener {
             default:
                 return Block_Grass.class;
         }
-    }
-
-    // Very quick and dirty method to select a block type
-    public Class<? extends Block> getBlockSelected(int id) {
-        Class<? extends Block> c;
-        if (id == 0) {
-            c = Block_Plank.class;
-        } else if (id == 1) {
-            c = Block_Cobble.class;
-        } else if (id == 2) {
-            c = Block_Dirt.class;
-        } else if (id == 3) {
-            c = Block_Glass.class;
-        } else if (id == 4) {
-            c = Block_Grass.class;
-        } else if (id == 5) {
-            c = Block_Gravel.class;
-        } else if (id == 6) {
-            c = Block_Ice.class;
-        } else if (id == 7) {
-            c = Block_Lava.class;
-        } else if (id == 8) {
-            c = Block_Log.class;
-        } else if (id == 9) {
-            c = Block_Mud.class;
-        } else if (id == 10) {
-            c = Block_Red_Clay.class;
-        } else if (id == 11) {
-            c = Block_Sand.class;
-        } else if (id == 12) {
-            c = Block_Stone.class;
-        } else if (id == 13) {
-            c = Block_Stone_Slab.class;
-        } else if (id == 14) {
-            c = Block_Water.class;
-        } else if (id == 15) {
-            c = Block_Leaves.class;
-        } else {
-            c = Block_Grass.class;
-        }
-
-        return c;
     }
 
     public Vector3f getCameraView() {
