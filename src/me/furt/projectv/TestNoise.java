@@ -2,6 +2,7 @@ package me.furt.projectv;
 
 import com.cubes.Block;
 import com.cubes.BlockNavigator;
+import com.cubes.CubesSettings;
 import com.cubes.TerrainControl;
 import com.cubes.Vector3Int;
 import com.jme3.app.SimpleApplication;
@@ -46,6 +47,9 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     private BitmapText blockLoc;
     private BitmapText chunkLoc;
     private BitmapText blockSelected;
+    private CubesSettings cubeSettings;
+    private BitmapText chunkStatus;
+    private BitmapText playerDir;
 
     public TestNoise() {
         settings = new AppSettings(true);
@@ -66,29 +70,53 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     public void simpleInitApp() {
         WorldSettings.registerBlocks();
         WorldSettings.initializeEnvironment(this);
-        initControls();
+        cubeSettings = WorldSettings.getSettings(this);
         initBlockTerrain();
-        initGUI();
+        initControls();
         initPlayer();
+        initGUI();
     }
 
     @Override
     public void simpleUpdate(float tpf) {
         Vector3f loc = cam.getLocation();
         Vector3f dir = cam.getDirection();
-        chunkLoc.setText("Chunk  : X= " + getBlockLoc(loc.getX()) / 16 + ", Y= " + getBlockLoc(loc.getY()) / 128 + ", Z= " + getBlockLoc(loc.getZ()) / 16);
-        blockLoc.setText("Block   : X= " + getBlockLoc(loc.getX()) + ", Y= " + getBlockLoc(loc.getY()) + ", Z= " + getBlockLoc(loc.getZ()));
-        playerLoc.setText("Player : X= " + String.format("%.3f", loc.getX()) + ", Y= " + String.format("%.3f", loc.getY()) + ", Z= " + String.format("%.3f", loc.getZ()));
+        
+        Vector3Int block = new Vector3Int(getBlockLoc(loc.getX()), getBlockLoc(loc.getY()), getBlockLoc(loc.getZ()));
+        Vector3Int chunk = new Vector3Int(block.getX()/16, block.getY()/128, block.getZ()/16);
+        
+        chunkLoc.setText("Chunk     : X= " + chunk.getX() + ", Y= " + chunk.getY() + ", Z= " + chunk.getZ());
+        blockLoc.setText("Block      : X= " + block.getX() + ", Y= " + block.getY() + ", Z= " + block.getZ());
+        playerLoc.setText("Player    : X= " + String.format("%.3f", loc.getX()) + ", Y= " + String.format("%.3f", loc.getY()) + ", Z= " + String.format("%.3f", loc.getZ()));
+        playerDir.setText("Direction : X= " + String.format("%.4f", dir.getX()) + ", Y= " + String.format("%.4f", dir.getY()) + ", Z= " + String.format("%.4f", dir.getZ()));
+        
         blockSelected.setText("Selected Block: " + getBlockName());
+        if(!chunkExists(startLocForChunk(block))) {
+            chunkStatus.setText("Chunk is unloaded!");
+        } else {
+            chunkStatus.setText("Chunk is loaded!");
+        }
+        
+        //blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
+    }
+
+    public boolean chunkExists(Vector3Int block) {
+        if (blockTerrain.getBlock(block) != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public Vector3Int startLocForChunk(Vector3Int chunk) {
+        return new Vector3Int(chunk.getX()*4, 0, chunk.getZ()*4);
     }
 
     public int getBlockLoc(float f) {
-        int i = (int) WorldSettings.getSettings(this).getBlockSize();
-        return (int) Math.ceil(f / i);
+        return (int) Math.ceil(f / cubeSettings.getBlockSize());
     }
 
     private void initBlockTerrain() {
-        blockTerrain = new TerrainControl(WorldSettings.getSettings(this), new Vector3Int(100, 1, 100));
+        blockTerrain = new TerrainControl(cubeSettings, new Vector3Int(100, 1, 100));
         // setBlocksFromNoise(Vector3Int location, Vector3Int size, float roughness, Block blockClass)
         blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
         blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
@@ -102,9 +130,9 @@ public class TestNoise extends SimpleApplication implements ActionListener {
 
     private void initPlayer() {
         itemInHand = 0;
-        cam.setLocation(new Vector3f(76, 50, 76));
-        cam.lookAtDirection(new Vector3f(0.64f, 5f, 0.6f), Vector3f.UNIT_Y);
-        flyCam.setMoveSpeed(200);
+        cam.setLocation(new Vector3f(40.6f, 79.66f, 30.64f));
+        cam.lookAtDirection(new Vector3f(0.26f, -0.83f, 0.49f), Vector3f.UNIT_Y);
+        flyCam.setMoveSpeed(80);
     }
 
     private void initFog() {
@@ -127,7 +155,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
      * seed "a predetermined long for noise"
      * 
      * to get chunk x z you must always round up
-     * (int)roundUp(cam/blockSize/chunkSize)
+     * (int)math ceil(cam/blockSize/chunkSize)
      * 
      */
     public void createSelectedCube() {
@@ -157,6 +185,9 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     private void initGUI() {
         Vector3f loc = cam.getLocation();
         Vector3f dir = cam.getDirection();
+        
+        Vector3Int block = new Vector3Int(getBlockLoc(loc.getX()), getBlockLoc(loc.getY()), getBlockLoc(loc.getZ()));
+        Vector3Int chunk = new Vector3Int(block.getX()/cubeSettings.getChunkSizeX(), block.getY()/cubeSettings.getChunkSizeY(), block.getZ()/cubeSettings.getChunkSizeZ());
 
         //Crosshair
         BitmapText crosshair = new BitmapText(guiFont);
@@ -172,22 +203,39 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         playerLoc = new BitmapText(guiFont, false);
         playerLoc.setSize(guiFont.getCharSet().getRenderedSize());
         playerLoc.setText("Player : X= " + String.format("%.3f", loc.getX()) + ", Y= " + String.format("%.3f", loc.getY()) + ", Z= " + String.format("%.3f", loc.getZ()));
-        playerLoc.setLocalTranslation(300, playerLoc.getLineHeight(), 0);
+        playerLoc.setLocalTranslation(300, playerLoc.getLineHeight() * 2, 0);
         guiNode.attachChild(playerLoc);
-
+        
+        //Camera Direction
+        playerDir = new BitmapText(guiFont, false);
+        playerDir.setSize(guiFont.getCharSet().getRenderedSize());
+        playerDir.setText("Direction : X= " + String.format("%.4f", dir.getX()) + ", Y= " + String.format("%.4f", dir.getY()) + ", Z= " + String.format("%.4f", dir.getZ()));
+        playerDir.setLocalTranslation(300, playerDir.getLineHeight(), 0);
+        guiNode.attachChild(playerDir);
+        
         //Block Location
         blockLoc = new BitmapText(guiFont, false);
         blockLoc.setSize(guiFont.getCharSet().getRenderedSize());
-        blockLoc.setText("Block   : X= " + getBlockLoc(loc.getX()) + ", Y= " + getBlockLoc(loc.getY()) + ", Z= " + getBlockLoc(loc.getZ()));
-        blockLoc.setLocalTranslation(300, blockLoc.getLineHeight() * 2, 0);
+        blockLoc.setText("Block   : X= " + block.getX() + ", Y= " + block.getY() + ", Z= " + block.getZ());
+        blockLoc.setLocalTranslation(300, blockLoc.getLineHeight() * 3, 0);
         guiNode.attachChild(blockLoc);
 
         //Chunk Location
         chunkLoc = new BitmapText(guiFont, false);
         chunkLoc.setSize(guiFont.getCharSet().getRenderedSize());
-        chunkLoc.setText("Chunk  : X= " + getBlockLoc(loc.getX()) / 16 + ", Y= " + getBlockLoc(loc.getY()) / 128 + ", Z= " + getBlockLoc(loc.getZ()) / 16);
-        chunkLoc.setLocalTranslation(300, chunkLoc.getLineHeight() * 3, 0);
+        chunkLoc.setText("Chunk  : X= " + chunk.getX() + ", Y= " + chunk.getY() + ", Z= " + chunk.getZ());
+        chunkLoc.setLocalTranslation(300, chunkLoc.getLineHeight() * 4, 0);
         guiNode.attachChild(chunkLoc);
+        
+        chunkStatus = new BitmapText(guiFont, false);
+        chunkStatus.setSize(guiFont.getCharSet().getRenderedSize());
+        if(!chunkExists(startLocForChunk(block))) {
+            chunkStatus.setText("Chunk is unloaded!");
+        } else {
+            chunkStatus.setText("Chunk is loaded!");
+        }
+        chunkStatus.setLocalTranslation(800, chunkStatus.getLineHeight() * 2, 0);
+        guiNode.attachChild(chunkStatus);
 
         //Block Selected
         blockSelected = new BitmapText(guiFont, false);

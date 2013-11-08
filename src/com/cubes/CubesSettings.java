@@ -14,8 +14,8 @@ public class CubesSettings {
         assetManager = application.getAssetManager();
     }
     private AssetManager assetManager;
-    private static float rowCount = 16;
-    private float blockSize = 3;
+    private static float rowCount = 10;
+    private float blockSize = 4;
     private int chunkSizeX = 16;
     private int chunkSizeY = 128;
     private int chunkSizeZ = 16;
