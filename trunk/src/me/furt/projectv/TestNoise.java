@@ -1,7 +1,6 @@
 package me.furt.projectv;
 
 import com.cubes.Block;
-import com.cubes.BlockManager;
 import com.cubes.BlockNavigator;
 import com.cubes.TerrainControl;
 import com.cubes.Vector3Int;
@@ -46,6 +45,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     }
     private BitmapText blockLoc;
     private BitmapText chunkLoc;
+    private BitmapText blockSelected;
 
     public TestNoise() {
         settings = new AppSettings(true);
@@ -79,6 +79,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         chunkLoc.setText("Chunk  : X= " + getBlockLoc(loc.getX()) / 16 + ", Y= " + getBlockLoc(loc.getY()) / 128 + ", Z= " + getBlockLoc(loc.getZ()) / 16);
         blockLoc.setText("Block   : X= " + getBlockLoc(loc.getX()) + ", Y= " + getBlockLoc(loc.getY()) + ", Z= " + getBlockLoc(loc.getZ()));
         playerLoc.setText("Player : X= " + String.format("%.3f", loc.getX()) + ", Y= " + String.format("%.3f", loc.getY()) + ", Z= " + String.format("%.3f", loc.getZ()));
+        blockSelected.setText("Selected Block: " + getBlockName());
     }
 
     public int getBlockLoc(float f) {
@@ -187,10 +188,18 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         chunkLoc.setText("Chunk  : X= " + getBlockLoc(loc.getX()) / 16 + ", Y= " + getBlockLoc(loc.getY()) / 128 + ", Z= " + getBlockLoc(loc.getZ()) / 16);
         chunkLoc.setLocalTranslation(300, chunkLoc.getLineHeight() * 3, 0);
         guiNode.attachChild(chunkLoc);
+
+        //Block Selected
+        blockSelected = new BitmapText(guiFont, false);
+        blockSelected.setSize(guiFont.getCharSet().getRenderedSize());
+        blockSelected.setText("Selected Block: " + getBlockName());
+        blockSelected.setLocalTranslation(800, blockSelected.getLineHeight(), 0);
+        guiNode.attachChild(blockSelected);
     }
 
     @Override
     public void onAction(String action, boolean value, float lastTimePerFrame) {
+        int temp = 15;
         if (action.equals("set_block") && value) {
             Vector3Int blockLocation = getCurrentPointedBlockLocation(true);
             if (blockLocation != null) {
@@ -203,15 +212,12 @@ public class TestNoise extends SimpleApplication implements ActionListener {
                 blockTerrain.removeBlock(blockLocation);
             }
         } else if (action.equals("block_plus") && value) {
-
-            int temp = 15;
             if (itemInHand == temp) {
                 itemInHand = 0;
             } else {
                 itemInHand++;
             }
         } else if (action.equals("block_minus") && value) {
-            int temp = 15;
             if (itemInHand == 0) {
                 itemInHand = temp;
             } else {
@@ -291,6 +297,61 @@ public class TestNoise extends SimpleApplication implements ActionListener {
 
             default:
                 return Block_Grass.class;
+        }
+    }
+
+    public String getBlockName() {
+        switch (itemInHand) {
+            case 0:
+                return "CobbleStone";
+
+            case 1:
+                return "Dirt";
+
+            case 2:
+                return "Glass";
+
+            case 3:
+                return "Grass";
+
+            case 4:
+                return "Gravel";
+
+            case 5:
+                return "Ice";
+
+            case 6:
+                return "Lava";
+
+            case 7:
+                return "Leaves";
+
+            case 8:
+                return "Log";
+
+            case 9:
+                return "Mud";
+
+            case 10:
+                return "Plank";
+
+            case 11:
+                return "Red Clay";
+
+            case 12:
+                return "Sand";
+
+            case 13:
+                return "Stone";
+
+            case 14:
+                return "Stone Slab";
+
+            case 15:
+                return "Water";
+
+            default:
+                return "Grass";
         }
     }
 
