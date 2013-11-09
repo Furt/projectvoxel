@@ -367,10 +367,10 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
      * @param maximumHeight
      * @param blockClass
      */
-    public void setBlocksFromHeightmap(Vector3Int location, String heightmapPath, int maximumHeight, Class<? extends Block> blockClass) {
+    public void setBlocksFromHeightmap(Vector3Int location, String heightmapPath, int maximumHeight, float scale, Class<? extends Block> blockClass) {
         try {
             Texture heightmapTexture = settings.getAssetManager().loadTexture(heightmapPath);
-            ImageBasedHeightMap heightmap = new ImageBasedHeightMap(heightmapTexture.getImage(), 1f);
+            ImageBasedHeightMap heightmap = new ImageBasedHeightMap(heightmapTexture.getImage(), scale);
             heightmap.load();
             heightmap.setHeightScale(maximumHeight / 255f);
             setBlocksFromHeightmap(location, getHeightmapBlockData(heightmap.getScaledHeightMap(), heightmap.getSize()), blockClass);
