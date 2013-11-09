@@ -5,11 +5,14 @@ import com.cubes.BlockNavigator;
 import com.cubes.CubesSettings;
 import com.cubes.TerrainControl;
 import com.cubes.Vector3Int;
+import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
+import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.material.Material;
@@ -30,6 +33,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import me.furt.projectv.block.*;
+import org.lwjgl.input.Keyboard;
+import tonegod.gui.controls.extras.ChatBoxExt;
+import tonegod.gui.core.Screen;
 import tonegod.skydome.FogFilter;
 
 public class TestNoise extends SimpleApplication implements ActionListener {
@@ -50,6 +56,8 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     private CubesSettings cubeSettings;
     private BitmapText chunkStatus;
     private BitmapText playerDir;
+    private Screen screen;
+    private ChatBoxExt chatbox;
 
     public TestNoise() {
         settings = new AppSettings(true);
@@ -68,12 +76,14 @@ public class TestNoise extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleInitApp() {
+        //stateManager.detach( stateManager.getState(FlyCamAppState.class));
         WorldSettings.registerBlocks();
         WorldSettings.initializeEnvironment(this);
         cubeSettings = WorldSettings.getSettings(this);
         initBlockTerrain();
         initControls();
         initPlayer();
+        initChatBox();
         initGUI();
     }
 
@@ -81,22 +91,24 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     public void simpleUpdate(float tpf) {
         Vector3f loc = cam.getLocation();
         Vector3f dir = cam.getDirection();
-        
+
         Vector3Int block = new Vector3Int(getBlockLoc(loc.getX()), getBlockLoc(loc.getY()), getBlockLoc(loc.getZ()));
-        Vector3Int chunk = new Vector3Int(block.getX()/16, block.getY()/128, block.getZ()/16);
-        
+        Vector3Int chunk = getChunkLoc(block);
+
         chunkLoc.setText("Chunk     : X= " + chunk.getX() + ", Y= " + chunk.getY() + ", Z= " + chunk.getZ());
         blockLoc.setText("Block      : X= " + block.getX() + ", Y= " + block.getY() + ", Z= " + block.getZ());
         playerLoc.setText("Player    : X= " + String.format("%.3f", loc.getX()) + ", Y= " + String.format("%.3f", loc.getY()) + ", Z= " + String.format("%.3f", loc.getZ()));
         playerDir.setText("Direction : X= " + String.format("%.4f", dir.getX()) + ", Y= " + String.format("%.4f", dir.getY()) + ", Z= " + String.format("%.4f", dir.getZ()));
-        
+
         blockSelected.setText("Selected Block: " + getBlockName());
-        if(!chunkExists(startLocForChunk(block))) {
+
+        if (!chunkExists(block)) {
             chunkStatus.setText("Chunk is unloaded!");
+            //blockTerrain.setBlocksFromNoise(startLocForChunk(block), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
         } else {
             chunkStatus.setText("Chunk is loaded!");
         }
-        
+
         //blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
     }
 
@@ -107,16 +119,38 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         return false;
     }
 
-    public Vector3Int startLocForChunk(Vector3Int chunk) {
-        return new Vector3Int(chunk.getX()*4, 0, chunk.getZ()*4);
+    public Vector3Int getChunkLoc(Vector3Int v) {
+        return v.div(cubeSettings.getChunkSizeX(), cubeSettings.getChunkSizeY(), cubeSettings.getChunkSizeZ());
     }
 
     public int getBlockLoc(float f) {
-        return (int) Math.ceil(f / cubeSettings.getBlockSize());
+        return (int) Math.ceil(f) / (int) cubeSettings.getBlockSize();
+    }
+
+    private void initChatBox() {
+        screen = new Screen(this, "tonegod/gui/style/def/style_map.xml");
+        chatbox = new ChatBoxExt(screen, new Vector2f(30, 30)) {
+            @Override
+            public void onSendMsg(Object command, String msg) {
+                
+            }
+        };
+        chatbox.setIsMovable(true);
+        chatbox.addChatChannel("general", "General", "general", "", ColorRGBA.White, true);
+        chatbox.addChatChannel("trade", "Trade", "trade", "", ColorRGBA.Yellow, true);
+
+        chatbox.setSendKey(Keyboard.KEY_RETURN);
+        chatbox.showSendButton(true);
+
+        screen.addElement(chatbox);
+        guiNode.addControl(screen);
+        
+        chatbox.setIsVisible(false);
     }
 
     private void initBlockTerrain() {
-        blockTerrain = new TerrainControl(cubeSettings, new Vector3Int(100, 1, 100));
+        blockTerrain = new TerrainControl(cubeSettings, new Vector3Int(10, 1, 10));
+        //blockTerrain.setBlocksFromHeightmap(new Vector3Int(0, 0, 0), "Textures/heightmap.jpg", 50, 0.8f, Block_Grass.class);
         // setBlocksFromNoise(Vector3Int location, Vector3Int size, float roughness, Block blockClass)
         blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
         blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
@@ -130,7 +164,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
 
     private void initPlayer() {
         itemInHand = 0;
-        cam.setLocation(new Vector3f(40.6f, 79.66f, 30.64f));
+        cam.setLocation(new Vector3f(40.6f, 100f, 30.64f));
         cam.lookAtDirection(new Vector3f(0.26f, -0.83f, 0.49f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(80);
     }
@@ -180,14 +214,16 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         inputManager.addListener(this, "block_plus");
         inputManager.addMapping("block_minus", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
         inputManager.addListener(this, "block_minus");
+        inputManager.addMapping("toggle_chat", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addListener(this, "toggle_chat");
     }
 
     private void initGUI() {
         Vector3f loc = cam.getLocation();
         Vector3f dir = cam.getDirection();
-        
+
         Vector3Int block = new Vector3Int(getBlockLoc(loc.getX()), getBlockLoc(loc.getY()), getBlockLoc(loc.getZ()));
-        Vector3Int chunk = new Vector3Int(block.getX()/cubeSettings.getChunkSizeX(), block.getY()/cubeSettings.getChunkSizeY(), block.getZ()/cubeSettings.getChunkSizeZ());
+        Vector3Int chunk = getChunkLoc(block);
 
         //Crosshair
         BitmapText crosshair = new BitmapText(guiFont);
@@ -205,14 +241,14 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         playerLoc.setText("Player : X= " + String.format("%.3f", loc.getX()) + ", Y= " + String.format("%.3f", loc.getY()) + ", Z= " + String.format("%.3f", loc.getZ()));
         playerLoc.setLocalTranslation(300, playerLoc.getLineHeight() * 2, 0);
         guiNode.attachChild(playerLoc);
-        
+
         //Camera Direction
         playerDir = new BitmapText(guiFont, false);
         playerDir.setSize(guiFont.getCharSet().getRenderedSize());
         playerDir.setText("Direction : X= " + String.format("%.4f", dir.getX()) + ", Y= " + String.format("%.4f", dir.getY()) + ", Z= " + String.format("%.4f", dir.getZ()));
         playerDir.setLocalTranslation(300, playerDir.getLineHeight(), 0);
         guiNode.attachChild(playerDir);
-        
+
         //Block Location
         blockLoc = new BitmapText(guiFont, false);
         blockLoc.setSize(guiFont.getCharSet().getRenderedSize());
@@ -226,10 +262,10 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         chunkLoc.setText("Chunk  : X= " + chunk.getX() + ", Y= " + chunk.getY() + ", Z= " + chunk.getZ());
         chunkLoc.setLocalTranslation(300, chunkLoc.getLineHeight() * 4, 0);
         guiNode.attachChild(chunkLoc);
-        
+
         chunkStatus = new BitmapText(guiFont, false);
         chunkStatus.setSize(guiFont.getCharSet().getRenderedSize());
-        if(!chunkExists(startLocForChunk(block))) {
+        if (!chunkExists(block)) {
             chunkStatus.setText("Chunk is unloaded!");
         } else {
             chunkStatus.setText("Chunk is loaded!");
@@ -243,6 +279,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         blockSelected.setText("Selected Block: " + getBlockName());
         blockSelected.setLocalTranslation(800, blockSelected.getLineHeight(), 0);
         guiNode.attachChild(blockSelected);
+        
     }
 
     @Override
@@ -271,6 +308,18 @@ public class TestNoise extends SimpleApplication implements ActionListener {
             } else {
                 itemInHand--;
             }
+        } else if (action.equals("toggle_chat") && value) {
+            toggleChat();
+        }
+    }
+
+    private void toggleChat() {
+        if (chatbox.getIsVisible()) {
+            chatbox.setIsVisible(false);
+            inputManager.setCursorVisible(false);
+        } else {
+            chatbox.setIsVisible(true);
+            inputManager.setCursorVisible(true);
         }
     }
 
