@@ -5,7 +5,6 @@ import com.cubes.BlockNavigator;
 import com.cubes.CubesSettings;
 import com.cubes.TerrainControl;
 import com.cubes.Vector3Int;
-import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
@@ -92,7 +91,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         Vector3f loc = cam.getLocation();
         Vector3f dir = cam.getDirection();
 
-        Vector3Int block = new Vector3Int(getBlockLoc(loc.getX()), getBlockLoc(loc.getY()), getBlockLoc(loc.getZ()));
+        Vector3Int block = getBlockLoc(loc);
         Vector3Int chunk = getChunkLoc(block);
 
         chunkLoc.setText("Chunk     : X= " + chunk.getX() + ", Y= " + chunk.getY() + ", Z= " + chunk.getZ());
@@ -101,14 +100,14 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         playerDir.setText("Direction : X= " + String.format("%.4f", dir.getX()) + ", Y= " + String.format("%.4f", dir.getY()) + ", Z= " + String.format("%.4f", dir.getZ()));
 
         blockSelected.setText("Selected Block: " + getBlockName());
-
-        if (!chunkExists(block)) {
-            chunkStatus.setText("Chunk is unloaded!");
-            //blockTerrain.setBlocksFromNoise(startLocForChunk(block), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
-        } else {
-            chunkStatus.setText("Chunk is loaded!");
-        }
-
+        /*
+         if (!chunkExists(block)) {
+         chunkStatus.setText("Chunk is unloaded!");
+         //blockTerrain.setBlocksFromNoise(startLocForChunk(block), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
+         } else {
+         chunkStatus.setText("Chunk is loaded!");
+         }
+         */
         //blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
     }
 
@@ -123,6 +122,12 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         return v.div(cubeSettings.getChunkSizeX(), cubeSettings.getChunkSizeY(), cubeSettings.getChunkSizeZ());
     }
 
+    public Vector3Int getBlockLoc(Vector3f vec) {
+        return new Vector3Int((int) Math.ceil(vec.getX()) / (int) cubeSettings.getBlockSize(),
+                              (int) Math.ceil(vec.getY()) / (int) cubeSettings.getBlockSize(),
+                              (int) Math.ceil(vec.getZ()) / (int) cubeSettings.getBlockSize());
+    }
+
     public int getBlockLoc(float f) {
         return (int) Math.ceil(f) / (int) cubeSettings.getBlockSize();
     }
@@ -132,7 +137,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         chatbox = new ChatBoxExt(screen, new Vector2f(30, 30)) {
             @Override
             public void onSendMsg(Object command, String msg) {
-                
+                chatbox.receiveMsg(command, "<player> " + msg);
             }
         };
         chatbox.setIsMovable(true);
@@ -144,7 +149,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
 
         screen.addElement(chatbox);
         guiNode.addControl(screen);
-        
+
         chatbox.setIsVisible(false);
     }
 
@@ -216,6 +221,8 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         inputManager.addListener(this, "block_minus");
         inputManager.addMapping("toggle_chat", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addListener(this, "toggle_chat");
+        inputManager.addMapping("chunk_fill", new KeyTrigger(KeyInput.KEY_F));
+        inputManager.addListener(this, "chunk_fill");
     }
 
     private void initGUI() {
@@ -262,24 +269,24 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         chunkLoc.setText("Chunk  : X= " + chunk.getX() + ", Y= " + chunk.getY() + ", Z= " + chunk.getZ());
         chunkLoc.setLocalTranslation(300, chunkLoc.getLineHeight() * 4, 0);
         guiNode.attachChild(chunkLoc);
-
-        chunkStatus = new BitmapText(guiFont, false);
-        chunkStatus.setSize(guiFont.getCharSet().getRenderedSize());
-        if (!chunkExists(block)) {
-            chunkStatus.setText("Chunk is unloaded!");
-        } else {
-            chunkStatus.setText("Chunk is loaded!");
-        }
-        chunkStatus.setLocalTranslation(800, chunkStatus.getLineHeight() * 2, 0);
-        guiNode.attachChild(chunkStatus);
-
+        /*
+         chunkStatus = new BitmapText(guiFont, false);
+         chunkStatus.setSize(guiFont.getCharSet().getRenderedSize());
+         if (!chunkExists(block)) {
+         chunkStatus.setText("Chunk is unloaded!");
+         } else {
+         chunkStatus.setText("Chunk is loaded!");
+         }
+         chunkStatus.setLocalTranslation(800, chunkStatus.getLineHeight() * 2, 0);
+         guiNode.attachChild(chunkStatus);
+         */
         //Block Selected
         blockSelected = new BitmapText(guiFont, false);
         blockSelected.setSize(guiFont.getCharSet().getRenderedSize());
         blockSelected.setText("Selected Block: " + getBlockName());
         blockSelected.setLocalTranslation(800, blockSelected.getLineHeight(), 0);
         guiNode.attachChild(blockSelected);
-        
+
     }
 
     @Override
@@ -310,7 +317,10 @@ public class TestNoise extends SimpleApplication implements ActionListener {
             }
         } else if (action.equals("toggle_chat") && value) {
             toggleChat();
+        } else if (action.equals("chunk_fill") && value) {
+            blockTerrain.setBlocksFromNoise(getBlockLoc(cam.getLocation()), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
         }
+
     }
 
     private void toggleChat() {
@@ -327,7 +337,9 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         CollisionResults results = getRayCastingResults(terrainNode);
         if (results.size() > 0) {
             Vector3f collisionContactPoint = results.getClosestCollision().getContactPoint();
-            return BlockNavigator.getPointedBlockLocation(blockTerrain, collisionContactPoint, getNeighborLocation);
+            Vector3Int vec = BlockNavigator.getPointedBlockLocation(blockTerrain, collisionContactPoint, getNeighborLocation);
+            System.out.println("Placed block at: " +vec.toString());
+            return vec;
         }
         return null;
     }

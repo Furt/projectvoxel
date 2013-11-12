@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import me.furt.projectv.states.IngameState;
 import me.furt.projectv.states.LoginState;
 import tonegod.gui.core.Screen;
 
