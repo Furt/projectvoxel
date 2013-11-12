@@ -117,7 +117,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         }
         return false;
     }
-
+    
     public Vector3Int getChunkLoc(Vector3Int v) {
         return v.div(cubeSettings.getChunkSizeX(), cubeSettings.getChunkSizeY(), cubeSettings.getChunkSizeZ());
     }
@@ -318,7 +318,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         } else if (action.equals("toggle_chat") && value) {
             toggleChat();
         } else if (action.equals("chunk_fill") && value) {
-            blockTerrain.setBlocksFromNoise(getBlockLoc(cam.getLocation()), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
+            generateNewChunkAtLoc(getBlockLoc(cam.getLocation()));
         }
 
     }
@@ -352,6 +352,15 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         CollisionResults results = new CollisionResults();
         node.collideWith(ray, results);
         return results;
+    }
+    
+    public void generateNewChunkAtLoc(Vector3Int block) {
+        int chunkX = Math.round(block.getX()/16);
+        chunkX = chunkX*16;
+        int chunkZ = Math.round(block.getZ()/16);
+        chunkZ = chunkZ*16;
+        blockTerrain.setBlocksFromNoise(new Vector3Int(chunkX, 0, chunkZ), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
+        
     }
 
     public Class<? extends Block> getBlockSelected() {
