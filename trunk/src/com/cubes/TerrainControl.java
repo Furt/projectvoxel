@@ -10,6 +10,7 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class TerrainControl extends AbstractControl implements BitSerializable {
 
@@ -427,7 +428,6 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
      */
     public void setBlocksFromNoise(Vector3Int location, Vector3Int size, float roughness, Class<? extends Block> blockClass) {
         Noise noise = new Noise(null, roughness, size.getX(), size.getZ());
-        //noise.initialise();
         float gridMinimum = noise.getMinimum();
         float gridLargestDifference = (noise.getMaximum() - gridMinimum);
         float[][] grid = noise.getGrid();
