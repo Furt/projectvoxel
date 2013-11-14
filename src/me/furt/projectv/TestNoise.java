@@ -28,6 +28,7 @@ import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -57,6 +58,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     private BitmapText playerDir;
     private Screen screen;
     private ChatBoxExt chatbox;
+    private int seed;
 
     public TestNoise() {
         settings = new AppSettings(true);
@@ -76,6 +78,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
     @Override
     public void simpleInitApp() {
         //stateManager.detach( stateManager.getState(FlyCamAppState.class));
+        seed = new Random().nextInt();
         WorldSettings.registerBlocks();
         WorldSettings.initializeEnvironment(this);
         cubeSettings = WorldSettings.getSettings(this);
@@ -100,36 +103,16 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         playerDir.setText("Direction : X= " + String.format("%.4f", dir.getX()) + ", Y= " + String.format("%.4f", dir.getY()) + ", Z= " + String.format("%.4f", dir.getZ()));
 
         blockSelected.setText("Selected Block: " + getBlockName());
-        /*
-         if (!chunkExists(block)) {
-         chunkStatus.setText("Chunk is unloaded!");
-         //blockTerrain.setBlocksFromNoise(startLocForChunk(block), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
-         } else {
-         chunkStatus.setText("Chunk is loaded!");
-         }
-         */
-        //blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
     }
 
-    public boolean chunkExists(Vector3Int block) {
-        if (blockTerrain.getBlock(block) != null) {
-            return true;
-        }
-        return false;
-    }
-    
-    public Vector3Int getChunkLoc(Vector3Int v) {
-        return v.div(cubeSettings.getChunkSizeX(), cubeSettings.getChunkSizeY(), cubeSettings.getChunkSizeZ());
+    private Vector3Int getChunkLoc(Vector3Int v) {
+        return new Vector3Int(v.getX() / cubeSettings.getChunkSizeX(), 0, v.getZ() / cubeSettings.getChunkSizeZ());
     }
 
-    public Vector3Int getBlockLoc(Vector3f vec) {
+    private Vector3Int getBlockLoc(Vector3f vec) {
         return new Vector3Int((int) Math.ceil(vec.getX()) / (int) cubeSettings.getBlockSize(),
-                              (int) Math.ceil(vec.getY()) / (int) cubeSettings.getBlockSize(),
-                              (int) Math.ceil(vec.getZ()) / (int) cubeSettings.getBlockSize());
-    }
-
-    public int getBlockLoc(float f) {
-        return (int) Math.ceil(f) / (int) cubeSettings.getBlockSize();
+                (int) Math.ceil(vec.getY()) / (int) cubeSettings.getBlockSize(),
+                (int) Math.ceil(vec.getZ()) / (int) cubeSettings.getBlockSize());
     }
 
     private void initChatBox() {
@@ -153,20 +136,62 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         chatbox.setIsVisible(false);
     }
 
+    private void generateChunk(Vector3Int loc, boolean fromDist) {
+        int x = 0;
+        int z = 0;
+        int los = 6;
+        int pass = 5;
+        int maxBlockHeight = 5;
+        float roughness = 0.3f;
+
+        if (loc != null) {
+            loc = getBlockFromChunk(loc);
+        } else {
+            loc = getBlockFromCam(cam.getLocation());
+        }
+        x = Math.round(loc.getX() / cubeSettings.getChunkSizeX());
+        z = Math.round(loc.getZ() / cubeSettings.getChunkSizeZ());
+        if (!fromDist) {
+            x = x * cubeSettings.getChunkSizeX();
+            z = z * cubeSettings.getChunkSizeZ();
+        } else {
+            // this needs alot more work, which is the reason for no auto gen yet.
+            x = (x * cubeSettings.getChunkSizeX() + los);
+            z = (z * cubeSettings.getChunkSizeZ()) + los;
+        }
+
+        for (int i = 0; i < pass; i++) {
+            blockTerrain.setBlocksFromNoise(new Vector3Int(x, 0, z), new Vector3Int(cubeSettings.getChunkSizeX(), maxBlockHeight, cubeSettings.getChunkSizeZ()), roughness, Block_Grass.class);
+        }
+    }
+
+    private Vector3Int getBlockFromCam(Vector3f cam) {
+        int x = (int) Math.ceil(cam.getX()) / (int) cubeSettings.getBlockSize();
+        int z = (int) Math.ceil(cam.getZ()) / (int) cubeSettings.getBlockSize();
+
+        return new Vector3Int(x, 0, z);
+    }
+
+    private Vector3Int getBlockFromChunk(Vector3Int chunk) {
+        int x = chunk.getX() * (int) cubeSettings.getChunkSizeX();
+        int z = chunk.getZ() * (int) cubeSettings.getChunkSizeZ();
+        return new Vector3Int(x, 0, z);
+    }
+
     private void initBlockTerrain() {
-        blockTerrain = new TerrainControl(cubeSettings, new Vector3Int(10, 1, 10));
-        //blockTerrain.setBlocksFromHeightmap(new Vector3Int(0, 0, 0), "Textures/heightmap.jpg", 50, 0.8f, Block_Grass.class);
-        // setBlocksFromNoise(Vector3Int location, Vector3Int size, float roughness, Block blockClass)
-        blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
-        blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 0), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
-        blockTerrain.setBlocksFromNoise(new Vector3Int(16, 0, 16), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
-        blockTerrain.setBlocksFromNoise(new Vector3Int(0, 0, 16), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
+        blockTerrain = new TerrainControl(cubeSettings, new Vector3Int(20, 1, 20));
+        // generateChunk(chunkX Y and Z) Y should always be 0
+        generateChunk(new Vector3Int(0, 0, 0), false);
+        generateChunk(new Vector3Int(1, 0, 0), false);
+        generateChunk(new Vector3Int(1, 0, 1), false);
+        generateChunk(new Vector3Int(0, 0, 1), false);
         terrainNode = new Node("Terrain");
         terrainNode.addControl(blockTerrain);
         terrainNode.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         rootNode.attachChild(terrainNode);
     }
 
+    // TODO
     private void initPlayer() {
         itemInHand = 0;
         cam.setLocation(new Vector3f(40.6f, 100f, 30.64f));
@@ -182,7 +207,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         FogFilter fog = new FogFilter();
         fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
         fog.setFogStartDistance(450);
-        fog.setFogDensity(0.5f);
+        fog.setFogDensity(0.1f);
         fpp.addFilter(fog);
         viewPort.addProcessor(fpp);
 
@@ -229,7 +254,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         Vector3f loc = cam.getLocation();
         Vector3f dir = cam.getDirection();
 
-        Vector3Int block = new Vector3Int(getBlockLoc(loc.getX()), getBlockLoc(loc.getY()), getBlockLoc(loc.getZ()));
+        Vector3Int block = getBlockLoc(loc);
         Vector3Int chunk = getChunkLoc(block);
 
         //Crosshair
@@ -318,7 +343,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         } else if (action.equals("toggle_chat") && value) {
             toggleChat();
         } else if (action.equals("chunk_fill") && value) {
-            generateNewChunkAtLoc(getBlockLoc(cam.getLocation()));
+            generateChunk(null, false);
         }
 
     }
@@ -338,7 +363,7 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         if (results.size() > 0) {
             Vector3f collisionContactPoint = results.getClosestCollision().getContactPoint();
             Vector3Int vec = BlockNavigator.getPointedBlockLocation(blockTerrain, collisionContactPoint, getNeighborLocation);
-            System.out.println("Placed block at: " +vec.toString());
+            System.out.println("Placed block at: " + vec.toString());
             return vec;
         }
         return null;
@@ -352,15 +377,6 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         CollisionResults results = new CollisionResults();
         node.collideWith(ray, results);
         return results;
-    }
-    
-    public void generateNewChunkAtLoc(Vector3Int block) {
-        int chunkX = Math.round(block.getX()/16);
-        chunkX = chunkX*16;
-        int chunkZ = Math.round(block.getZ()/16);
-        chunkZ = chunkZ*16;
-        blockTerrain.setBlocksFromNoise(new Vector3Int(chunkX, 0, chunkZ), new Vector3Int(16, 5, 16), 0.1f, Block_Grass.class);
-        
     }
 
     public Class<? extends Block> getBlockSelected() {
