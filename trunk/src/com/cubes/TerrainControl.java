@@ -10,6 +10,7 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class TerrainControl extends AbstractControl implements BitSerializable {
@@ -26,6 +27,7 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
     
     private CubesSettings settings;
     private ChunkControl[][][] chunks;
+    HashMap<Vector3Int, ChunkControl> chunkList = new HashMap<Vector3Int, ChunkControl>();
     private ArrayList<ChunkListener> chunkListeners = new ArrayList<ChunkListener>();
 
     /**
@@ -38,6 +40,7 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             for (int y = 0; y < chunks[0].length; y++) {
                 for (int z = 0; z < chunks[0][0].length; z++) {
                     ChunkControl chunk = new ChunkControl(this, x, y, z);
+                    chunkList.put(new Vector3Int(x,y,z), chunk);
                     chunks[x][y][z] = chunk;
                 }
             }
@@ -52,7 +55,7 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
      */
     public void addChunk(int x, int y, int z) {
         ChunkControl chunk = new ChunkControl(this, x, y, z);
-        chunks[x][y][z] = chunk;
+        chunkList.put(new Vector3Int(x,y,z), chunk);
     }
 
     /**
