@@ -8,7 +8,8 @@ import java.util.Random;
  * @author Furt
  */
 public class SimplexNoise {
-
+    // per block point this will return a 0.0-1.0f so we need to figure the min and max and get the return int
+    // int blockheight = (int)Math.round(((max - min)* value) + 20) ???
     SimplexNoise_octave[] octaves;
     double[] frequencys;
     double[] amplitudes;

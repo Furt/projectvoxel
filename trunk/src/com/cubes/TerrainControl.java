@@ -451,6 +451,10 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             }
         }
     }
+    
+    public void setBlocksFromSimplexNoise(Vector3Int loc, float roughness) {
+        
+    }
 
     /**
      *

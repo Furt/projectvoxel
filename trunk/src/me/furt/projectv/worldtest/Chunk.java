@@ -1,6 +1,6 @@
 package me.furt.projectv.worldtest;
 
-import me.furt.projectv.worldtest.Block.BlockType;
+import com.cubes.Vector3Int;
 
 /**
  * ProjectV
@@ -9,23 +9,46 @@ import me.furt.projectv.worldtest.Block.BlockType;
  */
 public class Chunk {
 
-    static final int CHUNK_SIZE = 16;
-    private Block[][][] Blocks;
-
-    public void Render() {
-    }
-
-    public void Update() {
-    }
-
+    private Block[][][] Blocks = new Block[16][128][16];
+    private Region region;
+    private Vector3Int location;
+    
     public Chunk() {
-        Blocks = new Block[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
-        for (int x = 0; x < CHUNK_SIZE; x++) {
-            for (int y = 0; y < CHUNK_SIZE; y++) {
-                for (int z = 0; z < CHUNK_SIZE; z++) {
-                    Blocks[x][y][z] = new Block(BlockType.Dirt);
-                }
-            }
-        }
+        
     }
+
+    public Chunk(Region region, Vector3Int location) {
+        this.region = region;
+        this.location = location;
+    }
+
+    public Block[][][] getBlocks() {
+        return Blocks;
+    }
+
+    public void setBlocks(Block[][][] Blocks) {
+        this.Blocks = Blocks;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
+    }
+
+    public Vector3Int getLocation() {
+        return location;
+    }
+
+    public void setLocation(Vector3Int location) {
+        this.location = location;
+    }
+    
+    public Block getBlockAtLoc(Vector3Int location) {
+        return this.Blocks[location.getX()][location.getY()][location.getZ()];
+    }
+    
+    
 }
