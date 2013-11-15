@@ -7,43 +7,74 @@ package me.furt.projectv.worldtest;
  */
 public class Block {
 
-    private boolean IsActive;
-    private BlockType Type;
-
-    public enum BlockType {
-
-        Default(0),
-        Grass(1),
-        Dirt(2),
-        Water(3),
-        Stone(4),
-        Wood(5),
-        Sand(6),
-        BlockTypes(7);
-        private int BlockID;
-
-        BlockType(int i) {
-            BlockID = i;
-        }
-
-        public int GetID() {
-            return BlockID;
-        }
+    private int id;
+    private String name;
+    private int hardness;
+    private int resistance;
+    private boolean breakable;
+    private boolean isActive;
+    
+    
+    public Block() {
+        
+    }
+    
+    public Block(int id, String name, int hardness, int resistance, boolean breakable, boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.hardness = hardness;
+        this.resistance = resistance;
+        this.breakable = breakable;
+        this.isActive = isActive;
     }
 
-    public Block(BlockType type) {
-        Type = type;
+    public int getId() {
+        return id;
     }
 
-    public boolean IsActive() {
-        return IsActive;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void SetActive(boolean active) {
-        IsActive = active;
+    public String getName() {
+        return name;
     }
 
-    public int GetID() {
-        return Type.GetID();
+    public void setName(String name) {
+        this.name = name;
     }
+
+    public int getHardness() {
+        return hardness;
+    }
+
+    public void setHardness(int hardness) {
+        this.hardness = hardness;
+    }
+
+    public int getResistance() {
+        return resistance;
+    }
+
+    public void setResistance(int resistance) {
+        this.resistance = resistance;
+    }
+
+    public boolean isBreakable() {
+        return breakable;
+    }
+
+    public void setBreakable(boolean breakable) {
+        this.breakable = breakable;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean IsActive) {
+        this.isActive = IsActive;
+    }
+    
+    
 }
