@@ -1,5 +1,7 @@
 package me.furt.projectv.noise;
 
+import java.util.Random;
+
 /**
  * ProjectV
  *
@@ -8,15 +10,17 @@ package me.furt.projectv.noise;
 public class Test {
 
     public static void main(String args[]) {
-        SimplexNoise simplexNoise = new SimplexNoise(100, 0.1, 5000);
+        int rand = new Random().nextInt();
+        // Largest Feature, Persistence, Seed
+        SimplexNoise simplexNoise = new SimplexNoise(20, 0.6, rand);
 
         double xStart = 0;
-        double XEnd = 32;
+        double XEnd = 200;
         double yStart = 0;
-        double yEnd = 32;
+        double yEnd = 200;
 
-        int xResolution = 16;
-        int yResolution = 16;
+        int xResolution = 200;
+        int yResolution = 200;
 
         double[][] result = new double[xResolution][yResolution];
 
@@ -29,7 +33,7 @@ public class Test {
             }
         }
 
-        ImageWriter.greyWriteImage(result);
+        ImageWriter.colorWriteImage(result, rand);
 
 
 
