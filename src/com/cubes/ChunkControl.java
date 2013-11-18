@@ -28,6 +28,7 @@ public class ChunkControl extends AbstractControl implements BitSerializable {
         node.setLocalTranslation(new Vector3f(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ()).mult(terrain.getSettings().getBlockSize()));
         blockTypes = new byte[terrain.getSettings().getChunkSizeX()][terrain.getSettings().getChunkSizeY()][terrain.getSettings().getChunkSizeZ()];
         blocks_IsOnSurface = new boolean[terrain.getSettings().getChunkSizeX()][terrain.getSettings().getChunkSizeY()][terrain.getSettings().getChunkSizeZ()];
+        generated = false;
     }
     private TerrainControl terrain;
     private Vector3Int location = new Vector3Int();
@@ -38,6 +39,7 @@ public class ChunkControl extends AbstractControl implements BitSerializable {
     private Geometry optimizedGeometry_Opaque;
     private Geometry optimizedGeometry_Transparent;
     private boolean needsMeshUpdate;
+    private boolean generated;
 
     /**
      *
@@ -308,7 +310,7 @@ public class ChunkControl extends AbstractControl implements BitSerializable {
         for (int x = 0; x < blockTypes.length; x++) {
             for (int y = 0; y < blockTypes[0].length; y++) {
                 for (int z = 0; z < blockTypes[0][0].length; z++) {
-                    blockTypes[x][y][z] = (byte) inputStream.readBits(8);
+                    blockTypes[x][y][z] = (byte) inputStream.readBits(8); 
                 }
             }
         }
@@ -335,4 +337,13 @@ public class ChunkControl extends AbstractControl implements BitSerializable {
         int chunksCountZ = (int) Math.ceil(((float) blocksCount.getZ()) / terrain.getSettings().getChunkSizeZ());
         return new Vector3Int(chunksCountX, chunksCountY, chunksCountZ);
     }
+
+    public boolean isGenerated() {
+        return generated;
+    }
+    
+    public void setGenerated(boolean b) {
+        this.generated = b;
+    }
+            
 }
