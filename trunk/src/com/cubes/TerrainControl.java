@@ -10,8 +10,6 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
 
 public class TerrainControl extends AbstractControl implements BitSerializable {
 
@@ -24,10 +22,8 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
         this.settings = settings;
         initializeChunks(chunksCount);
     }
-    
     private CubesSettings settings;
     private ChunkControl[][][] chunks;
-    HashMap<Vector3Int, ChunkControl> chunkList = new HashMap<Vector3Int, ChunkControl>();
     private ArrayList<ChunkListener> chunkListeners = new ArrayList<ChunkListener>();
 
     /**
@@ -40,7 +36,6 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             for (int y = 0; y < chunks[0].length; y++) {
                 for (int z = 0; z < chunks[0][0].length; z++) {
                     ChunkControl chunk = new ChunkControl(this, x, y, z);
-                    chunkList.put(new Vector3Int(x,y,z), chunk);
                     chunks[x][y][z] = chunk;
                 }
             }
@@ -54,8 +49,6 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
      * @param z
      */
     public void addChunk(int x, int y, int z) {
-        ChunkControl chunk = new ChunkControl(this, x, y, z);
-        chunkList.put(new Vector3Int(x,y,z), chunk);
     }
 
     /**
@@ -275,6 +268,13 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
         return Util.isValidIndex(chunks, location);
     }
 
+    public boolean isChunkGenerated(Vector3Int location) {
+        if (Util.isValidIndex(chunks, location)) {
+            return chunks[location.getX()][location.getY()][location.getZ()].isGenerated();
+        }
+        return false;
+    }
+
     /**
      *
      * @param blockLocation
@@ -451,9 +451,8 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             }
         }
     }
-    
+
     public void setBlocksFromSimplexNoise(Vector3Int loc, float roughness) {
-        
     }
 
     /**
