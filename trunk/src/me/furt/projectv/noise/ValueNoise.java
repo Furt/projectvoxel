@@ -78,7 +78,7 @@ public class ValueNoise {
 
         float[][][] smoothNoise = new float[octaveCount][][]; //an array of 2D arrays containing
 
-        float persistance = 0.45f;
+        float persistance = 0.3f;
 
         //generate smooth noise
         for (int i = 0; i < octaveCount; i++) {

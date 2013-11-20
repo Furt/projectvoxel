@@ -29,11 +29,15 @@ public class Test {
                 int x = (int) (xStart + i * ((XEnd - xStart) / xResolution));
                 int y = (int) (yStart + j * ((yEnd - yStart) / yResolution));
                 result[i][j] = 0.5 * (1 + simplexNoise.getNoise(x, y));
-                System.out.println(result[i][j]);
             }
         }
 
-        ImageWriter.colorWriteImage(result, rand);
+        //ImageWriter.colorWriteImage(result, rand);
+        
+        // ValueNoise
+        
+        float[][] vNoise = ValueNoise.GenerateValueNoise(200, 200, 10);
+        ImageWriter.colorWriteImage(vNoise, rand);
 
 
 
