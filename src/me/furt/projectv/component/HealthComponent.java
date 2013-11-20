@@ -14,12 +14,13 @@ import com.simsilica.es.PersistentComponent;
  */
 @Serializable
 public class HealthComponent extends AbstractMessage implements PersistentComponent {
+
     public float health;
-    
+
     public HealthComponent(float health) {
         this.health = health;
     }
-    
+
     public float getHealth() {
         return health;
     }

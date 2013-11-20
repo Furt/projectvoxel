@@ -22,20 +22,16 @@
  * libnoiseforjava.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+package me.furt.projectv.libnoise.exception;
 
-package libnoiseforjava.exception;
+public class ExceptionNoModule extends Exception {
 
-public class ExceptionNoModule extends Exception
-{
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4820882012470782847L;
 
-   /**
-    * 
-    */
-   private static final long serialVersionUID = -4820882012470782847L;
-   
-   public ExceptionNoModule(String message)
-   {
-      super(message);
-   }
-
+    public ExceptionNoModule(String message) {
+        super(message);
+    }
 }

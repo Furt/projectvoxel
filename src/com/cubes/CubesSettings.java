@@ -28,7 +28,7 @@ public class CubesSettings {
     public AssetManager getAssetManager() {
         return assetManager;
     }
-    
+
     /**
      *
      * @return
@@ -36,7 +36,7 @@ public class CubesSettings {
     public static float getRowCount() {
         return rowCount;
     }
-    
+
     /**
      *
      * @param rowCount

@@ -7,6 +7,7 @@ import com.jme3.scene.Spatial;
 
 /**
  * Sync message for character objects
+ *
  * @author normenhansen
  */
 @Serializable()

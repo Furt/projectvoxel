@@ -13,15 +13,12 @@ import com.jme3.app.state.AppStateManager;
  * @author Terry
  */
 public class GuiAppState extends AbstractAppState {
-    
+
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
-        
     }
-    
+
     @Override
     public void update(float tpf) {
-        
     }
-    
 }

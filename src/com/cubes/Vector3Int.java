@@ -223,22 +223,22 @@ public class Vector3Int {
     public Vector3Int mult(int x, int y, int z) {
         return new Vector3Int(this.x * x, this.y * y, this.z * z);
     }
-    
+
     /**
-     * 
+     *
      * @param factor
-     * @return 
+     * @return
      */
     public Vector3Int div(int factor) {
         return div(factor, factor, factor);
     }
 
     /**
-     * 
+     *
      * @param x
      * @param y
      * @param z
-     * @return 
+     * @return
      */
     public Vector3Int div(int x, int y, int z) {
         return new Vector3Int(this.x / x, this.y / y, this.z / z);

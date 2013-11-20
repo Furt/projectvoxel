@@ -18,22 +18,18 @@ public class Noise {
         rand_ = ((rand == null) ? new Random() : rand);
         initialise();
     }
-    
     /**
      * Source of entropy
      */
     private Random rand_;
-    
     /**
      * Seed
      */
     private float seed;
-    
     /**
      * Amount of roughness
      */
     float roughness_;
-    
     /**
      * Plasma fractal grid
      */

@@ -8,5 +8,6 @@ import com.cubes.Block;
  */
 public class Block_Brick extends Block {
 
-    public Block_Brick() {}
+    public Block_Brick() {
+    }
 }

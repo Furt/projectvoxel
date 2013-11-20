@@ -22,171 +22,152 @@
  * libnoiseforjava.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+package me.furt.projectv.libnoise.module;
 
-package libnoiseforjava.module;
+import me.furt.projectv.libnoise.exception.ExceptionInvalidParam;
 
-import libnoiseforjava.exception.ExceptionInvalidParam;
+public class TranslatePoint extends ModuleBase {
+    /// Noise module that moves the coordinates of the input value before
+    /// returning the output value from a source module.
+    ///
+    /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates of
+    /// the input value by a translation amount before returning the output
+    /// value from the source module.  To set the translation amount, call
+    /// the setTranslation() method.  To set the translation amount to
+    /// apply to the individual @a x, @a y, or @a z coordinates, call the
+    /// setXTranslation(), setYTranslation() or setZTranslation() methods,
+    /// respectively.
+    ///
+    /// This noise module requires one source module.
 
-public class TranslatePoint extends ModuleBase
-{
-   /// Noise module that moves the coordinates of the input value before
-   /// returning the output value from a source module.
-   ///
-   /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates of
-   /// the input value by a translation amount before returning the output
-   /// value from the source module.  To set the translation amount, call
-   /// the setTranslation() method.  To set the translation amount to
-   /// apply to the individual @a x, @a y, or @a z coordinates, call the
-   /// setXTranslation(), setYTranslation() or setZTranslation() methods,
-   /// respectively.
-   ///
-   /// This noise module requires one source module.
+    /// Default translation factor applied to the @a x coordinate for the
+    /// TranslatePoint noise module.
+    static final double DEFAULT_TRANSLATE_POINT_X = 0.0;
+    /// Default translation factor applied to the @a y coordinate for the
+    /// TranslatePoint noise module.
+    static final double DEFAULT_TRANSLATE_POINT_Y = 0.0;
+    /// Default translation factor applied to the @a z coordinate for the
+    /// TranslatePoint noise module.
+    static final double DEFAULT_TRANSLATE_POINT_Z = 0.0;
+    /// Translation amount applied to the @a x coordinate of the input
+    /// value.
+    double xTranslation;
+    /// Translation amount applied to the @a y coordinate of the input
+    /// value.
+    double yTranslation;
+    /// Translation amount applied to the @a z coordinate of the input
+    /// value.
+    double zTranslation;
 
+    public TranslatePoint(ModuleBase sourceModule) throws ExceptionInvalidParam {
+        super(1);
+        setSourceModule(0, sourceModule);
+        xTranslation = DEFAULT_TRANSLATE_POINT_X;
+        yTranslation = DEFAULT_TRANSLATE_POINT_Y;
+        zTranslation = DEFAULT_TRANSLATE_POINT_Z;
 
-   /// Default translation factor applied to the @a x coordinate for the
-   /// TranslatePoint noise module.
-   static final double DEFAULT_TRANSLATE_POINT_X = 0.0;
+    }
 
-   /// Default translation factor applied to the @a y coordinate for the
-   /// TranslatePoint noise module.
-   static final double DEFAULT_TRANSLATE_POINT_Y = 0.0;
+    public double getValue(double x, double y, double z) {
+        assert (sourceModules[0] != null);
 
-   /// Default translation factor applied to the @a z coordinate for the
-   /// TranslatePoint noise module.
-   static final double DEFAULT_TRANSLATE_POINT_Z = 0.0;
+        return sourceModules[0].getValue(x + xTranslation, y + yTranslation,
+                z + zTranslation);
+    }
 
-   /// Translation amount applied to the @a x coordinate of the input
-   /// value.
-   double xTranslation;
+    /// Returns the translation amount to apply to the @a x coordinate of
+    /// the input value.
+    ///
+    /// @returns The translation amount to apply to the @a x coordinate.
+    public double getXTranslation() {
+        return xTranslation;
+    }
 
-   /// Translation amount applied to the @a y coordinate of the input
-   /// value.
-   double yTranslation;
+    /// Returns the translation amount to apply to the @a y coordinate of
+    /// the input value.
+    ///
+    /// @returns The translation amount to apply to the @a y coordinate.
+    public double getYTranslation() {
+        return yTranslation;
+    }
 
-   /// Translation amount applied to the @a z coordinate of the input
-   /// value.
-   double zTranslation;
+    /// Returns the translation amount to apply to the @a z coordinate of
+    /// the input value.
+    ///
+    /// @returns The translation amount to apply to the @a z coordinate.
+    public double getZTranslation() {
+        return zTranslation;
+    }
 
-   public TranslatePoint (ModuleBase sourceModule) throws ExceptionInvalidParam
-   {
-      super(1);
-      setSourceModule(0, sourceModule);
-      xTranslation = DEFAULT_TRANSLATE_POINT_X;
-      yTranslation = DEFAULT_TRANSLATE_POINT_Y;
-      zTranslation = DEFAULT_TRANSLATE_POINT_Z;
+    /// Sets the translation amount to apply to the input value.
+    ///
+    /// @param translation The translation amount to apply.
+    ///
+    /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
+    /// of the input value by a translation amount before returning the
+    /// output value from the source module
+    public void setTranslation(double translation) {
+        this.xTranslation = translation;
+        this.yTranslation = translation;
+        this.zTranslation = translation;
+    }
 
-   }
+    /// Sets the translation amounts to apply to the ( @a x, @a y, @a z )
+    /// coordinates of the input value.
+    ///
+    /// @param xTranslation The translation amount to apply to the @a x
+    /// coordinate.
+    /// @param yTranslation The translation amount to apply to the @a y
+    /// coordinate.
+    /// @param zTranslation The translation amount to apply to the @a z
+    /// coordinate.
+    ///
+    /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
+    /// of the input value by a translation amount before returning the
+    /// output value from the source module
+    public void setTranslation(double xTranslation, double yTranslation,
+            double zTranslation) {
+        this.xTranslation = xTranslation;
+        this.yTranslation = yTranslation;
+        this.zTranslation = zTranslation;
+    }
 
-   public double getValue (double x, double y, double z)
-   {
-      assert (sourceModules[0] != null);
+    /// Sets the translation amount to apply to the @a x coordinate of the
+    /// input value.
+    ///
+    /// @param xTranslation The translation amount to apply to the @a x
+    /// coordinate.
+    ///
+    /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
+    /// of the input value by a translation amount before returning the
+    /// output value from the source module
+    public void setXTranslation(double xTranslation) {
+        this.xTranslation = xTranslation;
+    }
 
-      return sourceModules[0].getValue (x + xTranslation, y + yTranslation,
-            z + zTranslation);
-   }
+    /// Sets the translation amount to apply to the @a y coordinate of the
+    /// input value.
+    ///
+    /// @param yTranslation The translation amount to apply to the @a y
+    /// coordinate.
+    ///
+    /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
+    /// of the input value by a translation amount before returning the
+    /// output value from the source module
+    public void setYTranslation(double yTranslation) {
+        this.yTranslation = yTranslation;
+    }
 
-   /// Returns the translation amount to apply to the @a x coordinate of
-   /// the input value.
-   ///
-   /// @returns The translation amount to apply to the @a x coordinate.
-   public double getXTranslation ()
-   {
-      return xTranslation;
-   }
-
-   /// Returns the translation amount to apply to the @a y coordinate of
-   /// the input value.
-   ///
-   /// @returns The translation amount to apply to the @a y coordinate.
-   public double getYTranslation ()
-   {
-      return yTranslation;
-   }
-
-   /// Returns the translation amount to apply to the @a z coordinate of
-   /// the input value.
-   ///
-   /// @returns The translation amount to apply to the @a z coordinate.
-   public double getZTranslation ()
-   {
-      return zTranslation;
-   }
-
-   /// Sets the translation amount to apply to the input value.
-   ///
-   /// @param translation The translation amount to apply.
-   ///
-   /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
-   /// of the input value by a translation amount before returning the
-   /// output value from the source module
-   public void setTranslation (double translation)
-   {
-      this.xTranslation = translation;
-      this.yTranslation = translation;
-      this.zTranslation = translation;
-   }
-
-   /// Sets the translation amounts to apply to the ( @a x, @a y, @a z )
-   /// coordinates of the input value.
-   ///
-   /// @param xTranslation The translation amount to apply to the @a x
-   /// coordinate.
-   /// @param yTranslation The translation amount to apply to the @a y
-   /// coordinate.
-   /// @param zTranslation The translation amount to apply to the @a z
-   /// coordinate.
-   ///
-   /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
-   /// of the input value by a translation amount before returning the
-   /// output value from the source module
-   public void setTranslation (double xTranslation, double yTranslation,
-         double zTranslation)
-   {
-      this.xTranslation = xTranslation;
-      this.yTranslation = yTranslation;
-      this.zTranslation = zTranslation;
-   }
-
-   /// Sets the translation amount to apply to the @a x coordinate of the
-   /// input value.
-   ///
-   /// @param xTranslation The translation amount to apply to the @a x
-   /// coordinate.
-   ///
-   /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
-   /// of the input value by a translation amount before returning the
-   /// output value from the source module
-   public void setXTranslation (double xTranslation)
-   {
-      this.xTranslation = xTranslation;
-   }
-
-   /// Sets the translation amount to apply to the @a y coordinate of the
-   /// input value.
-   ///
-   /// @param yTranslation The translation amount to apply to the @a y
-   /// coordinate.
-   ///
-   /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
-   /// of the input value by a translation amount before returning the
-   /// output value from the source module
-   public void setYTranslation (double yTranslation)
-   {
-      this.yTranslation = yTranslation;
-   }
-
-   /// Sets the translation amount to apply to the @a z coordinate of the
-   /// input value.
-   ///
-   /// @param zTranslation The translation amount to apply to the @a z
-   /// coordinate.
-   ///
-   /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
-   /// of the input value by a translation amount before returning the
-   /// output value from the source module
-   public void setZTranslation (double zTranslation)
-   {
-      this.zTranslation = zTranslation;
-   }
-
+    /// Sets the translation amount to apply to the @a z coordinate of the
+    /// input value.
+    ///
+    /// @param zTranslation The translation amount to apply to the @a z
+    /// coordinate.
+    ///
+    /// The getValue() method moves the ( @a x, @a y, @a z ) coordinates
+    /// of the input value by a translation amount before returning the
+    /// output value from the source module
+    public void setZTranslation(double zTranslation) {
+        this.zTranslation = zTranslation;
+    }
 }

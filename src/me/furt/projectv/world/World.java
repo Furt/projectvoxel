@@ -15,10 +15,9 @@ import java.util.Iterator;
  * @author Furt
  */
 public class World extends AbstractControl {
-    
+
     private int id;
     private String name;
-
     private WorldInfo worldInfo;
     private ArrayList<Region> regions = new ArrayList<Region>();
 
@@ -45,7 +44,7 @@ public class World extends AbstractControl {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setWorldInfo(WorldInfo worldInfo) {
         this.worldInfo = worldInfo;
     }
@@ -53,12 +52,12 @@ public class World extends AbstractControl {
     public ArrayList<Region> getRegions() {
         return regions;
     }
-    
+
     public Region getRegion(Vector3Int regionLoc) {
         Iterator i = regions.iterator();
-        while(i.hasNext()) {
+        while (i.hasNext()) {
             Region region = (Region) i.next();
-            if(region.getLocation().equals(regionLoc)) {
+            if (region.getLocation().equals(regionLoc)) {
                 return region;
             }
         }
@@ -76,11 +75,11 @@ public class World extends AbstractControl {
     public void removeRegion(Region region) {
         this.regions.remove(region);
     }
-    
+
     public boolean chunkExists(Vector3Int block) {
         Iterator i = regions.iterator();
-        while(i.hasNext()) {
-            Region region = (Region)i.next();
+        while (i.hasNext()) {
+            Region region = (Region) i.next();
             Chunk chunk = region.getChunkFromBlock(block);
             if (chunk != null) {
                 return true;

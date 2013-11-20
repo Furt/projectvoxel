@@ -22,27 +22,23 @@
  * libnoiseforjava.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+package me.furt.projectv.libnoise.module;
 
-package libnoiseforjava.module;
+import me.furt.projectv.libnoise.exception.ExceptionInvalidParam;
 
-import libnoiseforjava.exception.ExceptionInvalidParam;
+public class Invert extends ModuleBase {
+    /// Noise module that inverts the output value from a source module.
+    ///
+    /// This noise module requires one source module.
 
-public class Invert extends ModuleBase
-{
-   /// Noise module that inverts the output value from a source module.
-   ///
-   /// This noise module requires one source module.
-   public Invert (ModuleBase sourceModule) throws ExceptionInvalidParam
-   {
-      super(1);
-      setSourceModule(0, sourceModule);
-   }
+    public Invert(ModuleBase sourceModule) throws ExceptionInvalidParam {
+        super(1);
+        setSourceModule(0, sourceModule);
+    }
 
-   public double getValue (double x, double y, double z)
-   {
-      assert (sourceModules[0] != null);
+    public double getValue(double x, double y, double z) {
+        assert (sourceModules[0] != null);
 
-      return -(sourceModules[0].getValue (x, y, z));
-   }
-
+        return -(sourceModules[0].getValue(x, y, z));
+    }
 }

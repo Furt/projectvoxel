@@ -9,7 +9,8 @@ import com.jme3.network.serializing.Serializable;
  * @author Furt
  */
 @Serializable()
-public class ServerJoinMessage extends AbstractMessage{
+public class ServerJoinMessage extends AbstractMessage {
+
     public boolean rejected;
     public long id;
     public int group_id;
@@ -24,5 +25,4 @@ public class ServerJoinMessage extends AbstractMessage{
         this.group_id = group_id;
         this.name = name;
     }
-
 }

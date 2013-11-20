@@ -19,12 +19,10 @@ public class Block {
     private boolean breakable;
     // If this block can be currently used return true //
     private boolean isActive;
-    
-    
+
     public Block() {
-        
     }
-    
+
     public Block(int id, String name, int hardness, int resistance, boolean breakable, boolean isActive) {
         this.id = id;
         this.name = name;
@@ -81,6 +79,4 @@ public class Block {
     public void setIsActive(boolean IsActive) {
         this.isActive = IsActive;
     }
-    
-    
 }

@@ -11,13 +11,13 @@ import java.util.HashMap;
  * @author Terry
  */
 public class PlayerManager {
-    
+
     private static HashMap<Long, PlayerData> playerList;
-    
+
     public PlayerManager() {
         playerList = new HashMap<Long, PlayerData>();
     }
-    
+
     public HashMap<Long, PlayerData> getPlayerList() {
         return playerList;
     }

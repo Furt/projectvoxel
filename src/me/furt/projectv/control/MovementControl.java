@@ -8,7 +8,9 @@ import com.jme3.scene.control.Control;
  *
  * @author Furt
  */
-public interface MovementControl extends Control{
+public interface MovementControl extends Control {
+
     public Vector3f getLocation();
+
     public Vector3f getAimDirection();
 }

@@ -87,34 +87,22 @@ public class DamageAppState extends AbstractAppState {
         }
         //end
 
-        /** method #2 start
-        Iterator<Entity> mainiterator = entitySet.iterator();
-        while (iterator.hasNext()) {
-            Entity entity = mainiterator.next();
-            if (entity != null) {
-                EntityComponent[] pc = entity.getComponents();
-                
-                float health = 0;
-                float newLife = 0;
-                float damage = 0;
-                
-                for (EntityComponent c : pc) {
-                    if (c instanceof HealthComponent) {
-                        health = ((HealthComponent) c).getHealth();
-                    } else if (c instanceof DamageComponent) {
-                        damage = ((DamageComponent) c).getDamage();
-                    }
-                }
-                //leave more of a gap to add modifiers and such compared to the other method
-                newLife = health - damage;
-
-                if (newLife < 0) {
-                    entityData.removeComponent(entity.getId(), HealthComponent.class);
-                } else {
-                    entity.set(new HealthComponent(newLife));
-                }
-            }
-        }
-        end */
+        /**
+         * method #2 start Iterator<Entity> mainiterator = entitySet.iterator();
+         * while (iterator.hasNext()) { Entity entity = mainiterator.next(); if
+         * (entity != null) { EntityComponent[] pc = entity.getComponents();
+         *
+         * float health = 0; float newLife = 0; float damage = 0;
+         *
+         * for (EntityComponent c : pc) { if (c instanceof HealthComponent) {
+         * health = ((HealthComponent) c).getHealth(); } else if (c instanceof
+         * DamageComponent) { damage = ((DamageComponent) c).getDamage(); } }
+         * //leave more of a gap to add modifiers and such compared to the other
+         * method newLife = health - damage;
+         *
+         * if (newLife < 0) { entityData.removeComponent(entity.getId(),
+         * HealthComponent.class); } else { entity.set(new
+         * HealthComponent(newLife)); } } } end
+         */
     }
 }

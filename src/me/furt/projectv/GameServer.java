@@ -40,8 +40,8 @@ public class GameServer extends SimpleApplication {
         app.setPauseOnLostFocus(false);
         app.setSettings(settings);
         app.start();
-        
-        
+
+
     }
 
     @Override
@@ -52,7 +52,7 @@ public class GameServer extends SimpleApplication {
         } catch (IOException ex) {
             Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         listenerManager = new ServerNetManager(app, server);
     }
 

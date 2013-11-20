@@ -9,7 +9,8 @@ import me.furt.projectv.network.physics.PhysicsSyncMessage;
  * @author Furt
  */
 @Serializable()
-public class ServerAddPlayerMessage extends PhysicsSyncMessage{
+public class ServerAddPlayerMessage extends PhysicsSyncMessage {
+
     public long playerId;
     public String name;
     public int group_id;
@@ -29,5 +30,4 @@ public class ServerAddPlayerMessage extends PhysicsSyncMessage{
     @Override
     public void applyData(Object object) {
     }
-
 }

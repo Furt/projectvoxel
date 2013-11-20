@@ -9,7 +9,8 @@ import com.jme3.network.serializing.Serializable;
  * @author Furt
  */
 @Serializable()
-public class StartGameMessage extends AbstractMessage{
+public class StartGameMessage extends AbstractMessage {
+
     public String levelName;
     public String[] modelNames;
 

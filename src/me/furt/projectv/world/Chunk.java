@@ -20,9 +20,8 @@ public class Chunk extends AbstractControl {
     private int chunkX = 16;
     private int chunkY = 128;
     private int chunkZ = 16;
-    
+
     public Chunk() {
-        
     }
 
     public Chunk(Region region, Vector3Int location) {
@@ -34,7 +33,7 @@ public class Chunk extends AbstractControl {
     public byte[][][] getBlocks() {
         return Blocks;
     }
-    
+
     public Block getBlock(Vector3Int location) {
         return BlockManager.getBlock(Blocks[location.getX()][location.getY()][location.getZ()]);
     }
@@ -72,6 +71,4 @@ public class Chunk extends AbstractControl {
     public Control cloneForSpatial(Spatial spatial) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    
 }

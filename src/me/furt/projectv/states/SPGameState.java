@@ -8,5 +8,4 @@ import com.jme3.app.state.AbstractAppState;
  * @author Furt
  */
 public class SPGameState extends AbstractAppState {
-
 }

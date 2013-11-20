@@ -21,12 +21,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * <p>Handles syncing of physics enabled server/client games. Puts messages in a queue
- * and executes them based on server time stamp plus an offset on the client.
- * The offset is calculated for each arriving message, if the time offset change
- * is bigger than maxDelay or smaller than zero (the message would be played either
- * very late or has happened already) then the offset time is adjusted.</p>
- * <p></p>
+ * <p>Handles syncing of physics enabled server/client games. Puts messages in a
+ * queue and executes them based on server time stamp plus an offset on the
+ * client. The offset is calculated for each arriving message, if the time
+ * offset change is bigger than maxDelay or smaller than zero (the message would
+ * be played either very late or has happened already) then the offset time is
+ * adjusted.</p> <p></p>
+ *
  * @author normenhansen
  */
 public class PhysicsSyncManager extends AbstractAppState implements MessageListener {
@@ -56,6 +57,7 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
     /**
      * updates the PhysicsSyncManager, executes messages on client and sends
      * sync info on the server.
+     *
      * @param tpf
      */
     @Override
@@ -84,6 +86,7 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
 
     /**
      * add an object to the list of objects managed by this sync manager
+     *
      * @param id
      * @param object
      */
@@ -93,6 +96,7 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
 
     /**
      * removes an object from the list of objects managed by this sync manager
+     *
      * @param object
      */
     public void removeObject(Object object) {
@@ -107,6 +111,7 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
 
     /**
      * removes an object from the list of objects managed by this sync manager
+     *
      * @param id
      */
     public void removeObject(long id) {
@@ -119,6 +124,7 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
 
     /**
      * executes a message immediately
+     *
      * @param message
      */
     protected void doMessage(PhysicsSyncMessage message) {
@@ -131,8 +137,9 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
     }
 
     /**
-     * enqueues the message and updates the offset of the sync manager based on the
-     * time stamp
+     * enqueues the message and updates the offset of the sync manager based on
+     * the time stamp
+     *
      * @param message
      */
     protected void enqueueMessage(PhysicsSyncMessage message) {
@@ -180,6 +187,7 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
     /**
      * use to broadcast physics control messages if server, applies timestamp to
      * PhysicsSyncMessage, call from OpenGL thread!
+     *
      * @param msg
      */
     public void broadcast(PhysicsSyncMessage msg) {
@@ -193,6 +201,7 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
 
     /**
      * send data to a specific client
+     *
      * @param client
      * @param msg
      */
@@ -206,6 +215,7 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
 
     /**
      * send data to a specific client
+     *
      * @param client
      * @param msg
      */
@@ -220,6 +230,7 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
 
     /**
      * registers the types of messages this PhysicsSyncManager listens to
+     *
      * @param classes
      */
     public void setMessageTypes(Class... classes) {
@@ -236,7 +247,6 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
         assert (message instanceof PhysicsSyncMessage);
         if (client != null) {
             app.enqueue(new Callable<Void>() {
-
                 public Void call() throws Exception {
                     enqueueMessage((PhysicsSyncMessage) message);
                     return null;
@@ -244,7 +254,6 @@ public class PhysicsSyncManager extends AbstractAppState implements MessageListe
             });
         } else if (server != null) {
             app.enqueue(new Callable<Void>() {
-
                 public Void call() throws Exception {
                     for (Iterator<SyncMessageValidator> it = validators.iterator(); it.hasNext();) {
                         SyncMessageValidator syncMessageValidator = it.next();

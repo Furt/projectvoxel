@@ -101,7 +101,7 @@ public class ImageWriter {
             throw new RuntimeException("I didn't handle this very well");
         }
     }
-    
+
     public static void colorWriteImage(float[][] data, int rand) {
 
         BufferedImage image = new BufferedImage(data.length, data[0].length, BufferedImage.TYPE_INT_RGB);

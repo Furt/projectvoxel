@@ -310,7 +310,7 @@ public class ChunkControl extends AbstractControl implements BitSerializable {
         for (int x = 0; x < blockTypes.length; x++) {
             for (int y = 0; y < blockTypes[0].length; y++) {
                 for (int z = 0; z < blockTypes[0][0].length; z++) {
-                    blockTypes[x][y][z] = (byte) inputStream.readBits(8); 
+                    blockTypes[x][y][z] = (byte) inputStream.readBits(8);
                 }
             }
         }
@@ -341,9 +341,8 @@ public class ChunkControl extends AbstractControl implements BitSerializable {
     public boolean isGenerated() {
         return generated;
     }
-    
+
     public void setGenerated(boolean b) {
         this.generated = b;
     }
-            
 }

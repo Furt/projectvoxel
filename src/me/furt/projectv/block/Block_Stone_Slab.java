@@ -5,13 +5,13 @@
 package me.furt.projectv.block;
 
 import com.cubes.Block;
+
 /**
  *
  * @author Jerry
  */
 public class Block_Stone_Slab extends Block {
-    public Block_Stone_Slab()
-    {
-        
+
+    public Block_Stone_Slab() {
     }
 }

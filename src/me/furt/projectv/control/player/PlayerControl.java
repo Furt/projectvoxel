@@ -9,5 +9,4 @@ package me.furt.projectv.control.player;
  * @author Terry
  */
 public class PlayerControl {
-    
 }
