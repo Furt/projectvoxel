@@ -185,7 +185,7 @@ public class Select extends ModuleBase {
     public void setEdgeFalloff(double edgeFalloff) {
         // Make sure that the edge falloff curves do not overlap.
         double boundSize = upperBound - lowerBound;
-        edgeFalloff = (edgeFalloff > boundSize / 2) ? boundSize / 2 : edgeFalloff;
+        this.edgeFalloff = (edgeFalloff > boundSize / 2) ? boundSize / 2 : edgeFalloff;
     }
 
     /// Returns the control module.
