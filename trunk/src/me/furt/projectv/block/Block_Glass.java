@@ -11,9 +11,7 @@ import com.cubes.Block;
  * @author Terry
  */
 public class Block_Glass extends Block {
-    
+
     public Block_Glass() {
-        
     }
-    
 }

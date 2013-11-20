@@ -8,6 +8,7 @@ import com.cubes.Vector3Int;
  * @author Furt
  */
 public class WorldInfo {
+
     public int id;
     public String name;
     public boolean pvp;
@@ -15,13 +16,13 @@ public class WorldInfo {
     public boolean monstersAllowed;
     public boolean crittersAllowed;
     public WorldType worldType;
-    
+
     public WorldInfo(int id, String name, WorldType worldType) {
         this.id = id;
         this.name = name;
         this.worldType = worldType;
     }
-    
+
     public int getId() {
         return id;
     }

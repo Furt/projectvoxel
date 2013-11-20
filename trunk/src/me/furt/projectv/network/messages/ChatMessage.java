@@ -28,15 +28,15 @@ public class ChatMessage extends AbstractMessage {
     public String getMessageData() {
         return channel + ":" + player + ":" + message;
     }
-    
+
     public Object getChannel() {
         return channel;
     }
-    
+
     public String getPlayer() {
         return player;
     }
-    
+
     public String getMessage() {
         return message;
     }

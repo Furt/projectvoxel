@@ -8,6 +8,7 @@ import com.cubes.Block;
 
 /**
  * You must extend Block and create a empty constructor
+ *
  * @author Terry
  */
 public class Test_Block extends Block {

@@ -69,7 +69,7 @@ public class World {
         blockTerrain.setBlockArea(new Vector3Int(3, 23, 12), new Vector3Int(6, 1, 6), Block_Mud.class);
         // water layer
         blockTerrain.setBlockArea(new Vector3Int(3, 24, 12), new Vector3Int(6, 1, 6), Block_Water.class);
-        
+
         //Sand Pit 
         blockTerrain.setBlockArea(new Vector3Int(10, 24, 3), new Vector3Int(6, 1, 6), Block_Sand.class);
 

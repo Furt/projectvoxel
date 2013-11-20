@@ -23,5 +23,4 @@ public class HandshakeMessage extends AbstractMessage {
         this.client_version = client_version;
         this.server_version = server_version;
     }
-
 }

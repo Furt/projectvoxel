@@ -22,69 +22,61 @@
  * libnoiseforjava.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+package me.furt.projectv.libnoise.module;
 
-package libnoiseforjava.module;
+import me.furt.projectv.libnoise.exception.ExceptionInvalidParam;
 
-import libnoiseforjava.exception.ExceptionInvalidParam;
+public class Clamp extends ModuleBase {
 
-public class Clamp extends ModuleBase
-{
+    /// Noise module that clamps the output value from a source module to a
+    /// range of values.
+    ///
+    /// @image html moduleclamp.png
+    ///
+    /// The range of values in which to clamp the output value is called the
+    /// <i>clamping range</i>.
+    ///
+    /// If the output value from the source module is less than the lower
+    /// bound of the clamping range, this noise module clamps that value to
+    /// the lower bound.  If the output value from the source module is
+    /// greater than the upper bound of the clamping range, this noise module
+    /// clamps that value to the upper bound.
+    ///
+    /// To specify the upper and lower bounds of the clamping range, call the
+    /// setBounds() method.
+    ///
+    /// This noise module requires one source module.
+    /// Default lower bound of the clamping range for the Clamp noise module.
+    static final double DEFAULT_CLAMP_LOWER_BOUND = -1.0;
+    /// Default upper bound of the clamping range for the Clamp noise module.
+    static final double DEFAULT_CLAMP_UPPER_BOUND = 1.0;
+    double lowerBound, upperBound;
 
-   /// Noise module that clamps the output value from a source module to a
-   /// range of values.
-   ///
-   /// @image html moduleclamp.png
-   ///
-   /// The range of values in which to clamp the output value is called the
-   /// <i>clamping range</i>.
-   ///
-   /// If the output value from the source module is less than the lower
-   /// bound of the clamping range, this noise module clamps that value to
-   /// the lower bound.  If the output value from the source module is
-   /// greater than the upper bound of the clamping range, this noise module
-   /// clamps that value to the upper bound.
-   ///
-   /// To specify the upper and lower bounds of the clamping range, call the
-   /// setBounds() method.
-   ///
-   /// This noise module requires one source module.
+    public Clamp(ModuleBase sourceModule) throws ExceptionInvalidParam {
+        super(1);
+        setSourceModule(0, sourceModule);
 
-   /// Default lower bound of the clamping range for the Clamp noise module.
-   static final double DEFAULT_CLAMP_LOWER_BOUND = -1.0;
+        lowerBound = DEFAULT_CLAMP_LOWER_BOUND;
+        upperBound = DEFAULT_CLAMP_UPPER_BOUND;
+    }
 
-   /// Default upper bound of the clamping range for the Clamp noise module.
-   static final double DEFAULT_CLAMP_UPPER_BOUND = 1.0;
+    public double getValue(double x, double y, double z) {
+        assert (sourceModules[0] != null);
 
-   double lowerBound, upperBound;
+        double value = sourceModules[0].getValue(x, y, z);
+        if (value < lowerBound) {
+            return lowerBound;
+        } else if (value > upperBound) {
+            return upperBound;
+        } else {
+            return value;
+        }
+    }
 
-   public Clamp (ModuleBase sourceModule) throws ExceptionInvalidParam
-   {
-      super(1);
-      setSourceModule(0, sourceModule);
+    public void setBounds(double lowerBound, double upperBound) {
+        assert (lowerBound < upperBound);
 
-      lowerBound = DEFAULT_CLAMP_LOWER_BOUND;
-      upperBound = DEFAULT_CLAMP_UPPER_BOUND;
-   }
-
-   public double getValue (double x, double y, double z)
-   {
-      assert (sourceModules[0] != null);
-
-      double value = sourceModules[0].getValue (x, y, z);
-      if (value < lowerBound)
-         return lowerBound;
-      else if (value > upperBound)
-         return upperBound;
-      else
-         return value;
-   }
-
-   public void setBounds (double lowerBound, double upperBound)
-   {
-      assert (lowerBound < upperBound);
-
-      this.lowerBound = lowerBound;
-      this.upperBound = upperBound;
-   }
-
+        this.lowerBound = lowerBound;
+        this.upperBound = upperBound;
+    }
 }

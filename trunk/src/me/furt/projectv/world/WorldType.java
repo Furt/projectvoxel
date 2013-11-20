@@ -6,6 +6,4 @@ package me.furt.projectv.world;
  * @author Furt
  */
 public class WorldType {
-    
-
 }

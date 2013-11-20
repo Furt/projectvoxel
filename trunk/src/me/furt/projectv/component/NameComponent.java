@@ -15,14 +15,14 @@ import com.simsilica.es.PersistentComponent;
  */
 @Serializable
 public class NameComponent extends AbstractMessage implements EntityComponent, PersistentComponent {
+
     private String name;
-    
+
     public NameComponent(String name) {
         this.name = name;
     }
-    
+
     public String getName() {
         return this.name;
     }
-    
 }

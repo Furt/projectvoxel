@@ -20,16 +20,17 @@ import me.furt.projectv.network.messages.*;
  * @author Terry
  */
 public class ServerNetManager implements MessageListener<HostedConnection>, ConnectionListener {
+
     GameServer app;
     Server server;
-    
+
     public ServerNetManager(GameServer app, Server server) {
         this.app = app;
         this.server = server;
         server.addConnectionListener(this);
         server.addMessageListener(this, HandshakeMessage.class, LoginMessage.class, ChatMessage.class);
     }
-    
+
     public void messageReceived(HostedConnection source, Message message) {
         if (message instanceof HandshakeMessage) {
             HandshakeMessage msg = (HandshakeMessage) message;
@@ -50,5 +51,4 @@ public class ServerNetManager implements MessageListener<HostedConnection>, Conn
 
     public void connectionRemoved(Server server, HostedConnection conn) {
     }
-    
 }

@@ -17,6 +17,7 @@ import tonegod.gui.core.Screen;
  * @author Terry
  */
 public class Test4 extends SimpleApplication {
+
     private Screen screen;
 
     @Override
@@ -50,7 +51,7 @@ public class Test4 extends SimpleApplication {
         Slider slider = new Slider(screen, new Vector2f(100, 100), Slider.Orientation.HORIZONTAL, true) {
             @Override
             public void onChange(int selectedIndex, Object value) {
-                float blend = (float)value.hashCode() * 0.01f;
+                float blend = (float) value.hashCode() * 0.01f;
                 float blend1 = selectedIndex * 0.01f;
                 color.interpolate(ColorRGBA.Red, ColorRGBA.Green, blend);
                 ind.setIndicatorColor(color);
@@ -61,7 +62,7 @@ public class Test4 extends SimpleApplication {
         screen.addElement(slider);
 
     }
-    
+
     public static void main(String[] args) {
         Test4 app = new Test4();
         app.start();

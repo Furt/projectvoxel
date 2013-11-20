@@ -15,12 +15,13 @@ import com.simsilica.es.PersistentComponent;
  */
 @Serializable
 public class SessionComponent extends AbstractMessage implements EntityComponent, PersistentComponent {
+
     int sessionId;
-    
+
     public SessionComponent(int session) {
         this.sessionId = session;
     }
-    
+
     public int getSessionId() {
         return sessionId;
     }

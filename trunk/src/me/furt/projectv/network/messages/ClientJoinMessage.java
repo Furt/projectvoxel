@@ -9,7 +9,8 @@ import com.jme3.network.serializing.Serializable;
  * @author Furt
  */
 @Serializable()
-public class ClientJoinMessage extends AbstractMessage{
+public class ClientJoinMessage extends AbstractMessage {
+
     public String name;
     public String pass;
 
@@ -20,5 +21,4 @@ public class ClientJoinMessage extends AbstractMessage{
         this.name = name;
         this.pass = pass;
     }
-
 }

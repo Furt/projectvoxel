@@ -33,9 +33,9 @@ public class Test {
         }
 
         //ImageWriter.colorWriteImage(result, rand);
-        
+
         // ValueNoise
-        
+
         float[][] vNoise = ValueNoise.GenerateValueNoise(200, 200, 10);
         ImageWriter.colorWriteImage(vNoise, rand);
 

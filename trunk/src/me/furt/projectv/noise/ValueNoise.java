@@ -10,7 +10,7 @@ import java.util.Random;
 public class ValueNoise {
 
     private static Random random = new Random();
-    
+
     public static float[][] GetEmptyArray(int width, int height) {
         float[][] image = new float[width][];
         for (int i = 0; i < width; i++) {

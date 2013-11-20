@@ -7,6 +7,7 @@ import com.jme3.network.serializing.Serializable;
  * Abstract physics sync message, can be used with PhysicsSyncManager, contains
  * timestamp and id. Override applyData method to apply the data to the object
  * with the specific id when it arrives.
+ *
  * @author normenhansen
  */
 @Serializable()
@@ -23,6 +24,6 @@ public abstract class PhysicsSyncMessage extends AbstractMessage {
         super(true);
         this.syncId = id;
     }
-    
+
     public abstract void applyData(Object object);
 }

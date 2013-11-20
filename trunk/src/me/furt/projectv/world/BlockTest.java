@@ -6,5 +6,4 @@ package me.furt.projectv.world;
  * @author Furt
  */
 public interface BlockTest {
-
 }

@@ -7,7 +7,7 @@ import com.jme3.scene.control.Control;
  *
  * @author Furt
  */
-public interface NetworkActionEnabled extends Control{
+public interface NetworkActionEnabled extends Control {
 
     public void doPerformAction(int action, boolean activate);
 }

@@ -57,8 +57,7 @@ public class BitInputStream {
 
     /**
      *
-     * @return
-     * @throws IOException
+     * @return @throws IOException
      */
     public float readFloat() throws IOException {
         return Float.intBitsToFloat(readBits(32));
@@ -66,8 +65,7 @@ public class BitInputStream {
 
     /**
      *
-     * @return
-     * @throws IOException
+     * @return @throws IOException
      */
     public int readInteger() throws IOException {
         return readBits(32);
@@ -75,8 +73,7 @@ public class BitInputStream {
 
     /**
      *
-     * @return
-     * @throws IOException
+     * @return @throws IOException
      */
     public boolean readBoolean() throws IOException {
         return (readBits(1) == 1);

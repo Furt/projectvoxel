@@ -31,6 +31,7 @@ import tonegod.skydome.SkyDome;
  * @author Terry
  */
 public class IngameState extends AbstractAppState {
+
     private SimpleApplication app;
     private AppSettings settings;
     private Node rootNode;
@@ -45,11 +46,11 @@ public class IngameState extends AbstractAppState {
     private BitmapFont guiFont;
     private ConcurrentLinkedQueue<String> chatMessageQueue;
     private AppStateManager stateManager;
-    
+
     public IngameState(AppSettings settings) {
         this.settings = settings;
     }
-    
+
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         this.app = (SimpleApplication) app;
@@ -68,7 +69,7 @@ public class IngameState extends AbstractAppState {
         skyDome.setEnabled(true);
         skyDome.setDayNightTransitionSpeed(0.1f);
         skyDome.setSunMoonSpeed(0.1f);
-        
+
         Node sky = new Node();
         sky.setQueueBucket(RenderQueue.Bucket.Sky);
         sky.addControl(skyDome);
@@ -83,7 +84,7 @@ public class IngameState extends AbstractAppState {
         rootNode.attachChild(test);
         // You must add a light to make the model visible
         WorldSettings.initializeEnvironment(this.app);
-        
+
         cam.setLocation(setBlockVector(1f, 30f, 1f));
         // this is still kinda wonky
         cam.lookAtDirection(setBlockVector(2f, -13f, 8f), Vector3f.UNIT_Y);
@@ -101,12 +102,12 @@ public class IngameState extends AbstractAppState {
          *
          */
     }
-    
+
     @Override
     public void update(float tpf) {
         skyDome.update(tpf);
     }
-    
+
     private void initHUD() {
         guiNode.detachAllChildren();
         this.app.setDisplayStatView(false);
@@ -126,7 +127,7 @@ public class IngameState extends AbstractAppState {
         guiNode.attachChild(ch);
 
     }
-    
+
     public Vector3f setBlockVector(float x, float y, float z) {
         float blockSize = WorldSettings.getSettings(app).getBlockSize();
         return new Vector3f(x * blockSize, y * blockSize, z * blockSize);

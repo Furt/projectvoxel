@@ -143,10 +143,9 @@ public class GameClient extends SimpleApplication implements ScreenController {
         node.collideWith(ray, results);
         return results;
     }
-    
+
     public void setStatusText(final String text) {
         enqueue(new Callable<Void>() {
-
             public Void call() throws Exception {
                 statusText.setText(text);
                 return null;

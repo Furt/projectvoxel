@@ -22,23 +22,24 @@ import me.furt.projectv.network.messages.ServerJoinMessage;
  * @author Terry
  */
 public class ClientNetManager implements MessageListener, ClientStateListener {
+
     private GameClient app;
     private Client client;
     private String name = "";
     private String pass = "";
-    
+
     public ClientNetManager(GameClient app, Client client) {
         this.app = app;
         this.client = client;
         client.addClientStateListener(this);
         client.addMessageListener(this, HandshakeMessage.class, ServerJoinMessage.class, ChatMessage.class);
     }
-    
+
     public void clientConnected(Client clienst) {
         HandshakeMessage msg = new HandshakeMessage(Globals.PROTOCOL_VERSION, Globals.CLIENT_VERSION, -1);
         client.send(msg);
     }
-    
+
     public void clientDisconnected(Client c, DisconnectInfo info) {
     }
 
@@ -58,7 +59,4 @@ public class ClientNetManager implements MessageListener, ClientStateListener {
     private void setStatusText(String message) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
-
-    
-    
 }

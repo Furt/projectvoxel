@@ -31,8 +31,8 @@ public class LoginMessage extends AbstractMessage {
         String hash = this.username + ":" + this.password;
         byte[] bytesOfMessage = hash.getBytes(Charset.forName("UTF-8"));
 
-        
-        
+
+
         try {
             MessageDigest md;
             byte[] thedigest;

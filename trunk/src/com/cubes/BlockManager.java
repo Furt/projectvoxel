@@ -46,7 +46,7 @@ public class BlockManager {
     public static BlockType getType(byte type) {
         return TYPES_BLOCKS[type];
     }
-    
+
     public static BlockType[] getTypes() {
         return TYPES_BLOCKS;
     }
