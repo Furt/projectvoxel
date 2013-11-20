@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import me.furt.projectv.libnoise.module.Billow;
 import me.furt.projectv.libnoise.module.Perlin;
+import me.furt.projectv.libnoise.module.RidgedMulti;
+import me.furt.projectv.libnoise.module.ScaleBias;
+import me.furt.projectv.libnoise.module.Select;
 import me.furt.projectv.libnoise.util.ColorCafe;
 import me.furt.projectv.libnoise.util.ImageCafe;
 import me.furt.projectv.libnoise.util.NoiseMap;
@@ -19,15 +21,30 @@ import me.furt.projectv.libnoise.util.RendererImage;
  *
  * @author Furt
  */
-public class Test {
+public class Test2 {
 
     public static void main(String[] args) {
-        Logger.getLogger("").setLevel(Level.SEVERE);
         try {
-            Perlin perlin = new Perlin();
+            RidgedMulti mountainTerrain = new RidgedMulti();
+
+            Billow baseFlatTerrain = new Billow();
+            baseFlatTerrain.setFrequency(2.0);
+
+            ScaleBias flatTerrain = new ScaleBias(baseFlatTerrain);
+            flatTerrain.setScale(0.125);
+            flatTerrain.setBias(-0.75);
+
+            Perlin terrainType = new Perlin();
+            terrainType.setFrequency(0.5);
+            terrainType.setPersistence(0.25);
+
+            Select finalTerrain = new Select(flatTerrain, mountainTerrain, terrainType);
+            finalTerrain.setBounds(0.0, 1000.0);
+            finalTerrain.setEdgeFalloff(0.125);
+
             NoiseMap heightMap = new NoiseMap(256, 256);
             NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
-            heightMapBuilder.setSourceModule(perlin);
+            heightMapBuilder.setSourceModule(finalTerrain);
             heightMapBuilder.setDestNoiseMap(heightMap);
             heightMapBuilder.setDestSize(256, 256);
             heightMapBuilder.setBounds(6.0, 10.0, 1.0, 5.0);
@@ -38,27 +55,19 @@ public class Test {
             renderer.setSourceNoiseMap(heightMap);
             renderer.setDestImage(image);
             renderer.clearGradient();
-            renderer.addGradientPoint(-1.0000, new ColorCafe(0, 0, 128, 255)); // deeps
-            renderer.addGradientPoint(-0.2500, new ColorCafe(0, 0, 255, 255)); // shallow
-            renderer.addGradientPoint(0.0000, new ColorCafe(0, 128, 255, 255)); // shore
-            renderer.addGradientPoint(0.0625, new ColorCafe(240, 240, 64, 255)); // sand
-            renderer.addGradientPoint(0.1250, new ColorCafe(32, 160, 0, 255)); // grass
-            renderer.addGradientPoint(0.3750, new ColorCafe(224, 224, 0, 255)); // dirt
-            renderer.addGradientPoint(0.7500, new ColorCafe(128, 128, 128, 255)); // rock
-            renderer.addGradientPoint(1.0000, new ColorCafe(255, 255, 255, 255)); // snow
+            renderer.addGradientPoint(-1.00, new ColorCafe(32, 160, 0, 255)); // grass
+            renderer.addGradientPoint(-0.25, new ColorCafe(224, 224, 0, 255)); // dirt
+            renderer.addGradientPoint(0.25, new ColorCafe(128, 128, 128, 255)); // rock
+            renderer.addGradientPoint(1.00, new ColorCafe(255, 255, 255, 255)); // snow
             renderer.enableLight(true);
-            renderer.setLightContrast(3.0); // Triple the contrast
-            renderer.setLightBrightness(2.0); // Double the brightness
+            renderer.setLightContrast(3.0);
+            renderer.setLightBrightness(2.0);
             renderer.render();
 
             BufferedImage im = buffBuilder(image.getHeight(), image.getWidth(), image);
-            ImageIO.write(im, "png", new File("./noise/libnoise_" + new Random().nextInt() + ".png"));
-
+            ImageIO.write(im, "png", new File("./noise/libnoise_2_" + new Random().nextInt() + ".png"));
         } catch (Exception e) {
-            throw new RuntimeException("I didn't handle this very well");
         }
-
-
     }
 
     public static BufferedImage buffBuilder(int height, int width, ImageCafe imageCafe) {
