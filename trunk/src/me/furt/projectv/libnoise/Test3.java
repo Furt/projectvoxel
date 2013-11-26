@@ -22,7 +22,7 @@ import me.furt.projectv.libnoise.util.RendererImage;
  *
  * @author Furt
  */
-public class Test2 {
+public class Test3 {
 
     public static void main(String[] args) {
         try {
@@ -43,41 +43,36 @@ public class Test2 {
             terrainSelector.setBounds(0.0, 1000.0);
             terrainSelector.setEdgeFalloff(0.125);
 
-            Turbulence finalTerrain = new Turbulence(terrainSelector);
+            ScaleBias terrainScaler = new ScaleBias(terrainSelector);
+            terrainScaler.setScale (80.0);
+            terrainScaler.setBias (80.0);
+
+            Turbulence finalTerrain = new Turbulence(terrainScaler);
             finalTerrain.setFrequency(4.0);
             finalTerrain.setPower(0.125);
 
             
 
-            NoiseMap heightMap = new NoiseMap(256, 256);
+            NoiseMap heightMap = new NoiseMap(160, 160);
             NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
             heightMapBuilder.setSourceModule(finalTerrain);
             heightMapBuilder.setDestNoiseMap(heightMap);
             heightMapBuilder.setDestSize(160, 160);
-            heightMapBuilder.setBounds(6.0, 10.0, 1.0, 5.0);
+            //heightMapBuilder.setBounds(6.0, 10.0, 1.0, 5.0);
             heightMapBuilder.build();
+            
+            for (int x = 0; x < 160; x++) {
+                for (int z = 0; z < 160; z++) {
+                    System.out.println(heightMap.getValue(x, z));
+                }
+            }
 
-            RendererImage renderer = new RendererImage();
-            ImageCafe image = new ImageCafe(heightMap.getWidth(), heightMap.getHeight());
-            renderer.setSourceNoiseMap(heightMap);
-            renderer.setDestImage(image);
-            renderer.clearGradient();
-            renderer.addGradientPoint(-1.00, new ColorCafe(32, 160, 0, 255)); // grass
-            renderer.addGradientPoint(-0.25, new ColorCafe(224, 224, 0, 255)); // dirt
-            renderer.addGradientPoint(0.25, new ColorCafe(128, 128, 128, 255)); // rock
-            renderer.addGradientPoint(1.00, new ColorCafe(255, 255, 255, 255)); // snow
-            renderer.enableLight(true);
-            renderer.setLightContrast(3.0);
-            renderer.setLightBrightness(2.0);
-            renderer.render();
-
-            BufferedImage im = buffBuilder(image.getHeight(), image.getWidth(), image);
-            ImageIO.write(im, "png", new File("./noise/libnoise_2_" + new Random().nextInt() + ".png"));
+            
         } catch (Exception e) {
         }
     }
 
-    public static BufferedImage buffBuilder(int height, int width, ImageCafe imageCafe) {
+    private static BufferedImage buffBuilder(int height, int width, ImageCafe imageCafe) {
 
         BufferedImage im = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
 
@@ -90,7 +85,7 @@ public class Test2 {
         return im;
     }
 
-    public static int getRGBA(ColorCafe colorCafe) {
+    private static int getRGBA(ColorCafe colorCafe) {
         int red, blue, green, alpha;
         red = colorCafe.getRed();
         blue = colorCafe.getBlue();
