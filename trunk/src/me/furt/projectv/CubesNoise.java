@@ -110,7 +110,7 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
 
         setupControls();
         setupChatBox();
-        
+        //setupFog();
         createLight();
 
         seed = new Random().nextInt();
@@ -125,8 +125,11 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         setupGUI();
     }
 
-    @Override
+     @Override
     public void simpleUpdate(float tpf) {
+        if(character.getPhysicsLocation().getY() < -10.0f) {
+            character.setPhysicsLocation(new Vector3f(151f, 67f, 51f));
+        }
         // Player updates
         Vector3f camDir = cam.getDirection().clone().multLocal(0.1f);
         Vector3f camLeft = cam.getLeft().clone().multLocal(0.1f);
@@ -161,7 +164,9 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
                     animationChannel.setAnim("stand");
                 }
             } else if (!"Walk".equals(animationChannel.getAnimationName())) {
+                animationChannel.setSpeed(5f);
                 animationChannel.setAnim("Walk", 0.7f);
+                
             }
         }
         character.setWalkDirection(walkDirection);
@@ -258,7 +263,7 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         blockTerrain = new TerrainControl(cubeSettings, new Vector3Int(25, 1, 25));
         blockTerrain.setBlocksFromLibNoise(new Vector3Int(0, 0, 0));
         blockTerrain.addChunkListener(new ChunkListener() {
-
+            @Override
             public void onSpatialUpdated(ChunkControl blockChunk) {
                 Geometry optimizedGeometry = blockChunk.getOptimizedGeometry_Opaque();
                 RigidBodyControl rigidBodyControl = optimizedGeometry.getControl(RigidBodyControl.class);
@@ -287,12 +292,15 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
     // TODO
     private void setupPlayer() {
         itemInHand = 0;
-        CapsuleCollisionShape capsule = new CapsuleCollisionShape(3f, 4f);
+        CapsuleCollisionShape capsule = new CapsuleCollisionShape(0.5f, 1f);
         character = new CharacterControl(capsule, 0.01f);
+        character.setGravity(20f);
+        character.setJumpSpeed(8f);
+        character.setFallSpeed(14f);
         model = (Node) assetManager.loadModel("Textures/Oto/Oto.mesh.xml");
-        //model.setLocalScale(0.5f);
+        model.setLocalScale(0.20f);
         model.addControl(character);
-        character.setPhysicsLocation(new Vector3f(67.638f, 349.542f, 145.545f));
+        character.setPhysicsLocation(new Vector3f(151f, 67f, 51f));
         rootNode.attachChild(model);
         getPhysicsSpace().add(character);
 
@@ -304,6 +312,8 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
     private void setupChaseCamera() {
         flyCam.setEnabled(false);
         chaseCam = new ChaseCamera(cam, model, inputManager);
+        chaseCam.setSmoothMotion(true);
+        chaseCam.setDragToRotate(false);
     }
 
     private void setupAnimationController() {
@@ -319,7 +329,7 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         FogFilter fog = new FogFilter();
         fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
-        fog.setFogStartDistance(450);
+        fog.setFogStartDistance(550);
         fog.setFogDensity(0.1f);
         fpp.addFilter(fog);
         viewPort.addProcessor(fpp);
@@ -474,7 +484,7 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
             toggleChat();
         } else if (action.equals("chunk_fill") && value) {
             generateChunk(null, false);
-        } else if (action.equals("player_strafe_leftt")) {
+        } else if (action.equals("player_strafe_left")) {
             if (value) {
                 left = true;
             } else {
