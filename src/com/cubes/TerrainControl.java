@@ -10,6 +10,10 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import java.io.IOException;
 import java.util.ArrayList;
+import me.furt.projectv.block.Block_Grass;
+import me.furt.projectv.block.Block_Sand;
+import me.furt.projectv.block.Block_Stone;
+import me.furt.projectv.block.Block_Water;
 import me.furt.projectv.libnoise.exception.ExceptionInvalidParam;
 import me.furt.projectv.libnoise.module.Billow;
 import me.furt.projectv.libnoise.module.Perlin;
@@ -464,7 +468,7 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
     public void setBlocksFromSimplexNoise(Vector3Int loc, float roughness) {
     }
 
-    public void setBlocksFromLibNoise(Vector3Int loc, Class<? extends Block> blockClass) {
+    public void setBlocksFromLibNoise(Vector3Int loc) {
         try {
             RidgedMulti mountainTerrain = new RidgedMulti();
 
@@ -476,6 +480,7 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             flatTerrain.setBias(-0.75);
 
             Perlin terrainType = new Perlin();
+            terrainType.setOctaveCount(3);
             terrainType.setFrequency(0.5);
             terrainType.setPersistence(0.25);
 
@@ -498,14 +503,27 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             heightMapBuilder.setDestSize(160, 160);
             heightMapBuilder.setBounds(6.0, 10.0, 1.0, 5.0);
             heightMapBuilder.build();
-
+            int grass = 60;
+            int sand = 32;
+            int rock = 29;
             for (int x = 0; x < 160; x++) {
                 for (int z = 0; z < 160; z++) {
                     int blockHeight = (int) Math.round(heightMap.getValue(x, z));
+                    if (blockHeight > 60) {
+                        blockHeight = 60;
+                    }
                     Vector3Int tmpLocation = new Vector3Int();
                     for (int y = 0; y < blockHeight; y++) {
                         tmpLocation.set(loc.getX() + x, loc.getY() + y, loc.getZ() + z);
-                        setBlock(tmpLocation, blockClass);
+                        if (y <= rock) {
+                            setBlock(tmpLocation, Block_Stone.class);
+                        } else if (y > rock && y <= sand) {
+                            setBlock(tmpLocation, Block_Sand.class);
+                        } else if (y > sand && y <= grass) {
+                            setBlock(tmpLocation, Block_Grass.class);
+                        } else {
+                            setBlock(tmpLocation, Block_Water.class);
+                        }
                     }
                 }
             }
