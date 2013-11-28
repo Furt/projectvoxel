@@ -33,7 +33,7 @@ public class WorldSettings {
         CubesSettings.setRowCount(10);
         CubesSettings settings = new CubesSettings(application);
         settings.setDefaultBlockMaterial("Textures/Blocks/blocktextures3.png");
-        settings.setBlockSize(4);
+        settings.setBlockSize(1);
         return settings;
     }
 
