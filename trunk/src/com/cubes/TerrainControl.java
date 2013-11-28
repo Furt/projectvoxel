@@ -508,7 +508,7 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             heightMapBuilder.build();
             int grass = regionY;
             int sand = 32;
-            int water = 30;
+            int water = 32;
             int rock = 29;
             for (int x = 0; x < regionX; x++) {
                 for (int z = 0; z < regionZ; z++) {
@@ -518,8 +518,8 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
                     }
                     Vector3Int tmpLocation = new Vector3Int();
                     if (blockHeight < water) {
-                        int w = (water - blockHeight)+2;
-                        for (int j = 1; j < w; j++) {
+                        int w = water - blockHeight;
+                        for (int j = 0; j < w; j++) {
                             setBlock(new Vector3Int(loc.getX() + x, loc.getY() + (blockHeight + j), loc.getZ() + z), Block_Water.class);
                         }
                     }
