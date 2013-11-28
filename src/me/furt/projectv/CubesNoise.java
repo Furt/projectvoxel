@@ -192,9 +192,9 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
     // TODO
     private void initPlayer() {
         itemInHand = 0;
-        cam.setLocation(new Vector3f(40.6f, 100f, 30.64f));
-        cam.lookAtDirection(new Vector3f(0.26f, -0.83f, 0.49f), Vector3f.UNIT_Y);
-        flyCam.setMoveSpeed(80);
+        cam.setLocation(new Vector3f(67.638f, 349.542f, 145.545f));
+        cam.lookAtDirection(new Vector3f(0.8006f, -0.4007f, 0.4455f), Vector3f.UNIT_Y);
+        flyCam.setMoveSpeed(75);
     }
 
     private void initFog() {

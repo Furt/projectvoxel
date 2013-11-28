@@ -469,6 +469,9 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
     }
 
     public void setBlocksFromLibNoise(Vector3Int loc) {
+        int regionX = 200;
+        int regionZ = 200;
+        int regionY = 60;
         try {
             RidgedMulti mountainTerrain = new RidgedMulti();
 
@@ -489,32 +492,40 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             terrainSelector.setEdgeFalloff(0.125);
 
             ScaleBias terrainScaler = new ScaleBias(terrainSelector);
-            terrainScaler.setScale(60.0);
+            terrainScaler.setScale(regionY);
             terrainScaler.setBias(80.0);
 
             Turbulence finalTerrain = new Turbulence(terrainScaler);
             finalTerrain.setFrequency(4.0);
             finalTerrain.setPower(0.125);
 
-            NoiseMap heightMap = new NoiseMap(400, 400);
+            NoiseMap heightMap = new NoiseMap(regionX, regionZ);
             NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
             heightMapBuilder.setSourceModule(terrainScaler);
             heightMapBuilder.setDestNoiseMap(heightMap);
-            heightMapBuilder.setDestSize(400, 400);
+            heightMapBuilder.setDestSize(regionX, regionZ);
             heightMapBuilder.setBounds(6.0, 10.0, 1.0, 5.0);
             heightMapBuilder.build();
-            int grass = 60;
+            int grass = regionY;
             int sand = 32;
+            int water = 30;
             int rock = 29;
-            for (int x = 0; x < 400; x++) {
-                for (int z = 0; z < 400; z++) {
-                    int blockHeight = (int) Math.round(heightMap.getValue(x, z));
+            for (int x = 0; x < regionX; x++) {
+                for (int z = 0; z < regionZ; z++) {
+                    int blockHeight = (int) Math.ceil(heightMap.getValue(x, z));
                     if (blockHeight > 60) {
                         blockHeight = 60;
                     }
                     Vector3Int tmpLocation = new Vector3Int();
+                    if (blockHeight < water) {
+                        int w = (water - blockHeight)+2;
+                        for (int j = 1; j < w; j++) {
+                            setBlock(new Vector3Int(loc.getX() + x, loc.getY() + (blockHeight + j), loc.getZ() + z), Block_Water.class);
+                        }
+                    }
                     for (int y = 0; y < blockHeight; y++) {
                         tmpLocation.set(loc.getX() + x, loc.getY() + y, loc.getZ() + z);
+
                         if (y <= rock) {
                             setBlock(tmpLocation, Block_Stone.class);
                         } else if (y > rock && y <= sand) {
