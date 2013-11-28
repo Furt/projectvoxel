@@ -1,6 +1,7 @@
 package me.furt.projectv.noise;
 
 import java.util.Random;
+import me.furt.projectv.world.Seed;
 
 /**
  * ProjectV
@@ -11,8 +12,9 @@ public class Test {
 
     public static void main(String args[]) {
         int rand = new Random().nextInt();
+        Seed seed = new Seed("jim bob".replace(" ", ""));
         // Largest Feature, Persistence, Seed
-        SimplexNoise simplexNoise = new SimplexNoise(20, 0.6, rand);
+        SimplexNoise simplexNoise = new SimplexNoise(60, 0.9, seed.returnInteger());
 
         double xStart = 0;
         double XEnd = 200;
