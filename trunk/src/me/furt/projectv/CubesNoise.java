@@ -2,18 +2,32 @@ package me.furt.projectv;
 
 import com.cubes.Block;
 import com.cubes.BlockNavigator;
+import com.cubes.ChunkControl;
+import com.cubes.ChunkListener;
 import com.cubes.CubesSettings;
 import com.cubes.TerrainControl;
 import com.cubes.Vector3Int;
+import com.jme3.animation.AnimChannel;
+import com.jme3.animation.AnimControl;
+import com.jme3.animation.AnimEventListener;
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.bullet.collision.shapes.MeshCollisionShape;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.control.CharacterControl;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
+import com.jme3.input.ChaseCamera;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Ray;
@@ -24,6 +38,7 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import java.awt.image.BufferedImage;
@@ -32,26 +47,29 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import me.furt.projectv.TestNoise;
-import me.furt.projectv.WorldSettings;
 import me.furt.projectv.block.*;
 import org.lwjgl.input.Keyboard;
 import tonegod.gui.controls.extras.ChatBoxExt;
 import tonegod.gui.core.Screen;
 import tonegod.skydome.FogFilter;
 
-public class CubesNoise extends SimpleApplication implements ActionListener {
+public class CubesNoise extends SimpleApplication implements ActionListener, AnimEventListener {
 
-    public TerrainControl blockTerrain;
-    public Node terrainNode;
-    public int itemInHand;
-    public BitmapText playerLoc;
-
-    public static void main(String[] args) {
-        Logger.getLogger("").setLevel(Level.SEVERE);
-        CubesNoise app = new CubesNoise();
-        app.start();
-    }
+    private BulletAppState bulletAppState;
+    private CharacterControl character;
+    private Node model;
+    private Vector3f walkDirection = new Vector3f();
+    private AnimChannel animationChannel;
+    private AnimControl animationControl;
+    private float airTime = 0;
+    private boolean left = false, right = false, up = false, down = false;
+    private ChaseCamera chaseCam;
+    private Sphere bullet;
+    private SphereCollisionShape bulletCollisionShape;
+    private TerrainControl blockTerrain;
+    private Node terrainNode;
+    private int itemInHand;
+    private BitmapText playerLoc;
     private BitmapText blockLoc;
     private BitmapText chunkLoc;
     private BitmapText blockSelected;
@@ -61,6 +79,12 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
     private Screen screen;
     private ChatBoxExt chatbox;
     private int seed;
+
+    public static void main(String[] args) {
+        Logger.getLogger("").setLevel(Level.SEVERE);
+        CubesNoise app = new CubesNoise();
+        app.start();
+    }
 
     public CubesNoise() {
         settings = new AppSettings(true);
@@ -79,20 +103,70 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleInitApp() {
+        bulletAppState = new BulletAppState();
+        bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
+        stateManager.attach(bulletAppState);
         //stateManager.detach( stateManager.getState(FlyCamAppState.class));
+
+        setupControls();
+        setupChatBox();
+        
+        createLight();
+
         seed = new Random().nextInt();
         WorldSettings.registerBlocks();
         WorldSettings.initializeEnvironment(this);
         cubeSettings = WorldSettings.getSettings(this);
-        initBlockTerrain();
-        initControls();
-        initPlayer();
-        initChatBox();
-        initGUI();
+        setupBlockTerrain();
+
+        setupPlayer();
+        setupChaseCamera();
+        setupAnimationController();
+        setupGUI();
     }
 
     @Override
     public void simpleUpdate(float tpf) {
+        // Player updates
+        Vector3f camDir = cam.getDirection().clone().multLocal(0.1f);
+        Vector3f camLeft = cam.getLeft().clone().multLocal(0.1f);
+        camDir.y = 0;
+        camLeft.y = 0;
+        walkDirection.set(0, 0, 0);
+        if (left) {
+            walkDirection.addLocal(camLeft);
+        }
+        if (right) {
+            walkDirection.addLocal(camLeft.negate());
+        }
+        if (up) {
+            walkDirection.addLocal(camDir);
+        }
+        if (down) {
+            walkDirection.addLocal(camDir.negate());
+        }
+        if (!character.onGround()) {
+            airTime = airTime + tpf;
+        } else {
+            airTime = 0;
+        }
+        if (walkDirection.length() == 0) {
+            if (!"stand".equals(animationChannel.getAnimationName())) {
+                animationChannel.setAnim("stand", 1f);
+            }
+        } else {
+            character.setViewDirection(walkDirection);
+            if (airTime > .3f) {
+                if (!"stand".equals(animationChannel.getAnimationName())) {
+                    animationChannel.setAnim("stand");
+                }
+            } else if (!"Walk".equals(animationChannel.getAnimationName())) {
+                animationChannel.setAnim("Walk", 0.7f);
+            }
+        }
+        character.setWalkDirection(walkDirection);
+
+        // GUI updates
         Vector3f loc = cam.getLocation();
         Vector3f dir = cam.getDirection();
 
@@ -117,7 +191,7 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
                 (int) Math.ceil(vec.getZ()) / (int) cubeSettings.getBlockSize());
     }
 
-    private void initChatBox() {
+    private void setupChatBox() {
         screen = new Screen(this, "tonegod/gui/style/def/style_map.xml");
         chatbox = new ChatBoxExt(screen, new Vector2f(30, 30)) {
             @Override
@@ -180,24 +254,65 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
         return new Vector3Int(x, 0, z);
     }
 
-    private void initBlockTerrain() {
+    private void setupBlockTerrain() {
         blockTerrain = new TerrainControl(cubeSettings, new Vector3Int(25, 1, 25));
-        blockTerrain.setBlocksFromLibNoise(new Vector3Int(0,0,0));
+        blockTerrain.setBlocksFromLibNoise(new Vector3Int(0, 0, 0));
+        blockTerrain.addChunkListener(new ChunkListener() {
+
+            public void onSpatialUpdated(ChunkControl blockChunk) {
+                Geometry optimizedGeometry = blockChunk.getOptimizedGeometry_Opaque();
+                RigidBodyControl rigidBodyControl = optimizedGeometry.getControl(RigidBodyControl.class);
+                if (rigidBodyControl == null) {
+                    rigidBodyControl = new RigidBodyControl(0);
+                    optimizedGeometry.addControl(rigidBodyControl);
+                    bulletAppState.getPhysicsSpace().add(rigidBodyControl);
+                }
+                rigidBodyControl.setCollisionShape(new MeshCollisionShape(optimizedGeometry.getMesh()));
+            }
+        });
         terrainNode = new Node("Terrain");
         terrainNode.addControl(blockTerrain);
         terrainNode.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         rootNode.attachChild(terrainNode);
     }
 
-    // TODO
-    private void initPlayer() {
-        itemInHand = 0;
-        cam.setLocation(new Vector3f(67.638f, 349.542f, 145.545f));
-        cam.lookAtDirection(new Vector3f(0.8006f, -0.4007f, 0.4455f), Vector3f.UNIT_Y);
-        flyCam.setMoveSpeed(75);
+    private void createLight() {
+        Vector3f direction = new Vector3f(-0.1f, -0.7f, -1).normalizeLocal();
+        DirectionalLight dl = new DirectionalLight();
+        dl.setDirection(direction);
+        dl.setColor(new ColorRGBA(1f, 1f, 1f, 1.0f));
+        rootNode.addLight(dl);
     }
 
-    private void initFog() {
+    // TODO
+    private void setupPlayer() {
+        itemInHand = 0;
+        CapsuleCollisionShape capsule = new CapsuleCollisionShape(3f, 4f);
+        character = new CharacterControl(capsule, 0.01f);
+        model = (Node) assetManager.loadModel("Textures/Oto/Oto.mesh.xml");
+        //model.setLocalScale(0.5f);
+        model.addControl(character);
+        character.setPhysicsLocation(new Vector3f(67.638f, 349.542f, 145.545f));
+        rootNode.attachChild(model);
+        getPhysicsSpace().add(character);
+
+        //cam.setLocation(new Vector3f(67.638f, 349.542f, 145.545f));
+        //cam.lookAtDirection(new Vector3f(0.8006f, -0.4007f, 0.4455f), Vector3f.UNIT_Y);
+        //flyCam.setMoveSpeed(75);
+    }
+
+    private void setupChaseCamera() {
+        flyCam.setEnabled(false);
+        chaseCam = new ChaseCamera(cam, model, inputManager);
+    }
+
+    private void setupAnimationController() {
+        animationControl = model.getControl(AnimControl.class);
+        animationControl.addListener(this);
+        animationChannel = animationControl.createChannel();
+    }
+
+    private void setupFog() {
         /**
          * Add fog to a scene
          */
@@ -233,7 +348,24 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
         guiNode.attachChild(cube_tex);
     }
 
-    private void initControls() {
+    private PhysicsSpace getPhysicsSpace() {
+        return bulletAppState.getPhysicsSpace();
+    }
+
+    private void setupControls() {
+        //Player movement
+        inputManager.addMapping("player_jump", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addListener(this, "player_jump");
+        inputManager.addMapping("player_strafe_left", new KeyTrigger(KeyInput.KEY_A));
+        inputManager.addListener(this, "player_strafe_left");
+        inputManager.addMapping("player_strafe_right", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addListener(this, "player_strafe_right");
+        inputManager.addMapping("player_walk_forward", new KeyTrigger(KeyInput.KEY_W));
+        inputManager.addListener(this, "player_walk_forward");
+        inputManager.addMapping("player_walk_backward", new KeyTrigger(KeyInput.KEY_S));
+        inputManager.addListener(this, "player_walk_backward");
+
+        //Player actions
         inputManager.addMapping("set_block", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addListener(this, "set_block");
         inputManager.addMapping("remove_block", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
@@ -248,7 +380,7 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
         inputManager.addListener(this, "chunk_fill");
     }
 
-    private void initGUI() {
+    private void setupGUI() {
         Vector3f loc = cam.getLocation();
         Vector3f dir = cam.getDirection();
 
@@ -342,6 +474,32 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
             toggleChat();
         } else if (action.equals("chunk_fill") && value) {
             generateChunk(null, false);
+        } else if (action.equals("player_strafe_leftt")) {
+            if (value) {
+                left = true;
+            } else {
+                left = false;
+            }
+        } else if (action.equals("player_strafe_right")) {
+            if (value) {
+                right = true;
+            } else {
+                right = false;
+            }
+        } else if (action.equals("player_walk_forward")) {
+            if (value) {
+                up = true;
+            } else {
+                up = false;
+            }
+        } else if (action.equals("player_walk_backward")) {
+            if (value) {
+                down = true;
+            } else {
+                down = false;
+            }
+        } else if (action.equals("player_jump")) {
+            character.jump();
         }
 
     }
@@ -493,5 +651,11 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
 
     public Vector3f getCameraLoc() {
         return cam.getLocation();
+    }
+
+    public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
+    }
+
+    public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
     }
 }
