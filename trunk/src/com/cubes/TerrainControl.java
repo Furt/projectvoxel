@@ -10,6 +10,15 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import java.io.IOException;
 import java.util.ArrayList;
+import me.furt.projectv.libnoise.exception.ExceptionInvalidParam;
+import me.furt.projectv.libnoise.module.Billow;
+import me.furt.projectv.libnoise.module.Perlin;
+import me.furt.projectv.libnoise.module.RidgedMulti;
+import me.furt.projectv.libnoise.module.ScaleBias;
+import me.furt.projectv.libnoise.module.Select;
+import me.furt.projectv.libnoise.module.Turbulence;
+import me.furt.projectv.libnoise.util.NoiseMap;
+import me.furt.projectv.libnoise.util.NoiseMapBuilderPlane;
 
 public class TerrainControl extends AbstractControl implements BitSerializable {
 
@@ -453,6 +462,55 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
     }
 
     public void setBlocksFromSimplexNoise(Vector3Int loc, float roughness) {
+    }
+
+    public void setBlocksFromLibNoise(Vector3Int loc, Class<? extends Block> blockClass) {
+        try {
+            RidgedMulti mountainTerrain = new RidgedMulti();
+
+            Billow baseFlatTerrain = new Billow();
+            baseFlatTerrain.setFrequency(2.0);
+
+            ScaleBias flatTerrain = new ScaleBias(baseFlatTerrain);
+            flatTerrain.setScale(0.125);
+            flatTerrain.setBias(-0.75);
+
+            Perlin terrainType = new Perlin();
+            terrainType.setFrequency(0.5);
+            terrainType.setPersistence(0.25);
+
+            Select terrainSelector = new Select(flatTerrain, mountainTerrain, terrainType);
+            terrainSelector.setBounds(0.0, 1000.0);
+            terrainSelector.setEdgeFalloff(0.125);
+
+            ScaleBias terrainScaler = new ScaleBias(terrainSelector);
+            terrainScaler.setScale(80.0);
+            terrainScaler.setBias(80.0);
+
+            Turbulence finalTerrain = new Turbulence(terrainScaler);
+            finalTerrain.setFrequency(4.0);
+            finalTerrain.setPower(0.125);
+
+            NoiseMap heightMap = new NoiseMap(160, 160);
+            NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
+            heightMapBuilder.setSourceModule(finalTerrain);
+            heightMapBuilder.setDestNoiseMap(heightMap);
+            heightMapBuilder.setDestSize(160, 160);
+            heightMapBuilder.setBounds(6.0, 10.0, 1.0, 5.0);
+            heightMapBuilder.build();
+
+            for (int x = 0; x < 160; x++) {
+                for (int z = 0; z < 160; z++) {
+                    int blockHeight = (int) Math.round(heightMap.getValue(x, z));
+                    Vector3Int tmpLocation = new Vector3Int();
+                    for (int y = 0; y < blockHeight; y++) {
+                        tmpLocation.set(loc.getX() + x, loc.getY() + y, loc.getZ() + z);
+                        setBlock(tmpLocation, blockClass);
+                    }
+                }
+            }
+        } catch (ExceptionInvalidParam exceptionInvalidParam) {
+        }
     }
 
     /**
