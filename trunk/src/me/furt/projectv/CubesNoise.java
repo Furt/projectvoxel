@@ -181,7 +181,7 @@ public class CubesNoise extends SimpleApplication implements ActionListener {
     }
 
     private void initBlockTerrain() {
-        blockTerrain = new TerrainControl(cubeSettings, new Vector3Int(20, 1, 20));
+        blockTerrain = new TerrainControl(cubeSettings, new Vector3Int(25, 1, 25));
         blockTerrain.setBlocksFromLibNoise(new Vector3Int(0,0,0));
         terrainNode = new Node("Terrain");
         terrainNode.addControl(blockTerrain);

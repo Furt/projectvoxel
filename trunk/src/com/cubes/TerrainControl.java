@@ -489,25 +489,25 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             terrainSelector.setEdgeFalloff(0.125);
 
             ScaleBias terrainScaler = new ScaleBias(terrainSelector);
-            terrainScaler.setScale(80.0);
+            terrainScaler.setScale(60.0);
             terrainScaler.setBias(80.0);
 
             Turbulence finalTerrain = new Turbulence(terrainScaler);
             finalTerrain.setFrequency(4.0);
             finalTerrain.setPower(0.125);
 
-            NoiseMap heightMap = new NoiseMap(160, 160);
+            NoiseMap heightMap = new NoiseMap(400, 400);
             NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
-            heightMapBuilder.setSourceModule(finalTerrain);
+            heightMapBuilder.setSourceModule(terrainScaler);
             heightMapBuilder.setDestNoiseMap(heightMap);
-            heightMapBuilder.setDestSize(160, 160);
+            heightMapBuilder.setDestSize(400, 400);
             heightMapBuilder.setBounds(6.0, 10.0, 1.0, 5.0);
             heightMapBuilder.build();
             int grass = 60;
             int sand = 32;
             int rock = 29;
-            for (int x = 0; x < 160; x++) {
-                for (int z = 0; z < 160; z++) {
+            for (int x = 0; x < 400; x++) {
+                for (int z = 0; z < 400; z++) {
                     int blockHeight = (int) Math.round(heightMap.getValue(x, z));
                     if (blockHeight > 60) {
                         blockHeight = 60;
