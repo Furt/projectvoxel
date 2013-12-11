@@ -297,7 +297,7 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         character.setGravity(20f);
         character.setJumpSpeed(8f);
         character.setFallSpeed(14f);
-        model = (Node) assetManager.loadModel("Textures/Oto/Oto.mesh.xml");
+        model = (Node) assetManager.loadModel("Textures/Oto/Oto.mesh.j3o");
         model.setLocalScale(0.20f);
         model.addControl(character);
         character.setPhysicsLocation(new Vector3f(151f, 67f, 51f));
