@@ -9,9 +9,10 @@ import java.util.ArrayList;
 
 public class MeshOptimizer {
 
+    private static int[] indices;
     private static Vector3f[] vertices;
     private static Vector2f[] textureCoordinates;
-    private static int[] indices;
+    private static float[] normals;
 
     /**
      *
@@ -28,6 +29,7 @@ public class MeshOptimizer {
         ArrayList<Vector3f> verticeList = new ArrayList<Vector3f>();
         ArrayList<Vector2f> textureCoordinateList = new ArrayList<Vector2f>();
         ArrayList<Integer> indicesList = new ArrayList<Integer>();
+        ArrayList<Float> normalsList = new ArrayList<Float>();
         TerrainControl blockTerrain = chunk.getTerrain();
         Vector3Int tmpLocation = new Vector3Int();
         for (int x = 0; x < blockTerrain.getSettings().getChunkSizeX(); x++) {
@@ -55,6 +57,7 @@ public class MeshOptimizer {
                             verticeList.add(faceLoc_Top_TopLeft);
                             verticeList.add(faceLoc_Top_TopRight);
                             addBlockTextureCoordinates(textureCoordinateList, blockSkin.getTextureLocation(chunk, tmpLocation, Block.Face.Top));
+                            addSquareNormals(normalsList, new float[]{0, 1, 0});
                         }
                         if (meshMerger.shouldFaceBeAdded(chunk, tmpLocation, Block.Face.Bottom)) {
                             addVerticeIndexes(verticeList, indicesList);
@@ -113,6 +116,22 @@ public class MeshOptimizer {
         for (int i = 0; i < indicesList.size(); i++) {
             indices[i] = indicesList.get(i);
         }
+        vertices = verticeList.toArray(new Vector3f[0]);
+        textureCoordinates = textureCoordinateList.toArray(new Vector2f[0]);
+        normals = new float[normalsList.size()];
+        for (int i = 0; i < normalsList.size(); i++) {
+            normals[i] = normalsList.get(i);
+        }
+    }
+
+    private static void addVerticeIndexes(ArrayList<Vector3f> verticeList, ArrayList<Integer> indexesList) {
+        int verticesCount = verticeList.size();
+        indexesList.add(verticesCount + 2);
+        indexesList.add(verticesCount + 0);
+        indexesList.add(verticesCount + 1);
+        indexesList.add(verticesCount + 1);
+        indexesList.add(verticesCount + 3);
+        indexesList.add(verticesCount + 2);
     }
 
     private static void addBlockTextureCoordinates(ArrayList<Vector2f> textureCoordinatesList, TextureLocation textureLocation) {
@@ -130,14 +149,13 @@ public class MeshOptimizer {
         return new Vector2f(x, y);
     }
 
-    private static void addVerticeIndexes(ArrayList<Vector3f> verticeList, ArrayList<Integer> indexesList) {
-        int verticesCount = verticeList.size();
-        indexesList.add(verticesCount + 2);
-        indexesList.add(verticesCount + 0);
-        indexesList.add(verticesCount + 1);
-        indexesList.add(verticesCount + 1);
-        indexesList.add(verticesCount + 3);
-        indexesList.add(verticesCount + 2);
+    private static void addSquareNormals(ArrayList<Float> normalsList, float[] normal) {
+
+        for (int i = 0; i < 4; i++) {
+            normalsList.add(normal[0]);
+            normalsList.add(normal[1]);
+            normalsList.add(normal[2]);
+        }
     }
 
     private static Mesh generateMesh() {
@@ -145,6 +163,7 @@ public class MeshOptimizer {
         mesh.setBuffer(Type.Position, 3, BufferUtils.createFloatBuffer(vertices));
         mesh.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(textureCoordinates));
         mesh.setBuffer(Type.Index, 1, BufferUtils.createIntBuffer(indices));
+        mesh.setBuffer(Type.Normal, 3, BufferUtils.createFloatBuffer(normals));
         mesh.updateBound();
         return mesh;
     }

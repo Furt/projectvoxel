@@ -2,8 +2,8 @@ package me.furt.projectv;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
-import me.furt.projectv.states.DamageAppState;
-import me.furt.projectv.states.GuiAppState;
+import me.furt.projectv.state.DamageAppState;
+import me.furt.projectv.state.GuiAppState;
 
 /**
  * Project V

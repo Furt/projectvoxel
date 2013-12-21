@@ -1,4 +1,4 @@
-package me.furt.projectv;
+package me.furt.test;
 
 import com.cubes.Block;
 import com.cubes.BlockNavigator;
@@ -34,6 +34,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import me.furt.projectv.WorldSettings;
 import me.furt.projectv.block.*;
 import org.lwjgl.input.Keyboard;
 import tonegod.gui.controls.extras.ChatBoxExt;

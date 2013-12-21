@@ -6,15 +6,13 @@ package me.furt.projectv.component;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
-import com.simsilica.es.EntityComponent;
-import com.simsilica.es.PersistentComponent;
 
 /**
  *
  * @author Terry
  */
 @Serializable
-public class NameComponent extends AbstractMessage implements EntityComponent, PersistentComponent {
+public class NameComponent extends AbstractMessage {
 
     private String name;
 
