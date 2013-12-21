@@ -13,14 +13,11 @@ import com.jme3.network.Network;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
-import com.simsilica.es.EntityData;
-import com.simsilica.es.sql.SqlEntityData;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.ScreenController;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -28,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import me.furt.projectv.states.LoginState;
+import me.furt.projectv.state.IngameState;
 import tonegod.gui.core.Screen;
 
 /**
@@ -41,7 +38,6 @@ public class GameClient extends SimpleApplication implements ScreenController {
     private static GameClient app;
     public Client client;
     public Screen screen;
-    public EntityData entityData;
     private TextRenderer statusText;
     private ScheduledExecutorService exec;
     static final Logger log = Logger.getLogger("Project-V");
@@ -81,14 +77,8 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
     @Override
     public void simpleInitApp() {
-        try {
-            entityData = new SqlEntityData("/Data", 20000L);
-        } catch (SQLException ex) {
-            Logger.getLogger(GameClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         try {
-            //entityData = new DefaultEntityData();
             client = Network.connectToServer(Globals.NAME, Globals.CLIENT_VERSION, Globals.DEFAULT_SERVER, Globals.DEFAULT_PORT_TCP, Globals.DEFAULT_PORT_UDP);
             client.start();
         } catch (IOException ex) {
@@ -97,16 +87,12 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
         screen = new Screen(this);
         guiNode.addControl(screen);
-        //stateManager.attach(new IngameState(settings));
-        stateManager.attach(new LoginState(this, settings, screen, client));
+        stateManager.attach(new IngameState(settings));
+        //stateManager.attach(new LoginState(this, settings, screen, client));
 
         // attach logic
         exec = Executors.newSingleThreadScheduledExecutor();
         exec.scheduleAtFixedRate(new GameLogic(this), 0, 20, TimeUnit.MILLISECONDS);
-    }
-
-    public EntityData getEntityData() {
-        return entityData;
     }
 
     @Override
@@ -120,7 +106,6 @@ public class GameClient extends SimpleApplication implements ScreenController {
     @Override
     public void destroy() {
         exec.shutdown();
-        entityData.close();
         client.close();
         super.destroy();
     }

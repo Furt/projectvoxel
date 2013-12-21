@@ -6,20 +6,19 @@ package me.furt.projectv.component;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
-import com.simsilica.es.EntityId;
-import com.simsilica.es.PersistentComponent;
+import me.furt.projectv.entity.Entity;
 
 /**
  *
  * @author Terry
  */
 @Serializable
-public class DamageComponent extends AbstractMessage implements PersistentComponent {
+public class DamageComponent extends AbstractMessage {
 
     private final float damage;
-    private final EntityId target;
+    private final Entity target;
 
-    public DamageComponent(EntityId target, float damage) {
+    public DamageComponent(Entity target, float damage) {
         this.target = target;
         this.damage = damage;
     }
@@ -28,7 +27,7 @@ public class DamageComponent extends AbstractMessage implements PersistentCompon
         return damage;
     }
 
-    public EntityId getTarget() {
+    public Entity getTarget() {
         return target;
     }
 }

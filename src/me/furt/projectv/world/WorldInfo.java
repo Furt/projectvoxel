@@ -11,7 +11,7 @@ public class WorldInfo {
 
     public int id;
     public String name;
-    public boolean pvp;
+    public boolean globalPVP;
     public Vector3Int spawnLocation;
     public boolean monstersAllowed;
     public boolean crittersAllowed;
@@ -39,12 +39,12 @@ public class WorldInfo {
         this.name = name;
     }
 
-    public boolean isPvp() {
-        return pvp;
+    public boolean globalPvpEnabled() {
+        return globalPVP;
     }
 
-    public void setPvp(boolean pvp) {
-        this.pvp = pvp;
+    public void setGlobalPVP(boolean pvp) {
+        this.globalPVP = pvp;
     }
 
     public Vector3Int getSpawnLocation() {

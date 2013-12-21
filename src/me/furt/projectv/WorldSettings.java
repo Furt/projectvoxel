@@ -1,9 +1,9 @@
 package me.furt.projectv;
 
 import com.cubes.Block;
-import com.cubes.ChunkControl;
 import com.cubes.BlockManager;
 import com.cubes.BlockSkin;
+import com.cubes.ChunkControl;
 import com.cubes.CubesSettings;
 import com.cubes.TextureLocation;
 import com.cubes.Vector3Int;
