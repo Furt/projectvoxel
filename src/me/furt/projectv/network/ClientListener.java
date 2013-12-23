@@ -21,14 +21,14 @@ import me.furt.projectv.network.messages.ServerJoinMessage;
  *
  * @author Terry
  */
-public class ClientNetManager implements MessageListener, ClientStateListener {
+public class ClientListener implements MessageListener, ClientStateListener {
 
     private GameClient app;
     private Client client;
     private String name = "";
     private String pass = "";
 
-    public ClientNetManager(GameClient app, Client client) {
+    public ClientListener(GameClient app, Client client) {
         this.app = app;
         this.client = client;
         client.addClientStateListener(this);
@@ -46,10 +46,10 @@ public class ClientNetManager implements MessageListener, ClientStateListener {
     public void messageReceived(Object source, Message message) {
         if (message instanceof HandshakeMessage) {
             HandshakeMessage msg = (HandshakeMessage) message;
-            Logger.getLogger(ClientNetManager.class.getName()).log(Level.INFO, "Got handshake message back");
+            Logger.getLogger(ClientListener.class.getName()).log(Level.INFO, "Got handshake message back");
             if (msg.protocol_version != Globals.PROTOCOL_VERSION) {
                 setStatusText("Protocol mismatch - update client!");
-                Logger.getLogger(ClientNetManager.class.getName()).log(Level.INFO, "Client protocol mismatch, disconnecting");
+                Logger.getLogger(ClientListener.class.getName()).log(Level.INFO, "Client protocol mismatch, disconnecting");
                 return;
             }
             client.send(new ClientJoinMessage(name, pass));

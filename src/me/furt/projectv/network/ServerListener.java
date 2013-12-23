@@ -19,12 +19,12 @@ import me.furt.projectv.network.messages.*;
  *
  * @author Terry
  */
-public class ServerNetManager implements MessageListener<HostedConnection>, ConnectionListener {
+public class ServerListener implements MessageListener<HostedConnection>, ConnectionListener {
 
     GameServer app;
     Server server;
 
-    public ServerNetManager(GameServer app, Server server) {
+    public ServerListener(GameServer app, Server server) {
         this.app = app;
         this.server = server;
         server.addConnectionListener(this);
@@ -34,15 +34,15 @@ public class ServerNetManager implements MessageListener<HostedConnection>, Conn
     public void messageReceived(HostedConnection source, Message message) {
         if (message instanceof HandshakeMessage) {
             HandshakeMessage msg = (HandshakeMessage) message;
-            Logger.getLogger(ServerNetManager.class.getName()).log(Level.INFO, "Got handshake message");
+            Logger.getLogger(ServerListener.class.getName()).log(Level.INFO, "Got handshake message");
             if (msg.protocol_version != Globals.PROTOCOL_VERSION) {
                 source.close("Connection Protocol Mismatch - Update Client");
-                Logger.getLogger(ServerNetManager.class.getName()).log(Level.INFO, "Client protocol mismatch, disconnecting");
+                Logger.getLogger(ServerListener.class.getName()).log(Level.INFO, "Client protocol mismatch, disconnecting");
                 return;
             }
             msg.server_version = Globals.SERVER_VERSION;
             source.send(msg);
-            Logger.getLogger(ServerNetManager.class.getName()).log(Level.INFO, "Sent back handshake message");
+            Logger.getLogger(ServerListener.class.getName()).log(Level.INFO, "Sent back handshake message");
         }
     }
 

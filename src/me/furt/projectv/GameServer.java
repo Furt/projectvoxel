@@ -11,7 +11,7 @@ import com.jme3.system.AppSettings;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.furt.projectv.network.ServerNetManager;
+import me.furt.projectv.network.ServerListener;
 
 /**
  *
@@ -21,7 +21,7 @@ public class GameServer extends SimpleApplication {
 
     public static GameServer app;
     public static Server server;
-    private ServerNetManager listenerManager;
+    private ServerListener listenerManager;
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);
@@ -53,7 +53,7 @@ public class GameServer extends SimpleApplication {
             Logger.getLogger(GameServer.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        listenerManager = new ServerNetManager(app, server);
+        listenerManager = new ServerListener(app, server);
     }
 
     @Override
