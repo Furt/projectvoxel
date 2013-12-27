@@ -25,6 +25,7 @@ public class MethodListForInfiniteTerrain {
     private ChunkControl[][][] chunks;
     
     // Instead use hashmap like the below example. This way we can add new chunks without having to hard set a max amount
+    // renamed to chunkList to prevent errors in the class
     private HashMap<Vector3Int, ChunkControl> chunkList = new HashMap<Vector3Int, ChunkControl>();
     
     // But if done this way initializeChunks and setSpatial methods will have to be dont differently
