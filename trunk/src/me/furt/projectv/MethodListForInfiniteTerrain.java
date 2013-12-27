@@ -1,6 +1,8 @@
 package me.furt.projectv;
 
+import com.cubes.Block;
 import com.cubes.ChunkControl;
+import com.cubes.TerrainControl;
 import com.cubes.Vector3Int;
 import com.jme3.math.Vector3f;
 import java.util.HashMap;
@@ -30,5 +32,40 @@ public class MethodListForInfiniteTerrain {
     
     // But if done this way initializeChunks and setSpatial methods will have to be dont differently
     // and im now sure how to do that considering we want a dynamic chunklist and not a static one.
+    
+    
+    // Maybe it can be done something like this
+    // original - added TerrainControl to method to silence the error 
+    public void setBlockArea(TerrainControl tc, Vector3Int location, Vector3Int size, Class<? extends Block> blockClass) {
+        Vector3Int tmpLocation = new Vector3Int();
+        for (int x = 0; x < size.getX(); x++) {
+            for (int y = 0; y < size.getY(); y++) {
+                for (int z = 0; z < size.getZ(); z++) {
+                    tmpLocation.set(location.getX() + x, location.getY() + y, location.getZ() + z);
+                    tc.setBlock(tmpLocation, blockClass);
+                }
+            }
+        }
+    }
+    
+    // revised using hashmap - methods slightly renamed for the sake of errors
+    public void setBlockAreas(TerrainControl tc, Vector3Int location, Vector3Int size, Class<? extends Block> blockClass) {
+        Vector3Int tmpLocation = new Vector3Int();
+        for (int x = 0; x < size.getX(); x++) {
+            for (int y = 0; y < size.getY(); y++) {
+                for (int z = 0; z < size.getZ(); z++) {
+                    tmpLocation.set(location.getX() + x, location.getY() + y, location.getZ() + z);
+                    ChunkControl tmpChunk = chunkList.get(tmpLocation);
+                    if(tmpChunk == null) {
+                        tmpChunk = new ChunkControl(tc, tmpLocation.getX(), tmpLocation.getY(), tmpLocation.getZ());
+                        chunkList.put(tmpLocation, tmpChunk);
+                    }
+                    tc.setBlock(tmpLocation, blockClass);
+                }
+            }
+        }
+    }
+    
+    // Not sure how this would effect performance.
 
 }
