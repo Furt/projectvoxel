@@ -21,7 +21,7 @@ public class GameServer extends SimpleApplication {
 
     public static GameServer app;
     public static Server server;
-    private ServerListener listenerManager;
+    public ServerListener listenerManager;
 
     public static void main(String[] args) {
         AppSettings settings = new AppSettings(true);

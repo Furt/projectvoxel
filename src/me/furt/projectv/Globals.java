@@ -7,7 +7,7 @@ package me.furt.projectv;
  */
 public class Globals {
 
-    public static final String NAME = "Project V - v0.0.1";
+    public static final String NAME = "ProjectV r" + Globals.CLIENT_VERSION;
     public static final String DEFAULT_SERVER = "127.0.0.1";
     public static final int PROTOCOL_VERSION = 1;
     public static final int CLIENT_VERSION = 1;
