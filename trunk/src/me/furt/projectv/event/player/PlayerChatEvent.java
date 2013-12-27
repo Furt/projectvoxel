@@ -38,7 +38,7 @@ public class PlayerChatEvent extends PlayerEvent implements Cancellable {
     
     public void setFormat(final String format) throws IllegalFormatException, NullPointerException {
         try {
-            String format1 = String.format(format, player, message);
+            String.format(format, player, message);
         } catch (RuntimeException ex) {
             ex.fillInStackTrace();
             throw ex;

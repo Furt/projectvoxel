@@ -28,12 +28,6 @@ public class GameServer extends SimpleApplication {
         settings.setFrameRate(Globals.SCENE_FPS);
         settings.setRenderer(null);
         settings.setAudioRenderer(null);
-        for (int i = 0; i < args.length; i++) {
-            String string = args[i];
-            if ("-display".equals(string)) {
-                settings.setRenderer(AppSettings.LWJGL_OPENGL2);
-            }
-        }
         Util.registerSerializers();
         app = new GameServer();
         app.setShowSettings(false);

@@ -107,7 +107,6 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         bulletAppState = new BulletAppState();
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         stateManager.attach(bulletAppState);
-        //stateManager.detach( stateManager.getState(FlyCamAppState.class));
 
         setupControls();
         setupChatBox();
@@ -121,7 +120,6 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         setupBlockTerrain();
 
         setupPlayer();
-        setupChaseCamera();
         setupAnimationController();
         setupGUI();
     }

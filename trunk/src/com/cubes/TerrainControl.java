@@ -14,13 +14,10 @@ import me.furt.projectv.block.Block_Grass;
 import me.furt.projectv.block.Block_Sand;
 import me.furt.projectv.block.Block_Stone;
 import me.furt.projectv.block.Block_Water;
+import me.furt.projectv.libnoise.NoiseGen;
 import me.furt.projectv.libnoise.exception.ExceptionInvalidParam;
-import me.furt.projectv.libnoise.module.Billow;
 import me.furt.projectv.libnoise.module.Perlin;
-import me.furt.projectv.libnoise.module.RidgedMulti;
 import me.furt.projectv.libnoise.module.ScaleBias;
-import me.furt.projectv.libnoise.module.Select;
-import me.furt.projectv.libnoise.module.Turbulence;
 import me.furt.projectv.libnoise.util.NoiseMap;
 import me.furt.projectv.libnoise.util.NoiseMapBuilderPlane;
 
@@ -471,8 +468,9 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
     public void setBlocksFromLibNoise(Vector3Int loc) {
         int regionX = 200;
         int regionZ = 200;
-        int regionY = 60;
+        int regionY = 40;
         try {
+            /*
             RidgedMulti mountainTerrain = new RidgedMulti();
 
             Billow baseFlatTerrain = new Billow();
@@ -497,24 +495,36 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
 
             Turbulence finalTerrain = new Turbulence(terrainScaler);
             finalTerrain.setFrequency(4.0);
-            finalTerrain.setPower(0.125);
+            finalTerrain.setPower(0.125); */
+            
+            Perlin perlin = new Perlin();
+            perlin.setFrequency(0.5);
+            perlin.setLacunarity(2);
+            perlin.setNoiseQuality(NoiseGen.NoiseQuality.QUALITY_FAST);
+            perlin.setOctaveCount(5);
+            perlin.setPersistence(0.45);
+            perlin.setSeed(8);
+            
+            ScaleBias scaleTerrain = new ScaleBias(perlin);
+            scaleTerrain.setScale(regionY);
+            scaleTerrain.setBias(regionY);
 
             NoiseMap heightMap = new NoiseMap(regionX, regionZ);
             NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
-            heightMapBuilder.setSourceModule(terrainScaler);
+            heightMapBuilder.setSourceModule(scaleTerrain);
             heightMapBuilder.setDestNoiseMap(heightMap);
             heightMapBuilder.setDestSize(regionX, regionZ);
             heightMapBuilder.setBounds(6.0, 10.0, 1.0, 5.0);
             heightMapBuilder.build();
-            int grass = regionY;
+            int grass = regionY-1;
             int sand = 32;
             int water = 32;
             int rock = 29;
             for (int x = 0; x < regionX; x++) {
                 for (int z = 0; z < regionZ; z++) {
                     int blockHeight = (int) Math.ceil(heightMap.getValue(x, z));
-                    if (blockHeight > 60) {
-                        blockHeight = 60;
+                    if (blockHeight > regionY) {
+                        blockHeight = regionY-1;
                     }
                     Vector3Int tmpLocation = new Vector3Int();
                     if (blockHeight < water) {
@@ -530,7 +540,7 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
                             setBlock(tmpLocation, Block_Stone.class);
                         } else if (y > rock && y <= sand) {
                             setBlock(tmpLocation, Block_Sand.class);
-                        } else if (y > sand && y <= grass) {
+                        } else if (y > sand && y < grass) {
                             setBlock(tmpLocation, Block_Grass.class);
                         } else {
                             setBlock(tmpLocation, Block_Water.class);
