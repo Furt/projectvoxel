@@ -19,30 +19,59 @@ public class RegionControl extends AbstractControl implements BitSerializable {
 
     public enum Climate {
 
-        ARTIC,
-        SUB_ARTIC,
-        TEMPERATE,
-        SUB_TROPICAL,
-        TROPICAL;
+        ARTIC(0),
+        SUB_ARTIC(1),
+        TEMPERATE(2),
+        SUB_TROPICAL(3),
+        TROPICAL(4);
+        
+        private int id = 0;
+        
+        private Climate(int id) {
+            this.id = id;
+        }
+        public int getId() {
+            return this.id;
+        }
     }
 
     public enum Biome {
 
-        WATER,
-        SWAMP,
-        DESERT,
-        PLAINS,
-        FOREST,
-        HILLS,
-        MOUNTAINS;
+        WATER(0),
+        SWAMP(1),
+        DESERT(2),
+        PLAINS(3),
+        FOREST(4),
+        HILLS(5),
+        MOUNTAINS(6);
+        
+        private int id = 0;
+        
+        private Biome(int id) {
+            this.id = id;
+        }
+        
+        public int getId() {
+            return this.id;
+        }
     }
 
     public enum TerrainType {
 
-        PRIMARY,
-        SECONDARY,
-        TERTIARY,
-        WILDCARD;
+        PRIMARY(0),
+        SECONDARY(1),
+        TERTIARY(2),
+        WILDCARD(3);
+        
+        private int id = 0;
+        
+        private TerrainType(int id) {
+            this.id = id;
+        }
+        
+        public int getId() {
+            return this.id;
+        }
     }
 
     @Override

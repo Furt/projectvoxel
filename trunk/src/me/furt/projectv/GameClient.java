@@ -32,8 +32,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
     private static GameClient app;
     private Screen screen;
-    private TextRenderer statusText;
-    private ScheduledExecutorService exec;
+    private ScheduledExecutorService logicService;
     public static final Logger log = Logger.getLogger("Project-V");
 
     public static void main(String[] args) {
@@ -51,7 +50,6 @@ public class GameClient extends SimpleApplication implements ScreenController {
         settings.setTitle(Globals.NAME);
         settings.setFrameRate(Globals.SCENE_FPS);
         settings.setSettingsDialogImage("/Interface/pv-splash.png");
-        settings.setTitle("ProjectV");
         try {
             settings.setIcons(new BufferedImage[]{
                         ImageIO.read(getClass().getResourceAsStream("/Interface/magex16.png")),
@@ -70,8 +68,8 @@ public class GameClient extends SimpleApplication implements ScreenController {
         stateManager.attach(new MainMenuState());
 
         // attach logic
-        exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(new GameLogic(this), 0, 20, TimeUnit.MILLISECONDS);
+        logicService = Executors.newSingleThreadScheduledExecutor();
+        logicService.scheduleAtFixedRate(new GameLogic(this), 0, 20, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -84,7 +82,7 @@ public class GameClient extends SimpleApplication implements ScreenController {
 
     @Override
     public void destroy() {
-        exec.shutdown();
+        logicService.shutdown();
         super.destroy();
     }
     

@@ -5,6 +5,7 @@
 package me.furt.projectv;
 
 import java.util.HashMap;
+import me.furt.projectv.player.Player;
 
 /**
  *
@@ -12,13 +13,21 @@ import java.util.HashMap;
  */
 public class PlayerManager {
 
-    private static HashMap<Long, PlayerData> playerList;
+    private static HashMap<Long, Player> playerList;
 
     public PlayerManager() {
-        playerList = new HashMap<Long, PlayerData>();
+        playerList = new HashMap<Long, Player>();
     }
 
-    public HashMap<Long, PlayerData> getPlayerList() {
+    public HashMap<Long, Player> getPlayerList() {
         return playerList;
+    }
+    
+    public void addPlayer(Long l, Player p) {
+        playerList.put(l, p);
+    }
+    
+    public void removePlayer(Long l) {
+        playerList.remove(l);
     }
 }
