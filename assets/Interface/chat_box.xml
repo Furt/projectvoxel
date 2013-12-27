@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+    <controlDefinition name="textarea" controller="me.furt.projectv.gui.TextareaControl">
+        <panel id="outerPanel" childLayout="center" height="$height" width="$width" backgroundColor="#00000000">
+            <control name="scrollPanel" id="textScrollpanel" horizontal="false" vertical="$scroll" height="100%" width="100%" style="$style" backgroundColor="$areaColor">
+                <panel id="textpanel" childLayout="horizontal" backgroundColor="$areaColor" height="100%" width="100%">
+                    <text id="areatext" style="base-font" color="$textColor" width="94%" />
+                </panel>
+            </control>
+        </panel>
+    </controlDefinition>
+</nifty>
