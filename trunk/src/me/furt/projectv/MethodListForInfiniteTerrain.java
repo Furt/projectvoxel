@@ -16,8 +16,8 @@ public class MethodListForInfiniteTerrain {
     // Variables that might be needed
     Vector3f camCoords = new Vector3f(0f,0f,0f);
     Vector3Int blockCoords = new Vector3Int(0,0,0);
-    int maxChunks = 33; // the amount of chunks that can be loaded at once
-    int chunkRadius = 5; // the chunk radius around the player
+    int maxChunks = 50; // the amount of chunks that can be loaded at once
+    int chunkRadius = 5; // the radius for checking if a chunk is loaded
     
     // Below is a list of stuff that will need to be changed in TerrainControl
     
