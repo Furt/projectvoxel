@@ -303,9 +303,9 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         rootNode.attachChild(model);
         getPhysicsSpace().add(character);
 
-        //cam.setLocation(new Vector3f(67.638f, 349.542f, 145.545f));
-        //cam.lookAtDirection(new Vector3f(0.8006f, -0.4007f, 0.4455f), Vector3f.UNIT_Y);
-        //flyCam.setMoveSpeed(75);
+        cam.setLocation(new Vector3f(67.638f, 349.542f, 145.545f));
+        cam.lookAtDirection(new Vector3f(0.8006f, -0.4007f, 0.4455f), Vector3f.UNIT_Y);
+        flyCam.setMoveSpeed(75);
     }
 
     private void setupChaseCamera() {

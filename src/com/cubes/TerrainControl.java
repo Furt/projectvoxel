@@ -516,7 +516,7 @@ public class TerrainControl extends AbstractControl implements BitSerializable {
             heightMapBuilder.setDestSize(regionX, regionZ);
             heightMapBuilder.setBounds(6.0, 10.0, 1.0, 5.0);
             heightMapBuilder.build();
-            int grass = regionY-1;
+            int grass = regionY;
             int sand = 32;
             int water = 32;
             int rock = 29;
