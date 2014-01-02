@@ -111,7 +111,7 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         setupControls();
         setupChatBox();
         //setupFog();
-        createLight();
+        //createLight();
 
         seed = new Random().nextInt();
         WorldSettings.registerBlocks();
@@ -120,55 +120,55 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         setupBlockTerrain();
 
         setupPlayer();
-        setupAnimationController();
+        //setupAnimationController();
         setupGUI();
     }
 
      @Override
     public void simpleUpdate(float tpf) {
-        if(character.getPhysicsLocation().getY() < -10.0f) {
-            character.setPhysicsLocation(new Vector3f(151f, 67f, 51f));
-        }
-        // Player updates
-        Vector3f camDir = cam.getDirection().clone().multLocal(0.1f);
-        Vector3f camLeft = cam.getLeft().clone().multLocal(0.1f);
-        camDir.y = 0;
-        camLeft.y = 0;
-        walkDirection.set(0, 0, 0);
-        if (left) {
-            walkDirection.addLocal(camLeft);
-        }
-        if (right) {
-            walkDirection.addLocal(camLeft.negate());
-        }
-        if (up) {
-            walkDirection.addLocal(camDir);
-        }
-        if (down) {
-            walkDirection.addLocal(camDir.negate());
-        }
-        if (!character.onGround()) {
-            airTime = airTime + tpf;
-        } else {
-            airTime = 0;
-        }
-        if (walkDirection.length() == 0) {
-            if (!"stand".equals(animationChannel.getAnimationName())) {
-                animationChannel.setAnim("stand", 1f);
-            }
-        } else {
-            character.setViewDirection(walkDirection);
-            if (airTime > .3f) {
-                if (!"stand".equals(animationChannel.getAnimationName())) {
-                    animationChannel.setAnim("stand");
-                }
-            } else if (!"Walk".equals(animationChannel.getAnimationName())) {
-                animationChannel.setSpeed(5f);
-                animationChannel.setAnim("Walk", 0.7f);
-                
-            }
-        }
-        character.setWalkDirection(walkDirection);
+//        if(character.getPhysicsLocation().getY() < -10.0f) {
+//            character.setPhysicsLocation(new Vector3f(151f, 67f, 51f));
+//        }
+//        // Player updates
+//        Vector3f camDir = cam.getDirection().clone().multLocal(0.1f);
+//        Vector3f camLeft = cam.getLeft().clone().multLocal(0.1f);
+//        camDir.y = 0;
+//        camLeft.y = 0;
+//        walkDirection.set(0, 0, 0);
+//        if (left) {
+//            walkDirection.addLocal(camLeft);
+//        }
+//        if (right) {
+//            walkDirection.addLocal(camLeft.negate());
+//        }
+//        if (up) {
+//            walkDirection.addLocal(camDir);
+//        }
+//        if (down) {
+//            walkDirection.addLocal(camDir.negate());
+//        }
+//        if (!character.onGround()) {
+//            airTime = airTime + tpf;
+//        } else {
+//            airTime = 0;
+//        }
+//        if (walkDirection.length() == 0) {
+//            if (!"stand".equals(animationChannel.getAnimationName())) {
+//                animationChannel.setAnim("stand", 1f);
+//            }
+//        } else {
+//            character.setViewDirection(walkDirection);
+//            if (airTime > .3f) {
+//                if (!"stand".equals(animationChannel.getAnimationName())) {
+//                    animationChannel.setAnim("stand");
+//                }
+//            } else if (!"Walk".equals(animationChannel.getAnimationName())) {
+//                animationChannel.setSpeed(5f);
+//                animationChannel.setAnim("Walk", 0.7f);
+//                
+//            }
+//        }
+//        character.setWalkDirection(walkDirection);
 
         // GUI updates
         Vector3f loc = cam.getLocation();
@@ -291,17 +291,17 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
     // TODO
     private void setupPlayer() {
         itemInHand = 0;
-        CapsuleCollisionShape capsule = new CapsuleCollisionShape(0.5f, 1f);
-        character = new CharacterControl(capsule, 0.01f);
-        character.setGravity(20f);
-        character.setJumpSpeed(8f);
-        character.setFallSpeed(14f);
-        model = (Node) assetManager.loadModel("Textures/Oto/Oto.mesh.j3o");
-        model.setLocalScale(0.20f);
-        model.addControl(character);
-        character.setPhysicsLocation(new Vector3f(151f, 67f, 51f));
-        rootNode.attachChild(model);
-        getPhysicsSpace().add(character);
+        //CapsuleCollisionShape capsule = new CapsuleCollisionShape(0.5f, 1f);
+        //character = new CharacterControl(capsule, 0.01f);
+        //character.setGravity(20f);
+        //character.setJumpSpeed(8f);
+        //character.setFallSpeed(14f);
+        //model = (Node) assetManager.loadModel("Textures/Oto/Oto.mesh.j3o");
+        //model.setLocalScale(0.20f);
+        //model.addControl(character);
+        //character.setPhysicsLocation(new Vector3f(151f, 67f, 51f));
+        //rootNode.attachChild(model);
+        //getPhysicsSpace().add(character);
 
         cam.setLocation(new Vector3f(67.638f, 349.542f, 145.545f));
         cam.lookAtDirection(new Vector3f(0.8006f, -0.4007f, 0.4455f), Vector3f.UNIT_Y);
