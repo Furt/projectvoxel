@@ -1,6 +1,7 @@
 package me.furt.projectv;
 
 import com.cubes.Block;
+import com.cubes.Block.Face;
 import com.cubes.BlockManager;
 import com.cubes.BlockSkin;
 import com.cubes.ChunkControl;
@@ -41,25 +42,21 @@ public class WorldSettings {
 
         BlockManager.register(Block_Grass.class, new BlockSkin(new TextureLocation[]{
                     new TextureLocation(0, 0),
-                    new TextureLocation(1, 0),
-                    new TextureLocation(2, 0),
-                    new TextureLocation(3, 0),
                     new TextureLocation(4, 0),
-                    new TextureLocation(0, 1),
-                    new TextureLocation(5, 1),}, false) {
+                    new TextureLocation(0, 1)}, false) {
             @Override
-            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Face face) {
                 if (chunk.isBlockOnSurface(blockLocation)) {
                     switch (face) {
                         case Top:
-                            return FastMath.nextRandomInt(0, 3);
+                            return 0;
 
                         case Bottom:
-                            return 5;
+                            return 2;
                     }
-                    return 4;
+                    return 1;
                 }
-                return FastMath.nextRandomInt(5, 6);
+                return 2;
             }
         });
 
@@ -67,86 +64,36 @@ public class WorldSettings {
 
         BlockManager.register(Block_Log.class, new BlockSkin(new TextureLocation[]{
                     new TextureLocation(1, 4),
-                    new TextureLocation(0, 4),
-                    new TextureLocation(3, 4),
-                    new TextureLocation(4, 4)
-                }, false) {
+                    new TextureLocation(0, 4)}, false) {
             @Override
-            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
+            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Face face) {
                 if (chunk.isBlockOnSurface(blockLocation)) {
                     switch (face) {
                         case Top:
-                            return 1;
+                            return 0;
                         case Bottom:
-                            return 1;
+                            return 0;
                     }
                 }
-                return FastMath.nextRandomInt(1, 3);
-            }
-        });
-
-
-        BlockManager.register(Block_Stone.class, new BlockSkin(new TextureLocation[]{
-                    new TextureLocation(0, 2),
-                    new TextureLocation(2, 2)
-                }, false) {
-            @Override
-            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-                return FastMath.nextRandomInt(0, 1);
+                return 1;
             }
         });
 
         BlockManager.register(Block_Stone_Slab.class, new BlockSkin(new TextureLocation(5, 3), false));
 
-        BlockManager.register(Block_Stone.class, new BlockSkin(new TextureLocation[]{
-                    new TextureLocation(0, 2),
-                    new TextureLocation(2, 2),}, false) {
-            @Override
-            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-                return FastMath.nextRandomInt(0, 1);
-            }
-        });
+        BlockManager.register(Block_Stone.class, new BlockSkin(new TextureLocation(0, 2), false));
+        
         BlockManager.register(Block_Plank.class, new BlockSkin(new TextureLocation(0, 3), false));
 
-        BlockManager.register(Block_Dirt.class, new BlockSkin(new TextureLocation[]{
-                    new TextureLocation(0, 1),
-                    new TextureLocation(5, 1),}, false) {
-            @Override
-            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-                return FastMath.nextRandomInt(0, 1);
-            }
-        });
-        BlockManager.register(Block_Sand.class, new BlockSkin(new TextureLocation[]{
-                    new TextureLocation(4, 1),
-                    new TextureLocation(6, 1)
-                }, false) {
-            @Override
-            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-                return FastMath.nextRandomInt(0, 1);
-            }
-        });
-        BlockManager.register(Block_Sand.class, new BlockSkin(new TextureLocation[]{
-                    new TextureLocation(4, 1),
-                    new TextureLocation(6, 1),}, false) {
-            @Override
-            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-                return FastMath.nextRandomInt(0, 1);
-            }
-        });
+        BlockManager.register(Block_Dirt.class, new BlockSkin(new TextureLocation(0, 1), false));
+        
+        BlockManager.register(Block_Sand.class, new BlockSkin(new TextureLocation(4, 1), false));
+        
         BlockManager.register(Block_Mud.class, new BlockSkin(new TextureLocation(1, 1), false));
 
         BlockManager.register(Block_Red_Clay.class, new BlockSkin(new TextureLocation(2, 1), false));
 
-        BlockManager.register(Block_Cobble.class, new BlockSkin(new TextureLocation[]{
-                    new TextureLocation(1, 3),
-                    new TextureLocation(3, 3),
-                    new TextureLocation(4, 3)
-                }, false) {
-            @Override
-            protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-                return FastMath.nextRandomInt(0, 2);
-            }
-        });
+        BlockManager.register(Block_Cobble.class, new BlockSkin(new TextureLocation(1, 3), false));
 
         BlockManager.register(Block_Ice.class, new BlockSkin(new TextureLocation(3, 5), true));
 
