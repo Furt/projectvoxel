@@ -8,10 +8,10 @@ import me.furt.projectv.world.Seed;
  *
  * @author Furt
  */
-public class ForestGen implements Generator {
+public class MountainGen implements Generator {
     private Seed seed;
     
-    public ForestGen(Seed seed) {
+    public MountainGen(Seed seed) {
         this.seed = seed;
     }
 

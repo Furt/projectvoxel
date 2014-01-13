@@ -1,11 +1,20 @@
 package me.furt.projectv.noise;
 
+import com.cubes.CubesSettings;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.furt.projectv.libnoise.exception.ExceptionInvalidParam;
 import me.furt.projectv.libnoise.module.ModuleBase;
 import me.furt.projectv.libnoise.util.NoiseMap;
 import me.furt.projectv.libnoise.util.NoiseMapBuilderPlane;
+import me.furt.projectv.noise.generators.DesertGen;
+import me.furt.projectv.noise.generators.FlatGen;
+import me.furt.projectv.noise.generators.ForestGen;
+import me.furt.projectv.noise.generators.HillGen;
+import me.furt.projectv.noise.generators.MountainGen;
+import me.furt.projectv.noise.generators.PlainGen;
+import me.furt.projectv.noise.generators.SwampGen;
+import me.furt.projectv.noise.generators.WaterGen;
 import me.furt.projectv.world.Seed;
 
 /**
@@ -15,17 +24,27 @@ import me.furt.projectv.world.Seed;
  */
 public class Noise {
 
-    public NoiseMap getChunkNoise(int chunkX, int chunkZ, Seed seed, BiomeType biomeType) {
+    private int chunkSizeX;
+    private int chunkSizeY;
+    private int chunkSizeZ;
+
+    public Noise(CubesSettings settings) {
+        this.chunkSizeX = settings.getChunkSizeX();
+        this.chunkSizeY = settings.getChunkSizeY();
+        this.chunkSizeZ = settings.getChunkSizeZ();
+    }
+
+    public NoiseMap getChunkNoise(int chunkLocX, int chunkLocZ, Seed seed, BiomeType biomeType) {
         try {
-            ModuleBase biome = getBiome(seed, biomeType);
-            float[] bounds = getBounds(chunkX, chunkZ);
-            
-            NoiseMap heightMap = new NoiseMap(16, 16);
+            ModuleBase biome = getBiome(chunkSizeY, seed, biomeType);
+            float[] bounds = getBounds(chunkLocX, chunkLocZ);
+
+            NoiseMap heightMap = new NoiseMap(chunkSizeX, chunkSizeZ);
             NoiseMapBuilderPlane heightMapBuilder = new NoiseMapBuilderPlane();
             heightMapBuilder.setSourceModule(biome);
             heightMapBuilder.setDestNoiseMap(heightMap);
-            heightMapBuilder.setDestSize(16, 16);
-            
+            heightMapBuilder.setDestSize(chunkSizeX, chunkSizeZ);
+
             heightMapBuilder.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
             heightMapBuilder.build();
 
@@ -36,38 +55,51 @@ public class Noise {
         }
     }
 
-    public float[] getBounds(int chunkX, int chunkZ) {
+    public float[] getBounds(int chunkLocX, int chunkLocZ) {
         float[] bounds = new float[4];
-        // TODO add code to convert chunk coords to boundries for noise
-        bounds[0] = chunkX*16-1;
-        bounds[1] = 2f;
-        bounds[2] = 3f;
-        bounds[3] = 4f;
+        bounds[0] = chunkLocX * chunkSizeX;
+        bounds[1] = ((chunkLocX * chunkSizeX) + chunkSizeX);
+        bounds[2] = chunkLocZ * chunkSizeZ;
+        bounds[3] = ((chunkLocZ * chunkSizeZ) + chunkSizeZ);
 
         return bounds;
     }
-    
-    public ModuleBase getBiome(Seed seed, BiomeType biomeType) {
+
+    public ModuleBase getBiome(int chunkSizeY, Seed seed, BiomeType biomeType) {
         // TODO finish gen classes to finish this method
         ModuleBase mb = null;
-        if(biomeType.equals(BiomeType.DESERT)) {
-            
+        if (biomeType.equals(BiomeType.DESERT)) {
+            DesertGen gen = new DesertGen(seed);
+            mb = gen.getBase();
         } else if (biomeType.equals(BiomeType.FOREST)) {
-            // mb = null;
+           ForestGen gen = new ForestGen(seed);
+           mb = gen.getBase();
         } else if (biomeType.equals(BiomeType.HILLS)) {
-            // mb = null;
+            HillGen gen = new HillGen(seed);
+            mb = gen.getBase();
         } else if (biomeType.equals(BiomeType.MOUNTAINS)) {
-            // mb = null;
+            MountainGen gen = new MountainGen(seed);
+            mb = gen.getBase();
         } else if (biomeType.equals(BiomeType.PLAINS)) {
-            // mb = null;
+            PlainGen gen = new PlainGen(seed);
+            mb = gen.getBase();
         } else if (biomeType.equals(BiomeType.SWAMP)) {
-            // mb = null;
+            SwampGen gen = new SwampGen(seed);
+            mb = gen.getBase();
         } else if (biomeType.equals(BiomeType.WATER)) {
-            // mb = null;
+            WaterGen gen = new WaterGen(seed);
+            mb = gen.getBase();
         } else {
             // failsafe, generate flat terrain
+            FlatGen gen = new FlatGen(seed);
+            mb = gen.getBase();
         }
-        
+
         return mb;
+    }
+    
+    // How im gonna currently do the scale this might not even be needed.
+    public ModuleBase setScale(ModuleBase biome, BiomeType biomeType) {
+        return null;
     }
 }
