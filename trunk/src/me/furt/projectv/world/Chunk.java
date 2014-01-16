@@ -14,7 +14,7 @@ import com.jme3.scene.control.Control;
  */
 public class Chunk extends AbstractControl {
 
-    private byte[][][] Blocks;
+    private byte[][][] blocks;
     private Region region;
     private Vector3Int location;
     private int chunkX = 16;
@@ -25,21 +25,21 @@ public class Chunk extends AbstractControl {
     }
 
     public Chunk(Region region, Vector3Int location) {
-        Blocks = new byte[chunkX][chunkY][chunkZ];
+        blocks = new byte[chunkX][chunkY][chunkZ];
         this.region = region;
         this.location = location;
     }
 
     public byte[][][] getBlocks() {
-        return Blocks;
+        return blocks;
     }
 
     public Block getBlock(Vector3Int location) {
-        return BlockManager.getBlock(Blocks[location.getX()][location.getY()][location.getZ()]);
+        return BlockManager.getBlock(blocks[location.getX()][location.getY()][location.getZ()]);
     }
 
     public void setBlocks(byte[][][] Blocks) {
-        this.Blocks = Blocks;
+        this.blocks = Blocks;
     }
 
     public Region getRegion() {

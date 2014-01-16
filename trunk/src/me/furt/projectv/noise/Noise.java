@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.furt.projectv.libnoise.exception.ExceptionInvalidParam;
 import me.furt.projectv.libnoise.module.ModuleBase;
+import me.furt.projectv.libnoise.module.ScaleBias;
 import me.furt.projectv.libnoise.util.NoiseMap;
 import me.furt.projectv.libnoise.util.NoiseMapBuilderPlane;
 import me.furt.projectv.noise.generators.DesertGen;
@@ -72,8 +73,8 @@ public class Noise {
             DesertGen gen = new DesertGen(seed);
             mb = gen.getBase();
         } else if (biomeType.equals(BiomeType.FOREST)) {
-           ForestGen gen = new ForestGen(seed);
-           mb = gen.getBase();
+            ForestGen gen = new ForestGen(seed);
+            mb = gen.getBase();
         } else if (biomeType.equals(BiomeType.HILLS)) {
             HillGen gen = new HillGen(seed);
             mb = gen.getBase();
@@ -89,17 +90,26 @@ public class Noise {
         } else if (biomeType.equals(BiomeType.WATER)) {
             WaterGen gen = new WaterGen(seed);
             mb = gen.getBase();
+        } else if(biomeType.equals(BiomeType.FLATLANDS)) {
+            FlatGen gen = new FlatGen(seed);
+            mb = gen.getBase();
         } else {
-            // failsafe, generate flat terrain
             FlatGen gen = new FlatGen(seed);
             mb = gen.getBase();
         }
 
-        return mb;
+        return setScale(mb);
     }
-    
-    // How im gonna currently do the scale this might not even be needed.
-    public ModuleBase setScale(ModuleBase biome, BiomeType biomeType) {
-        return null;
+
+    public ModuleBase setScale(ModuleBase biome) {
+        try {
+        ScaleBias scaleTerrain = new ScaleBias(biome);
+        scaleTerrain.setScale(chunkSizeY);
+        scaleTerrain.setBias(chunkSizeY);
+        return scaleTerrain;
+        } catch (ExceptionInvalidParam ex) {
+            Logger.getLogger(Noise.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 }
