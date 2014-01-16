@@ -14,6 +14,7 @@ public class BlockManager {
 
     public BlockManager() {
         blockList.put(id, new Block(id, "Dirt", 5, 2, true, false));
+        id++;
     }
 
     static Block getBlock(byte b) {
