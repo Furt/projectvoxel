@@ -15,12 +15,15 @@ public class WorldInfo {
     public Vector3Int spawnLocation;
     public boolean monstersAllowed;
     public boolean crittersAllowed;
-    public WorldType worldType;
+    public Seed seed;
 
-    public WorldInfo(int id, String name, WorldType worldType) {
+    public WorldInfo(int id, String name) {
         this.id = id;
         this.name = name;
-        this.worldType = worldType;
+    }
+    
+    public WorldInfo(String config) {
+        // For yml world settings
     }
 
     public int getId() {
@@ -70,12 +73,12 @@ public class WorldInfo {
     public void setCrittersAllowed(boolean crittersAllowed) {
         this.crittersAllowed = crittersAllowed;
     }
-
-    public WorldType getWorldType() {
-        return worldType;
+    
+    public Seed getSeed() {
+        return seed;
     }
-
-    public void setWorldType(WorldType worldType) {
-        this.worldType = worldType;
+    
+    public void setSeed(Seed seed) {
+        this.seed = seed;
     }
 }
