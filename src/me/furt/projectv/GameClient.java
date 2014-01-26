@@ -1,16 +1,9 @@
 package me.furt.projectv;
 
-import com.cubes.BlockNavigator;
-import com.cubes.TerrainControl;
-import com.cubes.Vector3Int;
 import com.jme3.app.SimpleApplication;
-import com.jme3.collision.CollisionResults;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.ScreenController;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -28,7 +21,7 @@ import tonegod.gui.core.Screen;
  *
  * @author Furt
  */
-public class GameClient extends SimpleApplication implements ScreenController {
+public class GameClient extends SimpleApplication {
 
     private static GameClient app;
     private Screen screen;
@@ -84,17 +77,5 @@ public class GameClient extends SimpleApplication implements ScreenController {
     public void destroy() {
         logicService.shutdown();
         super.destroy();
-    }
-    
-    public void bind(Nifty nifty, de.lessvoid.nifty.screen.Screen screen) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void onStartScreen() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void onEndScreen() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
