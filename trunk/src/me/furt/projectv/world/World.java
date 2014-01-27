@@ -1,6 +1,7 @@
 package me.furt.projectv.world;
 
 import com.cubes.Vector3Int;
+import com.jme3.app.Application;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
@@ -20,9 +21,23 @@ public class World extends AbstractControl {
     private String name;
     private WorldInfo worldInfo;
     private ArrayList<Region> regions = new ArrayList<Region>();
+    private Application app;
+    private BlockManager bm;
 
-    public World(WorldInfo worldInfo) {
-        this.worldInfo = worldInfo;
+    public World(Application app) {
+        this.worldInfo = new WorldInfo("name");
+        this.app = app;
+        this.bm = new BlockManager();
+        // this might need to be elsewhere
+        bm.registerDefaults();
+    }
+    
+    public BlockManager getBlockManager() {
+        return bm;
+    }
+    
+    public Application getApp() {
+        return this.app;
     }
 
     public WorldInfo getWorldInfo() {
