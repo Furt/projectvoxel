@@ -5,7 +5,7 @@
 package me.furt.projectv;
 
 import java.util.HashMap;
-import me.furt.projectv.player.Player;
+import me.furt.projectv.core.player.Player;
 
 /**
  *

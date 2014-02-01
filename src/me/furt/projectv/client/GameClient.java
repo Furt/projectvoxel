@@ -1,5 +1,6 @@
-package me.furt.projectv;
+package me.furt.projectv.client;
 
+import me.furt.projectv.core.Globals;
 import com.jme3.app.SimpleApplication;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
@@ -13,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import me.furt.projectv.GameLogic;
+import me.furt.projectv.Util;
 import me.furt.projectv.state.MainMenuState;
 import tonegod.gui.core.Screen;
 

@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.furt.projectv;
+package me.furt.projectv.server;
 
+import me.furt.projectv.core.Globals;
 import com.jme3.app.SimpleApplication;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
@@ -11,7 +12,8 @@ import com.jme3.system.AppSettings;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.furt.projectv.network.ServerListener;
+import me.furt.projectv.Util;
+import me.furt.projectv.core.network.ServerListener;
 
 /**
  *

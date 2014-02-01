@@ -14,7 +14,7 @@ import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.math.Vector2f;
 import com.jme3.network.Client;
 import com.jme3.system.AppSettings;
-import me.furt.projectv.network.messages.LoginMessage;
+import me.furt.projectv.core.network.messages.LoginMessage;
 import tonegod.gui.controls.windows.LoginBox;
 import tonegod.gui.core.Screen;
 
