@@ -1,4 +1,4 @@
-package me.furt.projectv;
+package me.furt.projectv.core;
 
 /**
  * Project V

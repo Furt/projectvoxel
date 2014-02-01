@@ -1,10 +1,15 @@
 package me.furt.projectv;
 
+import me.furt.projectv.core.network.messages.LoginMessage;
+import me.furt.projectv.core.network.messages.ChatMessage;
+import me.furt.projectv.core.network.messages.ServerJoinMessage;
+import me.furt.projectv.core.network.messages.ClientJoinMessage;
+import me.furt.projectv.core.network.messages.ServerTerrainMessage;
+import me.furt.projectv.core.network.messages.HandshakeMessage;
 import com.cubes.Vector3Int;
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializer;
 import com.jme3.renderer.Camera;
-import me.furt.projectv.network.messages.*;
 
 /**
  * Project V
