@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class Region extends AbstractControl {
 
-    private Chunk[][] chunkList = new Chunk[80][80];
+    private Chunk[][] chunkList = new Chunk[50][50];
     private byte[][] noiseData;
     //private ArrayList<Chunk> chunkList = new ArrayList<Chunk>();
     private Vector3Int location;
