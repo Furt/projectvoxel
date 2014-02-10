@@ -1,20 +1,17 @@
 /*
  * Copyright (C) 2003, 2004 Jason Bevins (original libnoise code)
- * Copyright  2010 Thomas J. Hodge (java port of libnoise)
+ * Copyright (C) 2013, 2014 Terry J Earnheart (java port of libnoise)
  * 
- * This file is part of libnoiseforjava.
+ * This file is part of lb4j.
  * 
- * libnoiseforjava is a Java port of the C++ library libnoise, which may be found at 
- * http://libnoise.sourceforge.net/.  libnoise was developed by Jason Bevins, who may be 
- * contacted at jlbezigvins@gmzigail.com (for great email, take off every 'zig').
- * Porting to Java was done by Thomas Hodge, who may be contacted at
- * libnoisezagforjava@gzagmail.com (remove every 'zag').
+ * lb4j is a Java port of the C++ library libnoise, which may be found at 
+ * http://libnoise.sourceforge.net/.
  * 
- * libnoiseforjava is free software: you can redistribute it and/or modify it
+ * lb4j is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later version.
  * 
- * libnoiseforjava is distributed in the hope that it will be useful, but
+ * lb4j is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  * 
