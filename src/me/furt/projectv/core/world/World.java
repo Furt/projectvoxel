@@ -6,12 +6,12 @@ import com.jme3.app.Application;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 import java.util.ArrayList;
 import java.util.Iterator;
+import me.furt.projectv.core.Seed;
 import me.furt.projectv.core.block.Block;
 import me.furt.projectv.core.block.BlockManager;
 
@@ -27,22 +27,31 @@ public class World extends AbstractControl {
     private WorldInfo worldInfo;
     private ArrayList<Region> regions = new ArrayList<Region>();
     private Application app;
-    private BlockManager bm;
-    private Node worldNode;
+    private BlockManager blockManager;
+    private Seed seed;
 
     public World(Application app) {
-        this.worldInfo = new WorldInfo("name");
-        this.worldNode = new Node(worldInfo.getName());
+        this.worldInfo = new WorldInfo("world");
+        worldInfo.setCrittersAllowed(false);
+        worldInfo.setMonstersAllowed(false);
+        worldInfo.setName(name);
         this.app = app;
-        this.bm = new BlockManager();
-        // this might need to be elsewhere
-        bm.registerDefaults();
+        this.blockManager = new BlockManager();
+        this.blockManager.registerDefaults();
     }
-    
+
+    public World(Application app, WorldInfo worldInfo, Seed seed) {
+        this.app = app;
+        this.worldInfo = worldInfo;
+        this.seed = seed;
+        this.blockManager = new BlockManager();
+        this.blockManager.registerDefaults();
+    }
+
     public BlockManager getBlockManager() {
-        return bm;
+        return blockManager;
     }
-    
+
     public Application getApp() {
         return this.app;
     }
@@ -69,6 +78,14 @@ public class World extends AbstractControl {
 
     public void setWorldInfo(WorldInfo worldInfo) {
         this.worldInfo = worldInfo;
+    }
+
+    public void setSeed(Seed seed) {
+        this.seed = seed;
+    }
+
+    public Seed getSeed() {
+        return seed;
     }
 
     public ArrayList<Region> getRegions() {
@@ -123,7 +140,7 @@ public class World extends AbstractControl {
     public Control cloneForSpatial(Spatial spatial) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     public Vector3Int getPointedBlockLocation(Vector3f collisionContactPoint, boolean getNeighborLocation) {
         Vector3f collisionLocation = Util.compensateFloatRoundingErrors(collisionContactPoint);
         Vector3Int blockLocation = new Vector3Int(
@@ -141,14 +158,14 @@ public class World extends AbstractControl {
         }
         return blockLocation;
     }
-    
+
     public Block getBlock(Vector3Int loc) {
         Region region;
         Chunk c;
         Iterator i = regions.iterator();
         while (i.hasNext()) {
             region = (Region) i.next();
-            if(region.getChunkFromBlock(loc) != null) {
+            if (region.getChunkFromBlock(loc) != null) {
                 c = region.getChunkFromBlock(loc);
                 return c.getBlock(loc);
             }

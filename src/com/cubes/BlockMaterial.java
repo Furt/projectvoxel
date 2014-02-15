@@ -13,7 +13,7 @@ public class BlockMaterial extends Material {
      * @param blockTextureFilePath
      */
     public BlockMaterial(AssetManager assetManager, String blockTextureFilePath) {
-        super(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        super(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         Texture texture = assetManager.loadTexture(blockTextureFilePath);
         texture.setMagFilter(Texture.MagFilter.Nearest);
         texture.setMinFilter(Texture.MinFilter.NearestNoMipMaps);
