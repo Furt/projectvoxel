@@ -5,6 +5,7 @@ import com.cubes.ChunkControl;
 import com.cubes.TerrainControl;
 import com.cubes.Vector3Int;
 import com.jme3.math.Vector3f;
+import java.io.BufferedOutputStream;
 import java.util.HashMap;
 
 /**
@@ -68,4 +69,8 @@ public class MethodListForInfiniteTerrain {
     
     // Not sure how this would effect performance.
 
+    
+    
+    // server <-> client world data stream
+   // new DataOutputStream( new BufferedOutputStream( new GZIPOutputStream( /* compressed chunk data */ ) ) );
 }
