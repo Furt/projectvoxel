@@ -8,8 +8,8 @@ package me.furt.projectv.core.block;
 public class StorageBlock extends Block {
     private int slots[];
     
-    public StorageBlock(int id, String name, int slots[]) {
-        super(id, name);
+    public StorageBlock(int id, String name, BlockSkin texture, int slots[]) {
+        super(id, name, texture);
         this.slots = slots;
     }
 

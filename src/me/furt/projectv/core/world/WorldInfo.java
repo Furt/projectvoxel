@@ -1,7 +1,7 @@
 package me.furt.projectv.core.world;
 
-import com.cubes.Vector3Int;
 import me.furt.projectv.core.Seed;
+import me.furt.projectv.util.Vector3Int;
 
 /**
  * ProjectV

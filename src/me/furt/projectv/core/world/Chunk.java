@@ -1,18 +1,20 @@
 package me.furt.projectv.core.world;
 
-import me.furt.projectv.core.world.World;
-import com.cubes.Vector3Int;
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
-import me.furt.projectv.WorldSettings;
 import me.furt.projectv.core.block.Block;
+import me.furt.projectv.core.render.MeshOptimizer;
+import me.furt.projectv.core.render.TransparencyMerger;
+import me.furt.projectv.util.Util;
+import me.furt.projectv.util.Vector3Int;
 
 /**
  * ProjectV
@@ -25,14 +27,13 @@ public class Chunk extends AbstractControl {
     private int[][][] blocks;
     private Region region;
     // these should not be here
-    private int chunkX = 16;
-    private int chunkY = 128;
-    private int chunkZ = 16;
+    public final int chunkX = 16;
+    public final int chunkY = 128;
+    public final int chunkZ = 16;
     //
     private World world;
     private Vector3Int location = new Vector3Int();
     private Vector3Int blockLocation = new Vector3Int();
-    private byte[][][] blockTypes;
     private boolean[][][] blocks_IsOnSurface;
     private Node node = new Node();
     private Geometry optimizedGeometry_Opaque;
@@ -51,7 +52,6 @@ public class Chunk extends AbstractControl {
         blockLocation.set(location.mult(chunkX, chunkY, chunkZ));
         // 1 needs to be replaced with blockSize var
         node.setLocalTranslation(new Vector3f(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ()).mult(1));
-        blockTypes = new byte[chunkX][chunkY][chunkZ];
         blocks_IsOnSurface = new boolean[chunkX][chunkY][chunkZ];
         generated = false;
     }
@@ -66,6 +66,14 @@ public class Chunk extends AbstractControl {
 
     public void setBlocks(int[][][] Blocks) {
         this.blocks = Blocks;
+    }
+    
+    public void setBlock(Block block, Vector3Int loc) {
+        if (isValidBlockLocation(location)) {
+            blocks[location.getX()][location.getY()][location.getZ()] = block.getId();
+            updateBlockState(location);
+            needsMeshUpdate = true;
+        }
     }
 
     public Region getRegion() {
@@ -99,15 +107,55 @@ public class Chunk extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public Control cloneForSpatial(Spatial spatial) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public boolean updateSpatial() {
+        if (needsMeshUpdate) {
+            if (optimizedGeometry_Opaque == null) {
+                optimizedGeometry_Opaque = new Geometry("");
+                optimizedGeometry_Opaque.setQueueBucket(Bucket.Opaque);
+                node.attachChild(optimizedGeometry_Opaque);
+                updateBlockMaterial();
+            }
+            if (optimizedGeometry_Transparent == null) {
+                optimizedGeometry_Transparent = new Geometry("");
+                optimizedGeometry_Transparent.setQueueBucket(Bucket.Transparent);
+                node.attachChild(optimizedGeometry_Transparent);
+                updateBlockMaterial();
+            }
+            optimizedGeometry_Opaque.setMesh(MeshOptimizer.generateOptimizedMesh(this, TransparencyMerger.OPAQUE));
+            optimizedGeometry_Transparent.setMesh(MeshOptimizer.generateOptimizedMesh(this, TransparencyMerger.TRANSPARENT));
+            needsMeshUpdate = false;
+            return true;
+        }
+        return false;
+    }
+    
+    private void updateBlockState(Vector3Int location) {
+        updateBlockInformation(location);
+        for (int i = 0; i < Block.Face.values().length; i++) {
+            Vector3Int neighborLocation = getNeighborBlockGlobalLocation(location, Block.Face.values()[i]);
+            Chunk chunk = world.getChunk(neighborLocation);
+            if (chunk != null) {
+                chunk.updateBlockInformation(neighborLocation.subtract(chunk.getBlockLocation()));
+            }
+        }
+    }
+    
+    private void updateBlockInformation(Vector3Int location) {
+        Block neighborBlock_Top = world.getBlock(getNeighborBlockGlobalLocation(location, Block.Face.Top));
+        blocks_IsOnSurface[location.getX()][location.getY()][location.getZ()] = (neighborBlock_Top == null);
+    }
+
+    private boolean isValidBlockLocation(Vector3Int location) {
+        return Util.isValidIndex(blocks, location);
     }
 }
