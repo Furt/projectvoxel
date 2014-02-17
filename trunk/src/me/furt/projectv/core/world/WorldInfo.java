@@ -23,7 +23,7 @@ public class WorldInfo {
         this.id = id;
         this.name = name;
     }
-    
+
     public WorldInfo(String config) {
         // For yml world settings
     }
@@ -83,11 +83,11 @@ public class WorldInfo {
     public void setCrittersAllowed(boolean crittersAllowed) {
         this.crittersAllowed = crittersAllowed;
     }
-    
+
     public Seed getSeed() {
         return seed;
     }
-    
+
     public void setSeed(Seed seed) {
         this.seed = seed;
     }

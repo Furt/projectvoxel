@@ -26,6 +26,7 @@ public class World extends AbstractControl {
     private int id;
     private String name;
     private WorldInfo worldInfo;
+    private WorldSettings worldSettings;
     private ArrayList<Region> regions = new ArrayList<Region>();
     private Application app;
     private BlockManager blockManager;
@@ -44,6 +45,7 @@ public class World extends AbstractControl {
         worldInfo1.setMonstersAllowed(false);
         worldInfo1.setSpawnLocation(new Vector3Int(0, 0, 0));
         worldInfo1.setSeed(new Seed("test"));
+        this.worldSettings = new WorldSettings(app);
         this.app = app;
         this.worldInfo = worldInfo1;
         this.blockManager = new BlockManager();
@@ -63,6 +65,14 @@ public class World extends AbstractControl {
 
     public WorldInfo getWorldInfo() {
         return worldInfo;
+    }
+
+    public void setWorldSettings(WorldSettings worldSettings) {
+        this.worldSettings = worldSettings;
+    }
+
+    public WorldSettings getWorldSettings() {
+        return worldSettings;
     }
 
     public int getId() {
@@ -132,6 +142,17 @@ public class World extends AbstractControl {
         return false;
     }
 
+    public Chunk getChunkFromBlock(Vector3Int block) {
+        if (chunkExists(block)) {
+            Iterator i = regions.iterator();
+            while (i.hasNext()) {
+                Region region = (Region) i.next();
+                return region.getChunkFromBlock(block);
+            }
+        }
+        return null;
+    }
+
     @Override
     protected void controlUpdate(float tpf) {
         updateSpatial();
@@ -177,7 +198,7 @@ public class World extends AbstractControl {
         }
         return null;
     }
-    
+
     public void addChunkListener(ChunkListener chunkListener) {
         chunkListeners.add(chunkListener);
     }
@@ -205,5 +226,9 @@ public class World extends AbstractControl {
             }
         }
         return wasUpdatedNeeded;
+    }
+
+    public WorldSettings getSettings() {
+        return this.worldSettings;
     }
 }

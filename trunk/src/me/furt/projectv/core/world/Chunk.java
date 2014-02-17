@@ -11,6 +11,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 import me.furt.projectv.core.block.Block;
+import me.furt.projectv.core.block.BlockNavigator;
 import me.furt.projectv.core.render.MeshOptimizer;
 import me.furt.projectv.core.render.TransparencyMerger;
 import me.furt.projectv.util.Util;
@@ -26,11 +27,6 @@ public class Chunk extends AbstractControl {
 
     private int[][][] blocks;
     private Region region;
-    // these should not be here
-    public final int chunkX = 16;
-    public final int chunkY = 128;
-    public final int chunkZ = 16;
-    //
     private World world;
     private Vector3Int location = new Vector3Int();
     private Vector3Int blockLocation = new Vector3Int();
@@ -45,14 +41,13 @@ public class Chunk extends AbstractControl {
     }
 
     public Chunk(Region region, Vector3Int location) {
-        blocks = new int[chunkX][chunkY][chunkZ];
+        blocks = new int[world.getSettings().getChunkSizeX()][world.getSettings().getChunkSizeY()][world.getSettings().getChunkSizeZ()];
         this.region = region;
         this.location = location;
         world = region.getWorld();
-        blockLocation.set(location.mult(chunkX, chunkY, chunkZ));
-        // 1 needs to be replaced with blockSize var
-        node.setLocalTranslation(new Vector3f(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ()).mult(1));
-        blocks_IsOnSurface = new boolean[chunkX][chunkY][chunkZ];
+        blockLocation.set(location.mult(world.getSettings().getChunkSizeX(), world.getSettings().getChunkSizeY(), world.getSettings().getChunkSizeZ()));
+        node.setLocalTranslation(new Vector3f(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ()).mult(world.getSettings().getBlockSize()));
+        blocks_IsOnSurface = new boolean[world.getSettings().getChunkSizeX()][world.getSettings().getChunkSizeY()][world.getSettings().getChunkSizeZ()];
         generated = false;
     }
 
@@ -67,7 +62,7 @@ public class Chunk extends AbstractControl {
     public void setBlocks(int[][][] Blocks) {
         this.blocks = Blocks;
     }
-    
+
     public void setBlock(Block block, Vector3Int loc) {
         if (isValidBlockLocation(location)) {
             blocks[location.getX()][location.getY()][location.getZ()] = block.getId();
@@ -84,6 +79,10 @@ public class Chunk extends AbstractControl {
         this.region = region;
     }
 
+    public Vector3Int getBlockLocation() {
+        return blockLocation;
+    }
+
     public Vector3Int getLocation() {
         return location;
     }
@@ -91,7 +90,11 @@ public class Chunk extends AbstractControl {
     public void setLocation(Vector3Int location) {
         this.location = location;
     }
-    
+
+    public Node getNode() {
+        return this.node;
+    }
+
     @Override
     public void setSpatial(Spatial spatial) {
         Spatial oldSpatial = this.spatial;
@@ -116,7 +119,16 @@ public class Chunk extends AbstractControl {
     public Control cloneForSpatial(Spatial spatial) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
+    public void updateBlockMaterial() {
+        if (optimizedGeometry_Opaque != null) {
+            optimizedGeometry_Opaque.setMaterial(world.getSettings().getBlockMaterial());
+        }
+        if (optimizedGeometry_Transparent != null) {
+            optimizedGeometry_Transparent.setMaterial(world.getSettings().getBlockMaterial());
+        }
+    }
+
     public boolean updateSpatial() {
         if (needsMeshUpdate) {
             if (optimizedGeometry_Opaque == null) {
@@ -131,25 +143,26 @@ public class Chunk extends AbstractControl {
                 node.attachChild(optimizedGeometry_Transparent);
                 updateBlockMaterial();
             }
-            optimizedGeometry_Opaque.setMesh(MeshOptimizer.generateOptimizedMesh(this, TransparencyMerger.OPAQUE));
-            optimizedGeometry_Transparent.setMesh(MeshOptimizer.generateOptimizedMesh(this, TransparencyMerger.TRANSPARENT));
+            MeshOptimizer opt = new MeshOptimizer(world);
+            optimizedGeometry_Opaque.setMesh(opt.generateOptimizedMesh(this, TransparencyMerger.OPAQUE));
+            optimizedGeometry_Transparent.setMesh(opt.generateOptimizedMesh(this, TransparencyMerger.TRANSPARENT));
             needsMeshUpdate = false;
             return true;
         }
         return false;
     }
-    
+
     private void updateBlockState(Vector3Int location) {
         updateBlockInformation(location);
         for (int i = 0; i < Block.Face.values().length; i++) {
             Vector3Int neighborLocation = getNeighborBlockGlobalLocation(location, Block.Face.values()[i]);
-            Chunk chunk = world.getChunk(neighborLocation);
+            Chunk chunk = world.getChunkFromBlock(neighborLocation);
             if (chunk != null) {
                 chunk.updateBlockInformation(neighborLocation.subtract(chunk.getBlockLocation()));
             }
         }
     }
-    
+
     private void updateBlockInformation(Vector3Int location) {
         Block neighborBlock_Top = world.getBlock(getNeighborBlockGlobalLocation(location, Block.Face.Top));
         blocks_IsOnSurface[location.getX()][location.getY()][location.getZ()] = (neighborBlock_Top == null);
@@ -157,5 +170,16 @@ public class Chunk extends AbstractControl {
 
     private boolean isValidBlockLocation(Vector3Int location) {
         return Util.isValidIndex(blocks, location);
+    }
+
+    private Vector3Int getNeighborBlockGlobalLocation(Vector3Int location, Block.Face face) {
+        Vector3Int neighborLocation = BlockNavigator.getNeighborBlockLocalLocation(location, face);
+        neighborLocation.addLocal(blockLocation);
+        return neighborLocation;
+    }
+
+    public Block getNeighborBlock_Local(Vector3Int location, Block.Face face) {
+        Vector3Int neighborLocation = BlockNavigator.getNeighborBlockLocalLocation(location, face);
+        return getBlock(neighborLocation);
     }
 }

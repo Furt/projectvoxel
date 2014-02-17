@@ -4,28 +4,21 @@ import me.furt.projectv.core.block.Block;
 import me.furt.projectv.core.world.Chunk;
 import me.furt.projectv.util.Vector3Int;
 
+/**
+ * ProjectV
+ *
+ * @author Furt
+ */
 public class TransparencyMerger implements MeshMerger {
+
+    public static final TransparencyMerger OPAQUE = new TransparencyMerger(false);
+    public static final TransparencyMerger TRANSPARENT = new TransparencyMerger(true);
+    private boolean isGeometryTransparent;
 
     private TransparencyMerger(boolean isGeometryTransparent) {
         this.isGeometryTransparent = isGeometryTransparent;
     }
-    /**
-     *
-     */
-    public static final TransparencyMerger OPAQUE = new TransparencyMerger(false);
-    /**
-     *
-     */
-    public static final TransparencyMerger TRANSPARENT = new TransparencyMerger(true);
-    private boolean isGeometryTransparent;
 
-    /**
-     *
-     * @param chunk
-     * @param location
-     * @param face
-     * @return
-     */
     @Override
     public boolean shouldFaceBeAdded(Chunk chunk, Vector3Int location, Block.Face face) {
         Block block = chunk.getBlock(location);
