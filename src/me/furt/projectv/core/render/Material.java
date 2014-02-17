@@ -1,6 +1,5 @@
 package me.furt.projectv.core.render;
 
-import com.cubes.*;
 
 /**
  * ProjectV
