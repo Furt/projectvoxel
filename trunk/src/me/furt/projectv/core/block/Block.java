@@ -11,6 +11,8 @@ public class Block {
     private int id;
     // Block Name //
     private String name;
+    // Block Texture //
+    private BlockSkin texture;
     // Hardness: how long it takes to mine the block //
     private int hardness;
     // Resistance: for resistance to explosion/fire/etc //
@@ -20,18 +22,20 @@ public class Block {
     // If this block can be currently used return true //
     private boolean isActive;
     
-    public Block(int id, String name) {
+    public Block(int id, String name, BlockSkin blockSkin) {
         this.id = id;
         this.name = name;
+        this.texture = blockSkin;
         this.hardness = 5;
         this.resistance = 5;
         this.breakable = true;
         this.isActive = true;
     }
 
-    public Block(int id, String name, int hardness, int resistance, boolean breakable, boolean isActive) {
+    public Block(int id, String name, BlockSkin blockSkin, int hardness, int resistance, boolean breakable, boolean isActive) {
         this.id = id;
         this.name = name;
+        this.texture = blockSkin;
         this.hardness = hardness;
         this.resistance = resistance;
         this.breakable = breakable;
@@ -52,6 +56,10 @@ public class Block {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public BlockSkin getTexture() {
+        return this.texture;
     }
 
     public int getHardness() {
@@ -85,4 +93,32 @@ public class Block {
     public void setIsActive(boolean IsActive) {
         this.isActive = IsActive;
     }
+    
+    public static enum Face {
+
+        /**
+         * Top Face
+         */
+        Top,
+        /**
+         * Bottom Face
+         */
+        Bottom,
+        /**
+         * Left Face
+         */
+        Left,
+        /**
+         * Right Face
+         */
+        Right,
+        /**
+         * Front Face
+         */
+        Front,
+        /**
+         * Back Face
+         */
+        Back
+    };
 }

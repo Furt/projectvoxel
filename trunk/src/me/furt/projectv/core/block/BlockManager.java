@@ -17,7 +17,7 @@ public class BlockManager {
 
     public void registerDefaults() {
         // New method for registering blocks, reference Block for values
-        blockList.put(1, new Block(1, "Dirt", 5, 2, true, true));
+        blockList.put(1, new Block(1, "Dirt", new BlockSkin(new TextureLocation(1, 3), false)));
     }
 
     public void addBlock(Block block) {
@@ -25,10 +25,10 @@ public class BlockManager {
             if (!blockList.containsKey(block.getId())) {
                 blockList.put(block.getId(), block);
             } else {
-                // Block id already registered
+                // Block id already registered by a custom block
             }
         } else {
-            // Block id is reserved for defaults
+            // Block id is reserved for defaults must use 100 offset
         }
     }
 
@@ -39,8 +39,21 @@ public class BlockManager {
             // Block id does not exsist
         }
     }
+    
+    public void removeBlock(int i) {
+        if (blockList.containsKey(i)) {
+            blockList.remove(i);
+        } else {
+            // Block id does not exsist
+        }
+    }
 
     public Block getBlock(int i) {
-        return blockList.get(i);
+        if (blockList.containsKey(i)) {
+            return blockList.get(i);
+        } else {
+            // Block id does not exsist
+            return blockList.get(1);
+        }
     }
 }

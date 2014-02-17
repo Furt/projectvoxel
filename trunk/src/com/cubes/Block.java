@@ -3,18 +3,6 @@ package com.cubes;
 import com.jme3.math.FastMath;
 
 public class Block {
-
-    // example of how a block could be registered
-    public static final Block cobblestone = new Block(0, "CobbleStone", new BlockSkin(new TextureLocation[]{
-                new TextureLocation(1, 3),
-                new TextureLocation(3, 3),
-                new TextureLocation(4, 3)
-            }, false) {
-        @Override
-        protected int getTextureLocationIndex(ChunkControl chunk, Vector3Int blockLocation, Block.Face face) {
-            return FastMath.nextRandomInt(0, 2);
-        }
-    }, 1, true);
     public int id;
     public String name;
     public int hardness;

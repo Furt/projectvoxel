@@ -1,7 +1,5 @@
 package me.furt.projectv.core.world;
 
-import com.cubes.Util;
-import com.cubes.Vector3Int;
 import com.jme3.app.Application;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
@@ -14,6 +12,9 @@ import java.util.Iterator;
 import me.furt.projectv.core.Seed;
 import me.furt.projectv.core.block.Block;
 import me.furt.projectv.core.block.BlockManager;
+import me.furt.projectv.core.render.ChunkListener;
+import me.furt.projectv.util.Util;
+import me.furt.projectv.util.Vector3Int;
 
 /**
  * ProjectV
@@ -28,24 +29,28 @@ public class World extends AbstractControl {
     private ArrayList<Region> regions = new ArrayList<Region>();
     private Application app;
     private BlockManager blockManager;
-    private Seed seed;
+    private ArrayList<ChunkListener> chunkListeners = new ArrayList<ChunkListener>();
 
-    public World(Application app) {
-        this.worldInfo = new WorldInfo("world");
-        worldInfo.setCrittersAllowed(false);
-        worldInfo.setMonstersAllowed(false);
-        worldInfo.setName(name);
+    public World(Application app, WorldInfo worldInfo) {
         this.app = app;
+        this.worldInfo = worldInfo;
         this.blockManager = new BlockManager();
         this.blockManager.registerDefaults();
     }
 
-    public World(Application app, WorldInfo worldInfo, Seed seed) {
+    public World(Application app) {
+        WorldInfo worldInfo1 = new WorldInfo("world");
+        worldInfo1.setCrittersAllowed(false);
+        worldInfo1.setMonstersAllowed(false);
+        worldInfo1.setSpawnLocation(new Vector3Int(0, 0, 0));
+        worldInfo1.setSeed(new Seed("test"));
         this.app = app;
-        this.worldInfo = worldInfo;
-        this.seed = seed;
+        this.worldInfo = worldInfo1;
         this.blockManager = new BlockManager();
         this.blockManager.registerDefaults();
+    }
+
+    public void init() {
     }
 
     public BlockManager getBlockManager() {
@@ -81,11 +86,11 @@ public class World extends AbstractControl {
     }
 
     public void setSeed(Seed seed) {
-        this.seed = seed;
+        this.worldInfo.setSeed(seed);
     }
 
     public Seed getSeed() {
-        return seed;
+        return this.worldInfo.getSeed();
     }
 
     public ArrayList<Region> getRegions() {
@@ -129,7 +134,7 @@ public class World extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        updateSpatial();
     }
 
     @Override
@@ -171,5 +176,34 @@ public class World extends AbstractControl {
             }
         }
         return null;
+    }
+    
+    public void addChunkListener(ChunkListener chunkListener) {
+        chunkListeners.add(chunkListener);
+    }
+
+    public void removeChunkListener(ChunkListener chunkListener) {
+        chunkListeners.remove(chunkListener);
+    }
+
+    private boolean updateSpatial() {
+        boolean wasUpdatedNeeded = false;
+        Iterator i = regions.iterator();
+        while (i.hasNext()) {
+            Region region = (Region) i.next();
+            for (int x = 0; x < region.getChunkList().length; x++) {
+                for (int z = 0; z < region.getChunkList()[0].length; z++) {
+                    Chunk chunk = region.getChunkList()[x][z];
+                    if (chunk.updateSpatial()) {
+                        wasUpdatedNeeded = true;
+                        for (int k = 0; k < chunkListeners.size(); k++) {
+                            ChunkListener listener = chunkListeners.get(k);
+                            listener.onSpatialUpdated(chunk);
+                        }
+                    }
+                }
+            }
+        }
+        return wasUpdatedNeeded;
     }
 }

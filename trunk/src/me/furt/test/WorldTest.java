@@ -1,6 +1,7 @@
 package me.furt.test;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import me.furt.projectv.core.Seed;
@@ -27,16 +28,16 @@ public class WorldTest extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        this.seed = new Seed("test");
-        this.worldInfo = new WorldInfo("world");
-        worldInfo.setCrittersAllowed(false);
-        worldInfo.setMonstersAllowed(false);
-        world = new World(this, worldInfo, seed);
+        world = new World(this);
+        world.init();
         worldNode.addControl(world);
+        worldNode.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        rootNode.attachChild(worldNode);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
+        new String("test").hashCode();
     }
 
     @Override

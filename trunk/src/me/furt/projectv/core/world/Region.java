@@ -1,13 +1,11 @@
 package me.furt.projectv.core.world;
 
-import me.furt.projectv.core.world.World;
-import com.cubes.Vector3Int;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
-import java.util.ArrayList;
+import me.furt.projectv.util.Vector3Int;
 
 /**
  * ProjectV
