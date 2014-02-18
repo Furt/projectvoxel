@@ -39,7 +39,6 @@ import me.furt.projectv.block.*;
 import org.lwjgl.input.Keyboard;
 import tonegod.gui.controls.extras.ChatBoxExt;
 import tonegod.gui.core.Screen;
-import tonegod.skydome.FogFilter;
 
 public class TestNoise extends SimpleApplication implements ActionListener {
 
@@ -71,9 +70,9 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         settings.setSettingsDialogImage("/Interface/pv-splash.png");
         try {
             settings.setIcons(new BufferedImage[]{
-                        ImageIO.read(getClass().getResourceAsStream("/Interface/magex16.png")),
-                        ImageIO.read(getClass().getResourceAsStream("/Interface/magex32.png"))
-                    });
+                ImageIO.read(getClass().getResourceAsStream("/Interface/magex16.png")),
+                ImageIO.read(getClass().getResourceAsStream("/Interface/magex32.png"))
+            });
         } catch (IOException e) {
         }
     }
@@ -200,20 +199,6 @@ public class TestNoise extends SimpleApplication implements ActionListener {
         cam.setLocation(new Vector3f(40.6f, 100f, 30.64f));
         cam.lookAtDirection(new Vector3f(0.26f, -0.83f, 0.49f), Vector3f.UNIT_Y);
         flyCam.setMoveSpeed(80);
-    }
-
-    private void initFog() {
-        /**
-         * Add fog to a scene
-         */
-        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        FogFilter fog = new FogFilter();
-        fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
-        fog.setFogStartDistance(450);
-        fog.setFogDensity(0.1f);
-        fpp.addFilter(fog);
-        viewPort.addProcessor(fpp);
-
     }
 
     /*
