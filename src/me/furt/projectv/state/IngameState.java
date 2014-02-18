@@ -24,7 +24,6 @@ import com.jme3.system.AppSettings;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import me.furt.projectv.World;
 import me.furt.projectv.WorldSettings;
-import tonegod.skydome.SkyDome;
 
 /**
  *
@@ -41,7 +40,6 @@ public class IngameState extends AbstractAppState {
     private FlyByCamera flyCam;
     private World world;
     private BulletAppState bulletAppState;
-    public SkyDome skyDome;
     private AudioNode bgMusic;
     private BitmapFont guiFont;
     private ConcurrentLinkedQueue<String> chatMessageQueue;
@@ -65,16 +63,6 @@ public class IngameState extends AbstractAppState {
         stateManager.attach(bulletAppState);
         world = new World(this.app, bulletAppState);
         rootNode.attachChild(world.generateTestWorld());
-        skyDome = new SkyDome(assetManager, cam);
-        skyDome.setEnabled(true);
-        skyDome.setDayNightTransitionSpeed(0.1f);
-        skyDome.setSunMoonSpeed(0.1f);
-
-        Node sky = new Node();
-        sky.setQueueBucket(RenderQueue.Bucket.Sky);
-        sky.addControl(skyDome);
-        sky.setCullHint(Spatial.CullHint.Never);
-        rootNode.attachChild(sky);
         // TODO player model and set location
         
         // You must add a light to make the model visible
@@ -100,7 +88,6 @@ public class IngameState extends AbstractAppState {
 
     @Override
     public void update(float tpf) {
-        skyDome.update(tpf);
     }
 
     private void initHUD() {

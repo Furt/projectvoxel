@@ -52,7 +52,6 @@ import me.furt.projectv.block.*;
 import org.lwjgl.input.Keyboard;
 import tonegod.gui.controls.extras.ChatBoxExt;
 import tonegod.gui.core.Screen;
-import tonegod.skydome.FogFilter;
 
 public class CubesNoise extends SimpleApplication implements ActionListener, AnimEventListener {
 
@@ -110,7 +109,6 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
 
         setupControls();
         setupChatBox();
-        //setupFog();
         //createLight();
 
         seed = new Random().nextInt();
@@ -319,20 +317,6 @@ public class CubesNoise extends SimpleApplication implements ActionListener, Ani
         animationControl = model.getControl(AnimControl.class);
         animationControl.addListener(this);
         animationChannel = animationControl.createChannel();
-    }
-
-    private void setupFog() {
-        /**
-         * Add fog to a scene
-         */
-        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        FogFilter fog = new FogFilter();
-        fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
-        fog.setFogStartDistance(550);
-        fog.setFogDensity(0.1f);
-        fpp.addFilter(fog);
-        viewPort.addProcessor(fpp);
-
     }
 
     /*
