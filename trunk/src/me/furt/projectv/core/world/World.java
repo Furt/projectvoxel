@@ -52,9 +52,6 @@ public class World extends AbstractControl {
         this.blockManager.registerDefaults();
     }
 
-    public void init() {
-    }
-
     public BlockManager getBlockManager() {
         return blockManager;
     }
@@ -108,9 +105,7 @@ public class World extends AbstractControl {
     }
 
     public Region getRegion(Vector3Int regionLoc) {
-        Iterator i = regions.iterator();
-        while (i.hasNext()) {
-            Region region = (Region) i.next();
+        for (Region region : regions) {
             if (region.getLocation().equals(regionLoc)) {
                 return region;
             }
@@ -131,11 +126,8 @@ public class World extends AbstractControl {
     }
 
     public boolean chunkExists(Vector3Int block) {
-        Iterator i = regions.iterator();
-        while (i.hasNext()) {
-            Region region = (Region) i.next();
-            Chunk chunk = region.getChunkFromBlock(block);
-            if (chunk != null) {
+        for (Region region : regions) {
+            if (region.getChunkFromBlock(block) != null) {
                 return true;
             }
         }
@@ -144,9 +136,7 @@ public class World extends AbstractControl {
 
     public Chunk getChunkFromBlock(Vector3Int block) {
         if (chunkExists(block)) {
-            Iterator i = regions.iterator();
-            while (i.hasNext()) {
-                Region region = (Region) i.next();
+            for (Region region : regions) {
                 return region.getChunkFromBlock(block);
             }
         }
@@ -160,9 +150,9 @@ public class World extends AbstractControl {
 
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public Control cloneForSpatial(Spatial spatial) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -209,17 +199,17 @@ public class World extends AbstractControl {
 
     private boolean updateSpatial() {
         boolean wasUpdatedNeeded = false;
-        Iterator i = regions.iterator();
-        while (i.hasNext()) {
-            Region region = (Region) i.next();
+        for (Region region : regions) {
             for (int x = 0; x < region.getChunkList().length; x++) {
-                for (int z = 0; z < region.getChunkList()[0].length; z++) {
-                    Chunk chunk = region.getChunkList()[x][z];
-                    if (chunk.updateSpatial()) {
-                        wasUpdatedNeeded = true;
-                        for (int k = 0; k < chunkListeners.size(); k++) {
-                            ChunkListener listener = chunkListeners.get(k);
-                            listener.onSpatialUpdated(chunk);
+                for (int y = 0; y < region.getChunkList()[0].length; y++) {
+                    for (int z = 0; z < region.getChunkList()[0][0].length; z++) {
+                        Chunk chunk = region.getChunkList()[x][y][z];
+                        if (chunk.updateSpatial()) {
+                            wasUpdatedNeeded = true;
+                            for (int k = 0; k < chunkListeners.size(); k++) {
+                                ChunkListener listener = chunkListeners.get(k);
+                                listener.onSpatialUpdated(chunk);
+                            }
                         }
                     }
                 }
@@ -230,5 +220,13 @@ public class World extends AbstractControl {
 
     public WorldSettings getSettings() {
         return this.worldSettings;
+    }
+
+    public Vector3Int getSpawnLocation() {
+        return worldInfo.getSpawnLocation();
+    }
+
+    public void setSpawnLocation(Vector3Int location) {
+        worldInfo.setSpawnLocation(location);
     }
 }

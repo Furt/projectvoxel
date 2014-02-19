@@ -3,7 +3,9 @@ package me.furt.projectv.core.world;
 import com.jme3.app.Application;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
 import me.furt.projectv.core.block.BlockMaterial;
+import me.furt.projectv.util.Vector3Int;
 
 /**
  * ProjectV
@@ -24,6 +26,8 @@ public class WorldSettings {
     private int chunkSizeY = 256;
     // Amount of block on Z axis //
     private int chunkSizeZ = 16;
+    // Amount of chunk on x & z axis //
+    private Vector3Int regionSize = new Vector3Int(50, 0, 50);
     // Material use for rendering the block //
     private Material blockMaterial;
 
@@ -73,6 +77,14 @@ public class WorldSettings {
 
     public void setChunkSizeZ(int chunkSizeZ) {
         this.chunkSizeZ = chunkSizeZ;
+    }
+
+    public Vector3Int getRegionSize() {
+        return regionSize;
+    }
+
+    public void setRegionSize(Vector3Int regionSize) {
+        this.regionSize = regionSize;
     }
 
     public Material getBlockMaterial() {

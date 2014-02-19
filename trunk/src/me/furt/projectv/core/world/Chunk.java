@@ -1,6 +1,7 @@
 package me.furt.projectv.core.world;
 
 import com.jme3.math.Vector3f;
+import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -10,8 +11,12 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
+import java.io.IOException;
 import me.furt.projectv.core.block.Block;
 import me.furt.projectv.core.block.BlockNavigator;
+import me.furt.projectv.core.network.BitInputStream;
+import me.furt.projectv.core.network.BitOutputStream;
+import me.furt.projectv.core.network.BitSerializable;
 import me.furt.projectv.core.render.MeshOptimizer;
 import me.furt.projectv.core.render.TransparencyMerger;
 import me.furt.projectv.util.Util;
@@ -23,7 +28,7 @@ import me.furt.projectv.util.Vector3Int;
  * @author Furt
  */
 @Serializable
-public class Chunk extends AbstractControl {
+public class Chunk extends AbstractControl implements BitSerializable {
 
     private int[][][] blocks;
     private Region region;
@@ -41,14 +46,14 @@ public class Chunk extends AbstractControl {
     }
 
     public Chunk(Region region, Vector3Int location) {
-        blocks = new int[world.getSettings().getChunkSizeX()][world.getSettings().getChunkSizeY()][world.getSettings().getChunkSizeZ()];
+        this.blocks = new int[world.getSettings().getChunkSizeX()][world.getSettings().getChunkSizeY()][world.getSettings().getChunkSizeZ()];
         this.region = region;
         this.location = location;
-        world = region.getWorld();
-        blockLocation.set(location.mult(world.getSettings().getChunkSizeX(), world.getSettings().getChunkSizeY(), world.getSettings().getChunkSizeZ()));
-        node.setLocalTranslation(new Vector3f(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ()).mult(world.getSettings().getBlockSize()));
-        blocks_IsOnSurface = new boolean[world.getSettings().getChunkSizeX()][world.getSettings().getChunkSizeY()][world.getSettings().getChunkSizeZ()];
-        generated = false;
+        this.world = region.getWorld();
+        this.blockLocation.set(location.mult(world.getSettings().getChunkSizeX(), world.getSettings().getChunkSizeY(), world.getSettings().getChunkSizeZ()));
+        this.node.setLocalTranslation(new Vector3f(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ()).mult(world.getSettings().getBlockSize()));
+        this.blocks_IsOnSurface = new boolean[world.getSettings().getChunkSizeX()][world.getSettings().getChunkSizeY()][world.getSettings().getChunkSizeZ()];
+        this.generated = false;
     }
 
     public int[][][] getBlocks() {
@@ -116,6 +121,7 @@ public class Chunk extends AbstractControl {
     protected void controlRender(RenderManager rm, ViewPort vp) {
     }
 
+    @Override
     public Control cloneForSpatial(Spatial spatial) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -181,5 +187,29 @@ public class Chunk extends AbstractControl {
     public Block getNeighborBlock_Local(Vector3Int location, Block.Face face) {
         Vector3Int neighborLocation = BlockNavigator.getNeighborBlockLocalLocation(location, face);
         return getBlock(neighborLocation);
+    }
+
+    public void write(BitOutputStream outputStream) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void read(BitInputStream inputStream) throws IOException {
+        for (int x = 0; x < blocks.length; x++) {
+            for (int y = 0; y < blocks[0].length; y++) {
+                for (int z = 0; z < blocks[0][0].length; z++) {
+                    blocks[x][y][z] = (int) inputStream.readBits(8);
+                }
+            }
+        }
+        Vector3Int tmpLocation = new Vector3Int();
+        for (int x = 0; x < blocks.length; x++) {
+            for (int y = 0; y < blocks[0].length; y++) {
+                for (int z = 0; z < blocks[0][0].length; z++) {
+                    tmpLocation.set(x, y, z);
+                    updateBlockInformation(tmpLocation);
+                }
+            }
+        }
+        needsMeshUpdate = true;
     }
 }
