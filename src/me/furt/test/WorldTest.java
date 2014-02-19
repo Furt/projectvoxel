@@ -29,7 +29,7 @@ public class WorldTest extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         world = new World(this);
-        world.init();
+        worldNode = new Node("world");
         worldNode.addControl(world);
         worldNode.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         rootNode.attachChild(worldNode);
@@ -37,7 +37,6 @@ public class WorldTest extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        new String("test").hashCode();
     }
 
     @Override

@@ -14,18 +14,20 @@ import me.furt.projectv.util.Vector3Int;
  */
 public class Region extends AbstractControl {
 
-    private Chunk[][] chunkList = new Chunk[50][50];
+    private Chunk[][][] chunkList;
     private byte[][] noiseData;
-    //private ArrayList<Chunk> chunkList = new ArrayList<Chunk>();
     private Vector3Int location;
     private World world;
+    private WorldSettings worldSettings;
 
     public Region() {
     }
 
     public Region(World world, Vector3Int location) {
         this.world = world;
+        this.worldSettings = world.getSettings();
         this.location = location;
+        this.chunkList = new Chunk[worldSettings.getRegionSize().getX()][worldSettings.getRegionSize().getY()][worldSettings.getRegionSize().getZ()];
     }
 
     public Vector3Int getLocation() {
@@ -44,35 +46,19 @@ public class Region extends AbstractControl {
         this.world = world;
     }
 
-    public Chunk[][] getChunkList() {
+    public Chunk[][][] getChunkList() {
         return chunkList;
     }
 
-    public void setChunkList(Chunk[][] chunkList) {
+    public void setChunkList(Chunk[][][] chunkList) {
         this.chunkList = chunkList;
     }
 
-    /*
-     public ArrayList<Chunk> getChunkList() {
-     return chunkList;
-     }
-
-     public void setChunkList(ArrayList<Chunk> chunkList) {
-     this.chunkList = chunkList;
-     }
-    
-     public void addChunk(Chunk chunk) {
-     this.chunkList.add(chunk);
-     }
-    
-     public void removeChunk(Chunk chunk) {
-     this.chunkList.remove(chunk);
-     }
-     */
     public Chunk getChunkFromBlock(Vector3Int block) {
-        int x = block.getX() / 16;
-        int z = block.getZ() / 16;
-        return chunkList[x][z];
+        int x = block.getX() / worldSettings.getChunkSizeX();
+        int y = block.getY() / worldSettings.getChunkSizeY();
+        int z = block.getZ() / worldSettings.getChunkSizeZ();
+        return chunkList[x][y][z];
     }
 
     @Override
@@ -85,6 +71,7 @@ public class Region extends AbstractControl {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public Control cloneForSpatial(Spatial spatial) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
