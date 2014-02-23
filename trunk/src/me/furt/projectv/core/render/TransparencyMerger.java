@@ -2,7 +2,7 @@ package me.furt.projectv.core.render;
 
 import me.furt.projectv.core.block.Block;
 import me.furt.projectv.core.world.Chunk;
-import me.furt.projectv.util.Vector3Int;
+import me.furt.projectv.util.Vector3i;
 
 /**
  * ProjectV
@@ -20,7 +20,7 @@ public class TransparencyMerger implements MeshMerger {
     }
 
     @Override
-    public boolean shouldFaceBeAdded(Chunk chunk, Vector3Int location, Block.Face face) {
+    public boolean shouldFaceBeAdded(Chunk chunk, Vector3i location, Block.Face face) {
         Block block = chunk.getBlock(location);
         if (block.getTexture().isTransparent() == isGeometryTransparent) {
             Block neighborBlock = chunk.getNeighborBlock_Local(location, face);

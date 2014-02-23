@@ -1,7 +1,7 @@
 package me.furt.projectv.core.world;
 
 import me.furt.projectv.core.Seed;
-import me.furt.projectv.util.Vector3Int;
+import me.furt.projectv.util.Vector3i;
 
 /**
  * ProjectV
@@ -13,8 +13,8 @@ public class WorldInfo {
     public int id;
     public String name;
     public boolean globalPVP;
-    public Vector3Int spawnLocation;
-    public Vector3Int regionLocation;
+    public Vector3i spawnLocation;
+    public Vector3i regionLocation;
     public boolean monstersAllowed;
     public boolean crittersAllowed;
     public Seed seed;
@@ -52,19 +52,19 @@ public class WorldInfo {
         this.globalPVP = pvp;
     }
 
-    public Vector3Int getSpawnLocation() {
+    public Vector3i getSpawnLocation() {
         return spawnLocation;
     }
 
-    public void setSpawnLocation(Vector3Int spawnLocation) {
+    public void setSpawnLocation(Vector3i spawnLocation) {
         this.spawnLocation = spawnLocation;
     }
 
-    public Vector3Int getRegionLocation() {
+    public Vector3i getRegionLocation() {
         return regionLocation;
     }
 
-    public void setRegionLocation(Vector3Int regionLocation) {
+    public void setRegionLocation(Vector3i regionLocation) {
         this.regionLocation = regionLocation;
     }
 

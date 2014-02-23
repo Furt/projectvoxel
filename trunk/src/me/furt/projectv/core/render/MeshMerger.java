@@ -2,7 +2,7 @@ package me.furt.projectv.core.render;
 
 import me.furt.projectv.core.block.Block;
 import me.furt.projectv.core.world.Chunk;
-import me.furt.projectv.util.Vector3Int;
+import me.furt.projectv.util.Vector3i;
 
 /**
  * ProjectV
@@ -11,5 +11,5 @@ import me.furt.projectv.util.Vector3Int;
  */
 public interface MeshMerger {
 
-    public abstract boolean shouldFaceBeAdded(Chunk chunk, Vector3Int location, Block.Face face);
+    public abstract boolean shouldFaceBeAdded(Chunk chunk, Vector3i location, Block.Face face);
 }

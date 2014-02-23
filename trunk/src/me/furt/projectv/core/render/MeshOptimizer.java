@@ -13,7 +13,7 @@ import me.furt.projectv.core.world.Chunk;
 import me.furt.projectv.core.world.Region;
 import me.furt.projectv.core.world.World;
 import me.furt.projectv.core.world.WorldSettings;
-import me.furt.projectv.util.Vector3Int;
+import me.furt.projectv.util.Vector3i;
 
 /**
  * ProjectV
@@ -44,7 +44,7 @@ public class MeshOptimizer {
         ArrayList<Integer> indicesList = new ArrayList<Integer>();
         ArrayList<Float> normalsList = new ArrayList<Float>();
         Region region = chunk.getRegion();
-        Vector3Int tmpLocation = new Vector3Int();
+        Vector3i tmpLocation = new Vector3i();
         float blockSize = worldSettings.getBlockSize();
         for (int x = 0; x < worldSettings.getChunkSizeX(); x++) {
             for (int y = 0; y < worldSettings.getChunkSizeY(); y++) {

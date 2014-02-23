@@ -1,7 +1,7 @@
 package me.furt.projectv.core.block;
 
 import me.furt.projectv.core.world.Chunk;
-import me.furt.projectv.util.Vector3Int;
+import me.furt.projectv.util.Vector3i;
 
 /**
  * ProjectV
@@ -22,11 +22,11 @@ public class BlockSkin {
         this.isTransparent = isTransparent;
     }
 
-    public TextureLocation getTextureLocation(Chunk chunk, Vector3Int blockLocation, Block.Face face) {
+    public TextureLocation getTextureLocation(Chunk chunk, Vector3i blockLocation, Block.Face face) {
         return textureLocations[getTextureLocationIndex(chunk, blockLocation, face)];
     }
 
-    protected int getTextureLocationIndex(Chunk chunk, Vector3Int blockLocation, Block.Face face) {
+    protected int getTextureLocationIndex(Chunk chunk, Vector3i blockLocation, Block.Face face) {
         if (textureLocations.length == 6) {
             return face.ordinal();
         }

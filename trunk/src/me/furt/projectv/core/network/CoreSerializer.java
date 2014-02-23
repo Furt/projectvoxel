@@ -8,11 +8,6 @@ import me.furt.projectv.core.world.Region;
 
 public class CoreSerializer {
 
-    /**
-     *
-     * @param blockTerrain
-     * @return
-     */
     public static byte[][][][] writeChunksToBytes(Region region) {
         Chunk[][][] chunks = region.getChunkList();
         byte[][][][] bytes = new byte[chunks.length][chunks[0].length][chunks[0][0].length][];
@@ -26,11 +21,6 @@ public class CoreSerializer {
         return bytes;
     }
 
-    /**
-     *
-     * @param bitSerializable
-     * @return
-     */
     public static byte[] writeToBytes(BitSerializable bitSerializable) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         BitOutputStream bitOutputStream = new BitOutputStream(byteArrayOutputStream);
@@ -39,11 +29,6 @@ public class CoreSerializer {
         return byteArrayOutputStream.toByteArray();
     }
 
-    /**
-     *
-     * @param bitSerializable
-     * @param bytes
-     */
     public static void readFromBytes(BitSerializable bitSerializable, byte[] bytes) {
         BitInputStream bitInputStream = new BitInputStream(new ByteArrayInputStream(bytes));
         try {
