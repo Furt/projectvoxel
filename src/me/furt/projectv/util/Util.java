@@ -13,7 +13,7 @@ public class Util {
      * @param index
      * @return
      */
-    public static boolean isValidIndex(int[][][] array, Vector3Int index) {
+    public static boolean isValidIndex(int[][][] array, Vector3i index) {
         return ((index.getX() >= 0) && (index.getX() < array.length)
                 && (index.getY() >= 0) && (index.getY() < array[0].length)
                 && (index.getZ() >= 0) && (index.getZ() < array[0][0].length));
@@ -25,7 +25,7 @@ public class Util {
      * @param index
      * @return
      */
-    public static boolean isValidIndex(Object[][][] array, Vector3Int index) {
+    public static boolean isValidIndex(Object[][][] array, Vector3i index) {
         return ((index.getX() >= 0) && (index.getX() < array.length)
                 && (index.getY() >= 0) && (index.getY() < array[0].length)
                 && (index.getZ() >= 0) && (index.getZ() < array[0][0].length));

@@ -14,7 +14,7 @@ import me.furt.projectv.core.block.Block;
 import me.furt.projectv.core.block.BlockManager;
 import me.furt.projectv.core.render.ChunkListener;
 import me.furt.projectv.util.Util;
-import me.furt.projectv.util.Vector3Int;
+import me.furt.projectv.util.Vector3i;
 
 /**
  * ProjectV
@@ -43,7 +43,7 @@ public class World extends AbstractControl {
         WorldInfo worldInfo1 = new WorldInfo("world");
         worldInfo1.setCrittersAllowed(false);
         worldInfo1.setMonstersAllowed(false);
-        worldInfo1.setSpawnLocation(new Vector3Int(0, 0, 0));
+        worldInfo1.setSpawnLocation(new Vector3i(0, 0, 0));
         worldInfo1.setSeed(new Seed("test"));
         this.worldSettings = new WorldSettings(app);
         this.app = app;
@@ -104,7 +104,7 @@ public class World extends AbstractControl {
         return regions;
     }
 
-    public Region getRegion(Vector3Int regionLoc) {
+    public Region getRegion(Vector3i regionLoc) {
         for (Region region : regions) {
             if (region.getLocation().equals(regionLoc)) {
                 return region;
@@ -125,7 +125,7 @@ public class World extends AbstractControl {
         this.regions.remove(region);
     }
 
-    public boolean chunkExists(Vector3Int block) {
+    public boolean chunkExists(Vector3i block) {
         for (Region region : regions) {
             if (region.getChunkFromBlock(block) != null) {
                 return true;
@@ -134,7 +134,7 @@ public class World extends AbstractControl {
         return false;
     }
 
-    public Chunk getChunkFromBlock(Vector3Int block) {
+    public Chunk getChunkFromBlock(Vector3i block) {
         if (chunkExists(block)) {
             for (Region region : regions) {
                 return region.getChunkFromBlock(block);
@@ -157,9 +157,9 @@ public class World extends AbstractControl {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public Vector3Int getPointedBlockLocation(Vector3f collisionContactPoint, boolean getNeighborLocation) {
+    public Vector3i getPointedBlockLocation(Vector3f collisionContactPoint, boolean getNeighborLocation) {
         Vector3f collisionLocation = Util.compensateFloatRoundingErrors(collisionContactPoint);
-        Vector3Int blockLocation = new Vector3Int(
+        Vector3i blockLocation = new Vector3i(
                 (int) collisionLocation.getX(),
                 (int) collisionLocation.getY(),
                 (int) collisionLocation.getZ());
@@ -175,7 +175,7 @@ public class World extends AbstractControl {
         return blockLocation;
     }
 
-    public Block getBlock(Vector3Int loc) {
+    public Block getBlock(Vector3i loc) {
         Region region;
         Chunk c;
         Iterator i = regions.iterator();
@@ -222,11 +222,11 @@ public class World extends AbstractControl {
         return this.worldSettings;
     }
 
-    public Vector3Int getSpawnLocation() {
+    public Vector3i getSpawnLocation() {
         return worldInfo.getSpawnLocation();
     }
 
-    public void setSpawnLocation(Vector3Int location) {
+    public void setSpawnLocation(Vector3i location) {
         worldInfo.setSpawnLocation(location);
     }
 }

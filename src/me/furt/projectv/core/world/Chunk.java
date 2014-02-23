@@ -1,7 +1,6 @@
 package me.furt.projectv.core.world;
 
 import com.jme3.math.Vector3f;
-import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -20,7 +19,7 @@ import me.furt.projectv.core.network.BitSerializable;
 import me.furt.projectv.core.render.MeshOptimizer;
 import me.furt.projectv.core.render.TransparencyMerger;
 import me.furt.projectv.util.Util;
-import me.furt.projectv.util.Vector3Int;
+import me.furt.projectv.util.Vector3i;
 
 /**
  * ProjectV
@@ -33,8 +32,8 @@ public class Chunk extends AbstractControl implements BitSerializable {
     private int[][][] blocks;
     private Region region;
     private World world;
-    private Vector3Int location = new Vector3Int();
-    private Vector3Int blockLocation = new Vector3Int();
+    private Vector3i location = new Vector3i();
+    private Vector3i blockLocation = new Vector3i();
     private boolean[][][] blocks_IsOnSurface;
     private Node node = new Node();
     private Geometry optimizedGeometry_Opaque;
@@ -45,7 +44,7 @@ public class Chunk extends AbstractControl implements BitSerializable {
     public Chunk() {
     }
 
-    public Chunk(Region region, Vector3Int location) {
+    public Chunk(Region region, Vector3i location) {
         this.blocks = new int[world.getSettings().getChunkSizeX()][world.getSettings().getChunkSizeY()][world.getSettings().getChunkSizeZ()];
         this.region = region;
         this.location = location;
@@ -60,7 +59,7 @@ public class Chunk extends AbstractControl implements BitSerializable {
         return blocks;
     }
 
-    public Block getBlock(Vector3Int loc) {
+    public Block getBlock(Vector3i loc) {
         return world.getBlockManager().getBlock(blocks[loc.getX()][loc.getY()][loc.getZ()]);
     }
 
@@ -68,7 +67,7 @@ public class Chunk extends AbstractControl implements BitSerializable {
         this.blocks = Blocks;
     }
 
-    public void setBlock(Block block, Vector3Int loc) {
+    public void setBlock(Block block, Vector3i loc) {
         if (isValidBlockLocation(location)) {
             blocks[location.getX()][location.getY()][location.getZ()] = block.getId();
             updateBlockState(location);
@@ -84,15 +83,15 @@ public class Chunk extends AbstractControl implements BitSerializable {
         this.region = region;
     }
 
-    public Vector3Int getBlockLocation() {
+    public Vector3i getBlockLocation() {
         return blockLocation;
     }
 
-    public Vector3Int getLocation() {
+    public Vector3i getLocation() {
         return location;
     }
 
-    public void setLocation(Vector3Int location) {
+    public void setLocation(Vector3i location) {
         this.location = location;
     }
 
@@ -158,10 +157,10 @@ public class Chunk extends AbstractControl implements BitSerializable {
         return false;
     }
 
-    private void updateBlockState(Vector3Int location) {
+    private void updateBlockState(Vector3i location) {
         updateBlockInformation(location);
         for (int i = 0; i < Block.Face.values().length; i++) {
-            Vector3Int neighborLocation = getNeighborBlockGlobalLocation(location, Block.Face.values()[i]);
+            Vector3i neighborLocation = getNeighborBlockGlobalLocation(location, Block.Face.values()[i]);
             Chunk chunk = world.getChunkFromBlock(neighborLocation);
             if (chunk != null) {
                 chunk.updateBlockInformation(neighborLocation.subtract(chunk.getBlockLocation()));
@@ -169,28 +168,34 @@ public class Chunk extends AbstractControl implements BitSerializable {
         }
     }
 
-    private void updateBlockInformation(Vector3Int location) {
+    private void updateBlockInformation(Vector3i location) {
         Block neighborBlock_Top = world.getBlock(getNeighborBlockGlobalLocation(location, Block.Face.Top));
         blocks_IsOnSurface[location.getX()][location.getY()][location.getZ()] = (neighborBlock_Top == null);
     }
 
-    private boolean isValidBlockLocation(Vector3Int location) {
+    private boolean isValidBlockLocation(Vector3i location) {
         return Util.isValidIndex(blocks, location);
     }
 
-    private Vector3Int getNeighborBlockGlobalLocation(Vector3Int location, Block.Face face) {
-        Vector3Int neighborLocation = BlockNavigator.getNeighborBlockLocalLocation(location, face);
+    private Vector3i getNeighborBlockGlobalLocation(Vector3i location, Block.Face face) {
+        Vector3i neighborLocation = BlockNavigator.getNeighborBlockLocalLocation(location, face);
         neighborLocation.addLocal(blockLocation);
         return neighborLocation;
     }
 
-    public Block getNeighborBlock_Local(Vector3Int location, Block.Face face) {
-        Vector3Int neighborLocation = BlockNavigator.getNeighborBlockLocalLocation(location, face);
+    public Block getNeighborBlock_Local(Vector3i location, Block.Face face) {
+        Vector3i neighborLocation = BlockNavigator.getNeighborBlockLocalLocation(location, face);
         return getBlock(neighborLocation);
     }
 
     public void write(BitOutputStream outputStream) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (int x = 0; x < blocks.length; x++) {
+            for (int y = 0; y < blocks[0].length; y++) {
+                for (int z = 0; z < blocks[0][0].length; z++) {
+                    outputStream.writeBits(blocks[x][y][z], 8);
+                }
+            }
+        }
     }
 
     public void read(BitInputStream inputStream) throws IOException {
@@ -201,7 +206,7 @@ public class Chunk extends AbstractControl implements BitSerializable {
                 }
             }
         }
-        Vector3Int tmpLocation = new Vector3Int();
+        Vector3i tmpLocation = new Vector3i();
         for (int x = 0; x < blocks.length; x++) {
             for (int y = 0; y < blocks[0].length; y++) {
                 for (int z = 0; z < blocks[0][0].length; z++) {

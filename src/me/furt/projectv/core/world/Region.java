@@ -5,7 +5,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
-import me.furt.projectv.util.Vector3Int;
+import me.furt.projectv.util.Vector3i;
 
 /**
  * ProjectV
@@ -16,25 +16,25 @@ public class Region extends AbstractControl {
 
     private Chunk[][][] chunkList;
     private byte[][] noiseData;
-    private Vector3Int location;
+    private Vector3i location;
     private World world;
     private WorldSettings worldSettings;
 
     public Region() {
     }
 
-    public Region(World world, Vector3Int location) {
+    public Region(World world, Vector3i location) {
         this.world = world;
         this.worldSettings = world.getSettings();
         this.location = location;
         this.chunkList = new Chunk[worldSettings.getRegionSize().getX()][worldSettings.getRegionSize().getY()][worldSettings.getRegionSize().getZ()];
     }
 
-    public Vector3Int getLocation() {
+    public Vector3i getLocation() {
         return location;
     }
 
-    public void setLocation(Vector3Int location) {
+    public void setLocation(Vector3i location) {
         this.location = location;
     }
 
@@ -54,7 +54,7 @@ public class Region extends AbstractControl {
         this.chunkList = chunkList;
     }
 
-    public Chunk getChunkFromBlock(Vector3Int block) {
+    public Chunk getChunkFromBlock(Vector3i block) {
         int x = block.getX() / worldSettings.getChunkSizeX();
         int y = block.getY() / worldSettings.getChunkSizeY();
         int z = block.getZ() / worldSettings.getChunkSizeZ();
@@ -76,7 +76,7 @@ public class Region extends AbstractControl {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public boolean loadRegion(Vector3Int location) {
+    public boolean loadRegion(Vector3i location) {
         return false;
     }
 
